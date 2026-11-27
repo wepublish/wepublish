@@ -1,0 +1,2 @@
+INSERT INTO "settings" ("id", "modifiedAt", "name", "value", "settingRestriction") VALUES (gen_random_uuid(), CURRENT_TIMESTAMP, 'printIssueNumbering', '"perYear"'::jsonb, '{"allowedValues": {"stringChoice": ["perYear", "continuous"]}}'::jsonb) ON CONFLICT ("name") DO NOTHING;
+INSERT INTO "settings" ("id", "modifiedAt", "name", "value") VALUES (gen_random_uuid(), CURRENT_TIMESTAMP, 'printIssueLabelFormat', '"{range}.{yy}"'::jsonb) ON CONFLICT ("name") DO NOTHING;

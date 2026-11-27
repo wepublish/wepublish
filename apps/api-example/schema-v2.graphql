@@ -1891,6 +1891,24 @@ input FacebookVideoBlockInput {
   videoID: String
 }
 
+"""
+current: the issue shipped last is the first one. upcoming: the next one is.
+"""
+enum FirstPrintIssueChoice {
+  current
+  upcoming
+}
+
+"""
+Which printed issue the subscription starts with («Abo-Start»), as the reader chose it from printIssueStart.
+"""
+input FirstPrintIssueInput {
+  choice: FirstPrintIssueChoice!
+
+  """The id of the current issue the reader was shown."""
+  currentIssueId: String!
+}
+
 type FlexAlignment {
   h: Int!
   i: String!
@@ -4278,6 +4296,11 @@ type Mutation {
   createSubscription(
     autoRenew: Boolean!
     extendable: Boolean!
+
+    """
+    «Abo-Start»: the first printed issue is the first one shipped on or after this day.
+    """
+    firstPrintIssueFrom: DateTime
     memberPlanID: String!
     monthlyAmount: Float!
     paidUntil: DateTime
@@ -4357,12 +4380,12 @@ type Mutation {
   createUserRole(description: String, name: String!, permissionIDs: [String!]!): UserRole!
 
   """Allows authenticated users to create additional subscriptions"""
-  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, discountCode: String, failureURL: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Float!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String): Payment!
+  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, discountCode: String, failureURL: String, firstPrintIssue: FirstPrintIssueInput, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Float!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String): Payment!
 
   """
   Allows guests and authenticated users to create additional subscriptions
   """
-  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, discountCode: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Float!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
+  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, discountCode: String, firstPrintIssue: FirstPrintIssueInput, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Float!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
 
   """
   Lets a We.Publish supporter open the website as the given user for an hour. Needs a We.Publish login with the impersonate-cms role.
@@ -4599,6 +4622,11 @@ type Mutation {
   importSubscription(
     autoRenew: Boolean!
     extendable: Boolean!
+
+    """
+    «Abo-Start»: the first printed issue is the first one shipped on or after this day.
+    """
+    firstPrintIssueFrom: DateTime
     memberPlanID: String!
     monthlyAmount: Float!
     paidUntil: DateTime
@@ -5027,7 +5055,24 @@ type Mutation {
   updateSetting(name: SettingName!, value: GraphQLSettingValueType): Setting!
 
   """Updates an existing subscription."""
-  updateSubscription(autoRenew: Boolean, extendable: Boolean, id: String!, memberPlanID: String, monthlyAmount: Float, paidUntil: DateTime, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, properties: [PropertyInput!], startsAt: DateTime, userID: String): PublicSubscription!
+  updateSubscription(
+    autoRenew: Boolean
+    extendable: Boolean
+
+    """
+    «Abo-Start»: the first printed issue is the first one shipped on or after this day.
+    """
+    firstPrintIssueFrom: DateTime
+    id: String!
+    memberPlanID: String
+    monthlyAmount: Float
+    paidUntil: DateTime
+    paymentMethodID: String
+    paymentPeriodicity: PaymentPeriodicity
+    properties: [PropertyInput!]
+    startsAt: DateTime
+    userID: String
+  ): PublicSubscription!
 
   """Update an existing subscription flow"""
   updateSubscriptionFlow(
@@ -6305,6 +6350,11 @@ type PrintIssueBexioStats {
   """Found, but of a kind the options leave out."""
   excludedKind: Int!
 
+  """
+  Counting per copy: recipients whose running period already received its number.
+  """
+  exhausted: Int!
+
   """The options asked for bexio and it was read."""
   included: Boolean!
   invoicesInWindow: Int!
@@ -6328,6 +6378,14 @@ type PrintIssueBexioStats {
 type PrintIssueCount {
   count: Int!
   key: String!
+}
+
+"""
+perYear: numbers restart every year («6.26»). continuous: they run on («#117»).
+"""
+enum PrintIssueCounting {
+  continuous
+  perYear
 }
 
 """
@@ -6398,6 +6456,18 @@ input PrintIssueInputModel {
   year: Int!
 }
 
+"""
+How the medium numbers its print issues (settings printIssueNumbering and printIssueLabelFormat).
+"""
+type PrintIssueNumbering {
+  counting: PrintIssueCounting!
+
+  """
+  The label template: {range}, {number}, {yy}, {yyyy}, e.g. «{range}.{yy}» or «#{range}».
+  """
+  format: String!
+}
+
 """What a list is computed from."""
 type PrintIssueOptions {
   """
@@ -6432,6 +6502,26 @@ input PrintIssueOptionsInput {
   includeOpen: Boolean
   includeUpcoming: Boolean
   memberPlanIds: [String!]
+}
+
+"""
+How many of the printed issues a subscription paid for it received, as the print export counts: the running period, else the latest paid one.
+"""
+type PrintIssueProgress {
+  """What the period is worth; null = unlimited (lifetime)."""
+  entitled: Int
+  issues: [ReceivedPrintIssue!]!
+
+  """Still to send, never below 0."""
+  owed: Int!
+  periodId: String!
+
+  """Copies received in that period, historic issues inside it included."""
+  received: Int!
+
+  """Running, or ended and still owed copies within the time of two issues."""
+  relevant: Boolean!
+  subscriptionId: String!
 }
 
 """One line of the print run: one address, `anzahl` copies."""
@@ -6496,6 +6586,10 @@ enum PrintIssueRunMode {
 
 """Subscriptions the run left out, by reason."""
 type PrintIssueSkipped {
+  """
+  Shipped before the first issue the reader chose when subscribing («Abo-Start»).
+  """
+  beforeFirstIssue: Int!
   deactivated: Int!
   donation: Int!
 
@@ -6514,6 +6608,17 @@ type PrintIssueSkipped {
 type PrintIssueSources {
   bexio: Int!
   wepublish: Int!
+}
+
+"""
+The issues a new subscriber chooses the first one from: the last shipped and the next.
+"""
+type PrintIssueStart {
+  """Shipped today at the latest, whatever its status."""
+  current: PublicPrintIssue!
+
+  """Ships later; none until staff created it."""
+  upcoming: PublicPrintIssue
 }
 
 """
@@ -6590,6 +6695,20 @@ input PropertyInput {
   value: String!
 }
 
+"""A printed issue as a new subscriber sees it («Abo-Start»)."""
+type PublicPrintIssue {
+  id: String!
+
+  """The ship day (YYYY-MM-DD)."""
+  issueDate: String!
+
+  """As the medium writes it, e.g. «6.26» or «#117»."""
+  label: String!
+
+  """The topic."""
+  title: String
+}
+
 type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   autoRenew: Boolean!
   canExtend: Boolean!
@@ -6609,6 +6728,11 @@ type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   deactivation: SubscriptionDeactivation
   extendable: Boolean!
   externalReward: String
+
+  """
+  «Abo-Start»: the first printed issue is the first one shipped on or after this day.
+  """
+  firstPrintIssueFrom: DateTime
   goodie: Goodie
   id: String!
 
@@ -6636,6 +6760,11 @@ type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   """
   pendingPaymentMethodChange: SubscriptionPaymentMethodChange
   periods: [SubscriptionPeriod!]!
+
+  """
+  The printed issues the subscription received in its running (else latest paid) period; null where nothing is promised.
+  """
+  printIssueProgress: PrintIssueProgress
   properties: [Property!]!
   startsAt: DateTime!
   url: String!
@@ -7283,8 +7412,18 @@ type Query {
   """
   printIssueCsv(deliveryId: String, id: String!): PrintIssueFileModel!
 
+  """
+  How the medium numbers its print issues: restarting every year or running on, and the label template.
+  """
+  printIssueNumbering: PrintIssueNumbering!
+
   """The computed list waiting to be checked, if any."""
   printIssueRun(id: String!): PrintIssueRun
+
+  """
+  The issues a new subscriber chooses where the subscription starts from; null while the print export is off or nothing shipped yet.
+  """
+  printIssueStart: PrintIssueStart
 
   """All print issues, the newest first."""
   printIssues: [PrintIssue!]!
@@ -7526,6 +7665,26 @@ enum RatingSystemType {
   star
 }
 
+"""
+A printed issue a subscription received: a list handed to the printshop.
+"""
+type ReceivedPrintIssue {
+  """0 = the print list, n = Nachlieferung n."""
+  batch: Int!
+
+  """How many issues it counts as: 2 for a double issue."""
+  countsAs: Int!
+
+  """When the list went to the printshop."""
+  deliveredAt: String!
+
+  """The ship day (YYYY-MM-DD)."""
+  issueDate: String!
+
+  """As the medium writes it, e.g. «6.26» or «#117»."""
+  label: String!
+}
+
 type RedeemGiftCodeBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -7648,6 +7807,16 @@ type SensitiveDataUser implements BaseUser {
   paymentProviderCustomers: [PaymentProviderCustomer!]
   pendingEmail: String
   permissions: [String!]!
+
+  """
+  The printed issues each of the user's subscriptions received; null without print issues.
+  """
+  printIssueProgress: [PrintIssueProgress!]
+
+  """
+  Printed issues still to send to the user, over subscriptions running or still owed copies; null without printed issues.
+  """
+  printIssuesOwed: Int
   properties: [Property!]!
   roleIDs: [String!]!
   roles: [UserRole!]!
@@ -7904,6 +8073,9 @@ enum SettingName {
   PRINT_BEXIO_KINDS
   PRINT_EXPORT_DEFAULTS
   PRINT_ISSUES_PER_YEAR
+  PRINT_ISSUE_COUNTING
+  PRINT_ISSUE_LABEL_FORMAT
+  PRINT_ISSUE_NUMBERING
   RESET_PASSWORD_JWT_EXPIRES_MIN
   SEND_LOGIN_JWT_EXPIRES_MIN
   SESSION_TTL_DAYS
@@ -9043,6 +9215,7 @@ enum UserSort {
   FirstName
   ModifiedAt
   Name
+  PrintIssuesOwed
   SubscriptionCount
 }
 

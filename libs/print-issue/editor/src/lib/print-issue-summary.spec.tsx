@@ -54,6 +54,23 @@ describe('PrintIssueSummary', () => {
     ).toBeInTheDocument();
   });
 
+  it('names the readers whose chosen first issue comes later («Abo-Start»)', () => {
+    render(
+      <PrintIssueSummary
+        summary={
+          summary({
+            skipped: { ...summary().skipped, beforeFirstIssue: 2 },
+          }) as never
+        }
+      />
+    );
+
+    expect(
+      screen.getByText('printIssues.summary.skipped.beforeFirstIssue')
+        .parentElement
+    ).toHaveTextContent('2');
+  });
+
   it('lists what bexio left out and why', () => {
     render(
       <PrintIssueSummary
@@ -68,6 +85,8 @@ describe('PrintIssueSummary', () => {
               // the two biggest buckets on a medium billing through bexio
               skippedProvider: 5000,
               skippedImported: 400,
+              // counting per copy: running periods that got their number
+              exhausted: 6,
             },
           }) as never
         }
@@ -79,6 +98,7 @@ describe('PrintIssueSummary', () => {
       ['skippedOpen', 3],
       ['excludedKind', 4],
       ['quantityMismatch', 1],
+      ['exhausted', 6],
       ['skippedProvider', 5000],
       ['skippedImported', 400],
     ] as const) {

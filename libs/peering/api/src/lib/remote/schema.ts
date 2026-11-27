@@ -1823,6 +1823,19 @@ export type FacebookVideoBlockInput = {
   videoID?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** current: the issue shipped last is the first one. upcoming: the next one is. */
+export enum FirstPrintIssueChoice {
+  Current = 'current',
+  Upcoming = 'upcoming'
+}
+
+/** Which printed issue the subscription starts with («Abo-Start»), as the reader chose it from printIssueStart. */
+export type FirstPrintIssueInput = {
+  choice: FirstPrintIssueChoice;
+  /** The id of the current issue the reader was shown. */
+  currentIssueId: Scalars['String']['input'];
+};
+
 export type FlexAlignment = {
   __typename?: 'FlexAlignment';
   h: Scalars['Int']['output'];
@@ -4791,6 +4804,7 @@ export type MutationCreateSessionWithWepublishLoginArgs = {
 export type MutationCreateSubscriptionArgs = {
   autoRenew: Scalars['Boolean']['input'];
   extendable: Scalars['Boolean']['input'];
+  firstPrintIssueFrom?: InputMaybe<Scalars['DateTime']['input']>;
   memberPlanID: Scalars['String']['input'];
   monthlyAmount: Scalars['Float']['input'];
   paidUntil?: InputMaybe<Scalars['DateTime']['input']>;
@@ -4901,6 +4915,7 @@ export type MutationCreateUserSubscriptionArgs = {
   deactivateSubscriptionId?: InputMaybe<Scalars['String']['input']>;
   discountCode?: InputMaybe<Scalars['String']['input']>;
   failureURL?: InputMaybe<Scalars['String']['input']>;
+  firstPrintIssue?: InputMaybe<FirstPrintIssueInput>;
   goodieId?: InputMaybe<Scalars['String']['input']>;
   memberPlanID?: InputMaybe<Scalars['String']['input']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']['input']>;
@@ -4916,6 +4931,7 @@ export type MutationCreateUserSubscriptionArgs = {
 export type MutationCreateUserSubscriptionWithConfirmationArgs = {
   autoRenew: Scalars['Boolean']['input'];
   discountCode?: InputMaybe<Scalars['String']['input']>;
+  firstPrintIssue?: InputMaybe<FirstPrintIssueInput>;
   goodieId?: InputMaybe<Scalars['String']['input']>;
   memberPlanID?: InputMaybe<Scalars['String']['input']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']['input']>;
@@ -5276,6 +5292,7 @@ export type MutationImportPeerArticleArgs = {
 export type MutationImportSubscriptionArgs = {
   autoRenew: Scalars['Boolean']['input'];
   extendable: Scalars['Boolean']['input'];
+  firstPrintIssueFrom?: InputMaybe<Scalars['DateTime']['input']>;
   memberPlanID: Scalars['String']['input'];
   monthlyAmount: Scalars['Float']['input'];
   paidUntil?: InputMaybe<Scalars['DateTime']['input']>;
@@ -6054,6 +6071,7 @@ export type MutationUpdateSettingArgs = {
 export type MutationUpdateSubscriptionArgs = {
   autoRenew?: InputMaybe<Scalars['Boolean']['input']>;
   extendable?: InputMaybe<Scalars['Boolean']['input']>;
+  firstPrintIssueFrom?: InputMaybe<Scalars['DateTime']['input']>;
   id: Scalars['String']['input'];
   memberPlanID?: InputMaybe<Scalars['String']['input']>;
   monthlyAmount?: InputMaybe<Scalars['Float']['input']>;
@@ -7468,6 +7486,8 @@ export type PrintIssueBexioStats = {
   detailFetched: Scalars['Int']['output'];
   /** Found, but of a kind the options leave out. */
   excludedKind: Scalars['Int']['output'];
+  /** Counting per copy: recipients whose running period already received its number. */
+  exhausted: Scalars['Int']['output'];
   /** The options asked for bexio and it was read. */
   included: Scalars['Boolean']['output'];
   invoicesInWindow: Scalars['Int']['output'];
@@ -7490,6 +7510,12 @@ export type PrintIssueCount = {
   count: Scalars['Int']['output'];
   key: Scalars['String']['output'];
 };
+
+/** perYear: numbers restart every year («6.26»). continuous: they run on («#117»). */
+export enum PrintIssueCounting {
+  Continuous = 'continuous',
+  PerYear = 'perYear'
+}
 
 /** One list handed to the printshop: the export (batch 0) or a Nachlieferung. Until it is handed over it can be computed again and replaced, or deleted; from then on it is immutable and its copies count for the readers' quota. */
 export type PrintIssueDelivery = {
@@ -7542,6 +7568,14 @@ export type PrintIssueInputModel = {
   year: Scalars['Int']['input'];
 };
 
+/** How the medium numbers its print issues (settings printIssueNumbering and printIssueLabelFormat). */
+export type PrintIssueNumbering = {
+  __typename?: 'PrintIssueNumbering';
+  counting: PrintIssueCounting;
+  /** The label template: {range}, {number}, {yy}, {yyyy}, e.g. «{range}.{yy}» or «#{range}». */
+  format: Scalars['String']['output'];
+};
+
 /** What a list is computed from. */
 export type PrintIssueOptions = {
   __typename?: 'PrintIssueOptions';
@@ -7565,6 +7599,22 @@ export type PrintIssueOptionsInput = {
   includeOpen?: InputMaybe<Scalars['Boolean']['input']>;
   includeUpcoming?: InputMaybe<Scalars['Boolean']['input']>;
   memberPlanIds?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+/** How many of the printed issues a subscription paid for it received, as the print export counts: the running period, else the latest paid one. */
+export type PrintIssueProgress = {
+  __typename?: 'PrintIssueProgress';
+  /** What the period is worth; null = unlimited (lifetime). */
+  entitled?: Maybe<Scalars['Int']['output']>;
+  issues: Array<ReceivedPrintIssue>;
+  /** Still to send, never below 0. */
+  owed: Scalars['Int']['output'];
+  periodId: Scalars['String']['output'];
+  /** Copies received in that period, historic issues inside it included. */
+  received: Scalars['Int']['output'];
+  /** Running, or ended and still owed copies within the time of two issues. */
+  relevant: Scalars['Boolean']['output'];
+  subscriptionId: Scalars['String']['output'];
 };
 
 /** One line of the print run: one address, `anzahl` copies. */
@@ -7620,6 +7670,8 @@ export enum PrintIssueRunMode {
 /** Subscriptions the run left out, by reason. */
 export type PrintIssueSkipped = {
   __typename?: 'PrintIssueSkipped';
+  /** Shipped before the first issue the reader chose when subscribing («Abo-Start»). */
+  beforeFirstIssue: Scalars['Int']['output'];
   deactivated: Scalars['Int']['output'];
   donation: Scalars['Int']['output'];
   /** Plan not among the options' member plans. */
@@ -7637,6 +7689,15 @@ export type PrintIssueSources = {
   __typename?: 'PrintIssueSources';
   bexio: Scalars['Int']['output'];
   wepublish: Scalars['Int']['output'];
+};
+
+/** The issues a new subscriber chooses the first one from: the last shipped and the next. */
+export type PrintIssueStart = {
+  __typename?: 'PrintIssueStart';
+  /** Shipped today at the latest, whatever its status. */
+  current: PublicPrintIssue;
+  /** Ships later; none until staff created it. */
+  upcoming?: Maybe<PublicPrintIssue>;
 };
 
 /** open: lists can be computed, exported and handed over; closed: no more Nachlieferungen expected (reversible); historic: shipped before the export tracked issues (imported). */
@@ -7706,6 +7767,18 @@ export type PropertyInput = {
   value: Scalars['String']['input'];
 };
 
+/** A printed issue as a new subscriber sees it («Abo-Start»). */
+export type PublicPrintIssue = {
+  __typename?: 'PublicPrintIssue';
+  id: Scalars['String']['output'];
+  /** The ship day (YYYY-MM-DD). */
+  issueDate: Scalars['String']['output'];
+  /** As the medium writes it, e.g. «6.26» or «#117». */
+  label: Scalars['String']['output'];
+  /** The topic. */
+  title?: Maybe<Scalars['String']['output']>;
+};
+
 export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   __typename?: 'PublicSubscription';
   autoRenew: Scalars['Boolean']['output'];
@@ -7720,6 +7793,8 @@ export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   deactivation?: Maybe<SubscriptionDeactivation>;
   extendable: Scalars['Boolean']['output'];
   externalReward?: Maybe<Scalars['String']['output']>;
+  /** «Abo-Start»: the first printed issue is the first one shipped on or after this day. */
+  firstPrintIssueFrom?: Maybe<Scalars['DateTime']['output']>;
   goodie?: Maybe<Goodie>;
   id: Scalars['String']['output'];
   /** When the subscription was imported from another system. Null for a subscription created here. */
@@ -7738,6 +7813,8 @@ export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   /** A payment method change that is waiting for the reader to pay or authorize. Until it completes, the subscription keeps its payment method. */
   pendingPaymentMethodChange?: Maybe<SubscriptionPaymentMethodChange>;
   periods: Array<SubscriptionPeriod>;
+  /** The printed issues the subscription received in its running (else latest paid) period; null where nothing is promised. */
+  printIssueProgress?: Maybe<PrintIssueProgress>;
   properties: Array<Property>;
   startsAt: Scalars['DateTime']['output'];
   url: Scalars['String']['output'];
@@ -8100,8 +8177,12 @@ export type Query = {
   printIssue: PrintIssue;
   /** The CSV for the printshop: one delivery, or every delivery of the issue merged in export order. */
   printIssueCsv: PrintIssueFileModel;
+  /** How the medium numbers its print issues: restarting every year or running on, and the label template. */
+  printIssueNumbering: PrintIssueNumbering;
   /** The computed list waiting to be checked, if any. */
   printIssueRun?: Maybe<PrintIssueRun>;
+  /** The issues a new subscriber chooses where the subscription starts from; null while the print export is off or nothing shipped yet. */
+  printIssueStart?: Maybe<PrintIssueStart>;
   /** All print issues, the newest first. */
   printIssues: Array<PrintIssue>;
   promptHTML: Chat;
@@ -9264,6 +9345,21 @@ export enum RatingSystemType {
   Star = 'star'
 }
 
+/** A printed issue a subscription received: a list handed to the printshop. */
+export type ReceivedPrintIssue = {
+  __typename?: 'ReceivedPrintIssue';
+  /** 0 = the print list, n = Nachlieferung n. */
+  batch: Scalars['Int']['output'];
+  /** How many issues it counts as: 2 for a double issue. */
+  countsAs: Scalars['Int']['output'];
+  /** When the list went to the printshop. */
+  deliveredAt: Scalars['String']['output'];
+  /** The ship day (YYYY-MM-DD). */
+  issueDate: Scalars['String']['output'];
+  /** As the medium writes it, e.g. «6.26» or «#117». */
+  label: Scalars['String']['output'];
+};
+
 export type RedeemGiftCodeBlock = BaseBlock & {
   __typename?: 'RedeemGiftCodeBlock';
   blockStyle?: Maybe<Scalars['String']['output']>;
@@ -9369,6 +9465,10 @@ export type SensitiveDataUser = BaseUser & {
   paymentProviderCustomers?: Maybe<Array<PaymentProviderCustomer>>;
   pendingEmail?: Maybe<Scalars['String']['output']>;
   permissions: Array<Scalars['String']['output']>;
+  /** The printed issues each of the user's subscriptions received; null without print issues. */
+  printIssueProgress?: Maybe<Array<PrintIssueProgress>>;
+  /** Printed issues still to send to the user, over subscriptions running or still owed copies; null without printed issues. */
+  printIssuesOwed?: Maybe<Scalars['Int']['output']>;
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']['output']>;
   roles: Array<UserRole>;
@@ -9609,6 +9709,9 @@ export enum SettingName {
   PrintBexioKinds = 'PRINT_BEXIO_KINDS',
   PrintExportDefaults = 'PRINT_EXPORT_DEFAULTS',
   PrintIssuesPerYear = 'PRINT_ISSUES_PER_YEAR',
+  PrintIssueCounting = 'PRINT_ISSUE_COUNTING',
+  PrintIssueLabelFormat = 'PRINT_ISSUE_LABEL_FORMAT',
+  PrintIssueNumbering = 'PRINT_ISSUE_NUMBERING',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
   SessionTtlDays = 'SESSION_TTL_DAYS',
@@ -10669,6 +10772,7 @@ export enum UserSort {
   FirstName = 'FirstName',
   ModifiedAt = 'ModifiedAt',
   Name = 'Name',
+  PrintIssuesOwed = 'PrintIssuesOwed',
   SubscriptionCount = 'SubscriptionCount'
 }
 

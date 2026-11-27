@@ -143,6 +143,24 @@ describe('MemberContext.createSubscription marker', () => {
   });
 });
 
+describe('MemberContext.createSubscription — Abo-Start', () => {
+  it('stores the first printed issue the reader chose', async () => {
+    const { context, prisma } = setup();
+    const from = new Date('2026-11-14T00:00:00.000Z');
+
+    await context.createSubscription({
+      ...createInput,
+      firstPrintIssueFrom: from,
+    });
+
+    expect(prisma.subscription.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ firstPrintIssueFrom: from }),
+      })
+    );
+  });
+});
+
 describe('MemberContext.deactivateSubscription', () => {
   const deactivate = (context: MemberContext, skipMail?: boolean) => {
     vi.spyOn(context, 'cancelRemoteSubscription').mockResolvedValue();

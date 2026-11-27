@@ -20,6 +20,7 @@ import {
 import {
   CanCreateUser,
   CanDeleteUser,
+  CanGetPrintIssues,
   CanGetUser,
   CanGetUsers,
   CanResetUserPassword,
@@ -49,6 +50,8 @@ import {
   useListViewState,
   useTableExportQuery,
   PageTitle,
+  useAuthorisation,
+  useFeature,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -73,6 +76,8 @@ function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
       return UserSort.EmailQuality;
     case 'emailQualitySince':
       return UserSort.EmailQualitySince;
+    case 'printIssuesOwed':
+      return UserSort.PrintIssuesOwed;
     default:
       return null;
   }
@@ -88,6 +93,8 @@ function UserList() {
   const [currentUser, setCurrentUser] = useState<TinyUserFragment>();
 
   const [page, setPage] = useState(1);
+  const canSeePrintIssues = useAuthorisation(CanGetPrintIssues.id);
+  const printIssues = useFeature('print-export') && !!canSeePrintIssues;
 
   const {
     data,
@@ -178,14 +185,28 @@ function UserList() {
   function getSubscriptionTooltip(user: TinyUserFragment) {
     return (
       <>
-        {user.subscriptionOverview.map(({ id, memberPlanName, status }) => (
-          <div key={id}>
-            {t('userList.overview.subscriptionWithStatus', {
-              name: memberPlanName,
-              status: t(`userList.overview.subscriptionStatus.${status}`),
-            })}
-          </div>
-        ))}
+        {user.subscriptionOverview.map(({ id, memberPlanName, status }) => {
+          const progress = user.printIssueProgress?.find(
+            ({ subscriptionId, relevant }) => subscriptionId === id && relevant
+          );
+
+          return (
+            <div key={id}>
+              {progress ?
+                t('userList.overview.subscriptionWithStatusAndIssues', {
+                  name: memberPlanName,
+                  status: t(`userList.overview.subscriptionStatus.${status}`),
+                  received: progress.received,
+                  entitled: progress.entitled ?? '∞',
+                })
+              : t('userList.overview.subscriptionWithStatus', {
+                  name: memberPlanName,
+                  status: t(`userList.overview.subscriptionStatus.${status}`),
+                })
+              }
+            </div>
+          );
+        })}
       </>
     );
   }
@@ -301,6 +322,7 @@ function UserList() {
             'subscriptionCount',
             'emailQuality',
             'emailQualitySince',
+            ...(printIssues ? ['printIssuesOwed'] : []),
           ]}
           columns={[
             {
@@ -397,6 +419,21 @@ function UserList() {
                 );
               },
             },
+            ...(printIssues ?
+              [
+                {
+                  id: 'printissuesowed',
+                  label: t('userList.overview.printIssuesOwed'),
+                  width: 160,
+                  align: 'right' as const,
+                  sortKey: 'printIssuesOwed',
+                  render: ({ printIssuesOwed }: TinyUserFragment) =>
+                    printIssuesOwed ?? '',
+                  exportValue: ({ printIssuesOwed }: TinyUserFragment) =>
+                    printIssuesOwed ?? null,
+                },
+              ]
+            : []),
             {
               // Same segments as the mail-send audience; people never
               // evaluated have no row and count as unknown. A placeholder
