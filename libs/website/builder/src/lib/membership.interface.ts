@@ -6,6 +6,8 @@ import {
   CreateSubscriptionInfoQuery,
   CreateSubscriptionInfoQueryVariables,
   Currency,
+  FullGiftCodeOfferFragment,
+  FullGiftCodeRedemptionFragment,
   FullGoodieFragment,
   FullInvoiceFragment,
   FullMemberPlanFragment,
@@ -15,6 +17,7 @@ import {
   InvoicesQuery,
   MemberPlanListQuery,
   PaymentPeriodicity,
+  PurchaseGiftCodeMutationVariables,
   RegisterMutationVariables,
   SubscribeMutationVariables,
   SubscribePeriodicityDisplay,
@@ -323,6 +326,61 @@ export type BuilderSubscribeProps<
   hiddenAreas?: readonly SubscribeArea[];
   /** Called when a submit fails validation, e.g. because of a hidden section. */
   onInvalid?: (errors: FieldErrors) => void;
+  giftCodeRedemptionUrl?: string | null;
+  giftCodeRedemptionText?: string | null;
+  /**
+   * What a tenant adds to the subscription on submit, e.g. the first printed
+   * issue its own section asked for; false stops the submit because something
+   * the tenant needs is missing.
+   */
+  subscribeExtras?: () =>
+    | Partial<Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>>
+    | false;
+} & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>;
+
+type BuilderChallengeResult = Pick<
+  useQuery.Result<ChallengeQuery, OperationVariables, 'complete' | 'empty'>,
+  'data' | 'loading' | 'error'
+>;
+
+export type BuilderGiftCodeRedeemProps<
+  T extends Exclude<BuilderUserFormFields, 'flair'> = Exclude<
+    BuilderUserFormFields,
+    'flair'
+  >,
+> = {
+  challenge: BuilderChallengeResult;
+  redemption?: FullGiftCodeRedemptionFragment | null;
+  onRedeem: (code: string) => Promise<void>;
+  onRedeemWithRegister: (data: {
+    code: string;
+    register: RegisterMutationVariables;
+  }) => Promise<void>;
+  className?: string;
+} & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>;
+
+export type BuilderGiftCodePurchaseVariables = Omit<
+  PurchaseGiftCodeMutationVariables,
+  'successURL' | 'failureURL' | 'paymentMethodSlug'
+>;
+
+export type BuilderGiftCodePurchaseProps<
+  T extends Exclude<BuilderUserFormFields, 'flair'> = Exclude<
+    BuilderUserFormFields,
+    'flair'
+  >,
+> = {
+  offers: FullGiftCodeOfferFragment[];
+  defaultOfferId?: string | null;
+  challenge: BuilderChallengeResult;
+  askRecipientName?: boolean;
+  showDiscountCodes?: boolean;
+  onPurchase: (data: BuilderGiftCodePurchaseVariables) => Promise<void>;
+  onPurchaseWithRegister: (data: {
+    purchase: BuilderGiftCodePurchaseVariables;
+    register: RegisterMutationVariables;
+  }) => Promise<void>;
+  className?: string;
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>;
 
 export type BuilderUpgradeProps = {

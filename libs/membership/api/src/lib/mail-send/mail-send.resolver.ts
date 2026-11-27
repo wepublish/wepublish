@@ -1,6 +1,7 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
   MailChannel,
+  MailLogState,
   MailSendJobRecipientState,
   PrismaClient,
 } from '@prisma/client';
@@ -8,7 +9,9 @@ import {
   canReceiveLetters,
   formatAddressLines,
   LetterAddress,
+  LetterLogSyncService,
 } from '@wepublish/letter/api';
+import { bounceReasonOf } from '@wepublish/mail/api';
 import {
   actorOf,
   AuthSession,
@@ -21,7 +24,7 @@ import {
   EmailQualityRefreshModel,
   MailAudienceInput,
   MailLogFilter,
-  MailLogSyncModel,
+  MailAndLetterLogSyncModel,
   MailSendJobInput,
   MailSendJobModel,
   MailSendPreviewInput,
@@ -47,6 +50,15 @@ import { SuppressionSyncService } from './suppression-sync.service';
  * nothing to gain from loading the rest of the row — and plenty to lose:
  * templates carry their full html/text body, users their password hash.
  */
+/**
+ * The states whose payload can explain why a mail did not arrive. A rejected
+ * mail carries its reason in `error` already.
+ */
+const STATES_WITH_BOUNCE_REASON = new Set<MailLogState>([
+  MailLogState.bounced,
+  MailLogState.deferred,
+]);
+
 const mailLogTemplateSelect = { select: { id: true, name: true } } as const;
 
 const mailLogRecipientSelect = {
@@ -62,7 +74,8 @@ export class MailSendResolver {
     private mailLogSyncService: MailLogSyncService,
     private emailQualityService: EmailQualityService,
     private emailEvidenceService: EmailEvidenceService,
-    private suppressionSyncService: SuppressionSyncService
+    private suppressionSyncService: SuppressionSyncService,
+    private letterLogSyncService: LetterLogSyncService
   ) {}
 
   @Permissions(CanSendMailTemplates)
@@ -142,11 +155,18 @@ export class MailSendResolver {
   async mailTemplateMissingPlaceholders(
     @Args('templateId') templateId: string,
     @Args('withSubscriptionData', { type: () => Boolean })
-    withSubscriptionData: boolean
+    withSubscriptionData: boolean,
+    @Args('channel', {
+      type: () => MailChannel,
+      nullable: true,
+      description: 'The version to check; the email when left out.',
+    })
+    channel?: MailChannel | null
   ): Promise<string[]> {
     return this.mailSendJobService.missingPlaceholders(
       templateId,
-      withSubscriptionData
+      withSubscriptionData,
+      channel ?? MailChannel.mail
     );
   }
 
@@ -344,6 +364,8 @@ export class MailSendResolver {
       type: filter?.type,
       channel: filter?.channel,
       mailSendJobId: filter?.mailSendJobId,
+      subscriptionId: filter?.subscriptionId,
+      invoiceId: filter?.invoiceId,
     };
 
     const [totalCount, logs] = await Promise.all([
@@ -356,7 +378,7 @@ export class MailSendResolver {
         },
         skip,
         take: boundedTake + 1,
-        orderBy: { sentDate: 'desc' },
+        orderBy: [{ sentDate: 'desc' }, { id: 'desc' }],
       }),
     ]);
 
@@ -369,19 +391,45 @@ export class MailSendResolver {
             log.addressSnapshot as unknown as LetterAddress
           ).join(', ')
         : null,
+      // A bounce leaves no error behind when it comes in; what the provider
+      // said about it is read from the payload, so it follows the state.
+      error:
+        log.error ??
+        (STATES_WITH_BOUNCE_REASON.has(log.state) ?
+          bounceReasonOf(log.mailData)
+        : null),
     }));
 
     return this.paginate(rows, totalCount, skip, boundedTake);
   }
 
   @Permissions(CanGetMailLogs)
-  @Mutation(() => MailLogSyncModel, {
-    description: `Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development.`,
+  @Mutation(() => MailAndLetterLogSyncModel, {
+    description: `Ask the mail provider and the letter provider for the current delivery state of mails and letters that are still open. Complements the provider webhooks, which are not reachable in local development.`,
   })
   async syncMailLogStates(
     @Args('limit', { type: () => Int, nullable: true }) limit?: number
-  ): Promise<MailLogSyncModel> {
-    return this.mailLogSyncService.syncOpenStates(limit ?? undefined);
+  ): Promise<MailAndLetterLogSyncModel> {
+    // One provider being down is no reason to leave the other unasked.
+    const [mails, letters] = await Promise.allSettled([
+      this.mailLogSyncService.syncOpenStates(limit ?? undefined),
+      this.letterLogSyncService.syncOpenStates(limit ?? undefined),
+    ]);
+
+    if (mails.status === 'rejected') {
+      throw mails.reason;
+    }
+
+    if (letters.status === 'rejected') {
+      throw letters.reason;
+    }
+
+    return {
+      checked: mails.value.checked,
+      updated: mails.value.updated,
+      lettersChecked: letters.value.checked,
+      lettersUpdated: letters.value.updated,
+    };
   }
 
   @Permissions(CanGetMailLogs)

@@ -15,6 +15,8 @@ import {
   PaymentMethod,
   PaymentProviderCustomer,
   PeriodicJob,
+  PeriodicJobStepStatus,
+  Prisma,
   PrismaClient,
   Subscription,
   SubscriptionDeactivationReason,
@@ -28,7 +30,11 @@ import {
   resolveLetterRecipient,
 } from '@wepublish/mail/api';
 import { InvoicePaidNotifier, PaymentsService } from '@wepublish/payment/api';
-import { InvoiceDeliveryService, PaperSide } from './invoice-delivery.service';
+import {
+  InvoiceDeliveryService,
+  MailTrigger,
+  PaperSide,
+} from './invoice-delivery.service';
 import { PaymentMethodChangeService } from '../payment-method-change/payment-method-change.service';
 import {
   add,
@@ -40,12 +46,14 @@ import {
   sub,
   subMinutes,
 } from 'date-fns';
+import { v7 as uuidv7 } from 'uuid';
 import { inspect } from 'util';
 import { SubscriptionEventDictionary } from '../subscription-event-dictionary/subscription-event-dictionary';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { SubscriptionService } from './subscription.service';
 import { PeriodicJobRunObject } from './periodic-job.type';
 import {
+  earliestInvoiceDay,
   addErrorContext,
   describeError,
   getMaxTake,
@@ -55,6 +63,7 @@ import {
   type HeldLock,
   type LockResult,
 } from '@wepublish/dragonfly/api';
+import { isLegacySubscription } from '../subscription/legacy-subscription';
 
 const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
 
@@ -65,6 +74,17 @@ const RUN_LOCK_TTL_MS = 2 * 60 * 1000;
 
 /** How often a refused invoice letter is offered again before someone has to look. */
 const INVOICE_LETTER_ATTEMPTS = 3;
+
+/**
+ * The states of an invoice letter that is not on its way: the vendor never
+ * got it or turned it away, holds it for someone to act on, or it was taken
+ * back there.
+ */
+const UNPOSTED_LETTER_STATES = new Set<MailLogState>([
+  MailLogState.rejected,
+  MailLogState.actionRequired,
+  MailLogState.canceled,
+]);
 
 type OpenInvoice = Awaited<
   ReturnType<SubscriptionService['findAllOpenInvoices']>
@@ -100,6 +120,31 @@ export const isPeriodicJobRunning = (job: RunState, now = Date.now()) =>
   (job.executionTime?.getTime() ?? 0) > now - NIGHT_CLAIM_MS;
 
 type RetryRun = Extract<PeriodicJobRunObject, { isRetry: true }>;
+
+/** The job's own steps, in the order a run takes them. */
+export const CORE_STEP_KEYS = [
+  'customMails',
+  'invoiceStates',
+  'invoiceCreation',
+  'invoiceLetters',
+  'paymentMethodChanges',
+  'charging',
+  'deactivationUnpaid',
+  'deactivationNotRenewed',
+] as const;
+
+type CoreStepKey = (typeof CORE_STEP_KEYS)[number];
+
+/** What one step of the night did, for the job log. */
+export interface NightStepRecord {
+  key: string;
+  status: PeriodicJobStepStatus;
+  /** Counts by name, e.g. `{readers: 1821, failed: 7}`. */
+  counts?: Record<string, number>;
+  error?: string;
+  startedAt: Date;
+  finishedAt: Date;
+}
 
 /**
  * Controller responsible for performing periodic jobs. A new controller
@@ -142,6 +187,14 @@ export class PeriodicJobService {
       orderBy: {
         date: 'desc',
       },
+      include: { steps: { orderBy: { startedAt: 'asc' } } },
+    });
+  }
+
+  getSteps(periodicJobId: string) {
+    return this.prismaService.periodicJobStep.findMany({
+      where: { periodicJobId },
+      orderBy: { startedAt: 'asc' },
     });
   }
 
@@ -286,32 +339,40 @@ export class PeriodicJobService {
     try {
       this.logger.log('Executing periodic job...');
       this.logger.log('Processing custom mails...');
-      await this.sendCustomSubscriptionEmails(periodicJobRunObject);
+      await this.step('customMails', () =>
+        this.sendCustomSubscriptionEmails(periodicJobRunObject)
+      );
       this.logger.log('Processing invoice state changes...');
-      await this.checkStateOfOpenInvoices();
+      await this.step('invoiceStates', () => this.checkStateOfOpenInvoices());
       this.logger.log('Processing invoice creation...');
-      await this.createMissingInvoicesForActiveSubscriptions(
-        periodicJobRunObject
+      await this.step('invoiceCreation', () =>
+        this.createMissingInvoicesForActiveSubscriptions(periodicJobRunObject)
       );
       this.logger.log('Processing invoice letters still missing...');
-      await this.postMissingInvoiceLetters(periodicJobRunObject.date);
+      await this.step('invoiceLetters', () =>
+        this.postMissingInvoiceLetters(periodicJobRunObject.date)
+      );
       this.logger.log('Processing expiry of payment method changes...');
       // by the clock, not the run date: a catch-up run of an earlier day must
       // not keep changes alive that have expired since
-      await this.paymentMethodChanges.expirePending(new Date());
+      await this.step('paymentMethodChanges', () =>
+        this.paymentMethodChanges.expirePending(new Date())
+      );
       this.logger.log('Processing charge of invoices...');
-      await this.chargeUnpaidDueInvoices(periodicJobRunObject);
+      await this.step('charging', () =>
+        this.chargeUnpaidDueInvoices(periodicJobRunObject)
+      );
       this.logger.log(
         'Processing deactivation of subscriptions with unpaid invoice...'
       );
-      await this.deactivateSubscriptionsWithUnpaidInvoices(
-        periodicJobRunObject
+      await this.step('deactivationUnpaid', () =>
+        this.deactivateSubscriptionsWithUnpaidInvoices(periodicJobRunObject)
       );
       this.logger.log(
         'Processing deactivation of subscriptions with which are not auto renewed...'
       );
-      await this.deactivateExpiredNotAutoRenewSubscriptions(
-        periodicJobRunObject
+      await this.step('deactivationNotRenewed', () =>
+        this.deactivateExpiredNotAutoRenewSubscriptions(periodicJobRunObject)
       );
       this.logger.log('Periodic job successfully finished.');
     } catch (e) {
@@ -320,6 +381,74 @@ export class PeriodicJobService {
     }
 
     await this.markJobSuccessful();
+  }
+
+  /** Runs one of the job's own steps and notes it on the running job. */
+  private async step(key: CoreStepKey, run: () => Promise<unknown>) {
+    const startedAt = new Date();
+
+    try {
+      await run();
+    } catch (error) {
+      await this.saveStep(this.runningJob?.id, {
+        key,
+        status: 'error',
+        error: describeError(error),
+        startedAt,
+        finishedAt: new Date(),
+      });
+      throw error;
+    }
+
+    await this.saveStep(this.runningJob?.id, {
+      key,
+      status: 'ok',
+      startedAt,
+      finishedAt: new Date(),
+    });
+  }
+
+  /**
+   * Notes a step of the night that runs after the job (the syncs) on the
+   * newest job, so the log shows the whole night in one place.
+   */
+  async recordNightStep(step: NightStepRecord) {
+    const job = await this.prismaService.periodicJob.findFirst({
+      orderBy: { date: 'desc' },
+      select: { id: true },
+    });
+
+    if (!job) {
+      this.logger.warn(`No periodic job to note step ${step.key} on`);
+      return;
+    }
+
+    await this.saveStep(job.id, step);
+  }
+
+  /** The log is a report: failing to write it never fails the work itself. */
+  private async saveStep(
+    periodicJobId: string | undefined,
+    { counts, error, ...step }: NightStepRecord
+  ) {
+    if (!periodicJobId) {
+      return;
+    }
+
+    try {
+      await this.prismaService.periodicJobStep.create({
+        data: {
+          periodicJobId,
+          ...step,
+          ...(counts ? { counts: counts as Prisma.InputJsonObject } : {}),
+          ...(error ? { error } : {}),
+        },
+      });
+    } catch (saveError) {
+      this.logger.error(
+        `Could not note step ${step.key} on the job log: ${describeError(saveError)}`
+      );
+    }
   }
 
   private async inContext<T>(context: string, run: () => Promise<T>) {
@@ -486,6 +615,7 @@ export class PeriodicJobService {
         paymentMethodId: subscriptionsWithEvent.paymentMethodID,
         periodicity: subscriptionsWithEvent.paymentPeriodicity,
         autorenwal: subscriptionsWithEvent.autoRenew,
+        legacy: isLegacySubscription(subscriptionsWithEvent),
         daysAwayFromEnding,
       });
 
@@ -502,7 +632,8 @@ export class PeriodicJobService {
           subscriptionsWithEvent.user,
           periodicJobRunObject.isRetry,
           { subscription: subscriptionsWithEvent, invoices },
-          periodicJobRunObject.date
+          periodicJobRunObject.date,
+          { subscriptionId: subscriptionsWithEvent.id }
         );
       }
     }
@@ -522,6 +653,7 @@ export class PeriodicJobService {
         paymentMethodId: subscriptionToCreateInvoice.paymentMethodID,
         periodicity: subscriptionToCreateInvoice.paymentPeriodicity,
         autorenwal: subscriptionToCreateInvoice.autoRenew,
+        legacy: isLegacySubscription(subscriptionToCreateInvoice),
         events: [
           SubscriptionEvent.INVOICE_CREATION,
           SubscriptionEvent.DEACTIVATION_UNPAID,
@@ -544,10 +676,20 @@ export class PeriodicJobService {
       throw new NotFoundException('No invoice deactivation event found!');
     }
 
+    // A flow may create invoices earlier than this subscription's period is
+    // long: the invoice then waits for the earliest day its periodicity allows.
+    const creationDay =
+      creationEvent.daysAwayFromEnding === null ?
+        undefined
+      : Math.max(
+          creationEvent.daysAwayFromEnding,
+          earliestInvoiceDay([subscriptionToCreateInvoice.paymentPeriodicity])
+        );
+
     if (
       subscriptionToCreateInvoice.paidUntil &&
       add(startOfDay(subscriptionToCreateInvoice.paidUntil), {
-        days: creationEvent.daysAwayFromEnding ?? undefined,
+        days: creationDay,
       }) > periodicJobRunObject.date
     ) {
       return false;
@@ -581,7 +723,11 @@ export class PeriodicJobService {
       periodicJobRunObject.isRetry,
       { subscriptionToCreateInvoice, invoice },
       periodicJobRunObject.date,
-      outcome.send
+      {
+        ...outcome.send,
+        subscriptionId: subscriptionToCreateInvoice.id,
+        invoiceId: invoice.id,
+      }
     );
     return true;
   }
@@ -622,6 +768,27 @@ export class PeriodicJobService {
     }
   }
 
+  /**
+   * The letter itself when the vendor holds it for someone to act on and
+   * nobody is there to do so: where every letter is confirmed by hand at the
+   * vendor, a held one is theirs. Not in the run that posted it either, the
+   * same pdf would be held for the same reason.
+   */
+  private async replaceableHeldLetter<
+    Attempt extends { state: MailLogState; sentDate: Date },
+  >(runDate: Date, attempt: Attempt): Promise<Attempt | null> {
+    if (
+      attempt.state !== MailLogState.actionRequired ||
+      attempt.sentDate >= runDate
+    ) {
+      return null;
+    }
+
+    return (await this.mailContext.letterSender!.sendsAutomatically()) ?
+        attempt
+      : null;
+  }
+
   private async postInvoiceLetter(runDate: Date, invoice: OpenInvoice) {
     const subscription = invoice.subscription;
 
@@ -635,6 +802,7 @@ export class PeriodicJobService {
         paymentMethodId: subscription.paymentMethodID,
         periodicity: subscription.paymentPeriodicity,
         autorenwal: subscription.autoRenew,
+        legacy: isLegacySubscription(subscription),
         events: [SubscriptionEvent.INVOICE_CREATION],
       })
     ).find(action => action.type === SubscriptionEvent.INVOICE_CREATION);
@@ -650,16 +818,37 @@ export class PeriodicJobService {
         channel: MailChannel.letter,
         sentDate: { gte: invoice.createdAt },
       },
-      select: { state: true },
+      select: { id: true, state: true, providerLetterID: true, sentDate: true },
+      orderBy: { sentDate: 'asc' },
     });
 
-    if (attempts.some(({ state }) => state !== MailLogState.rejected)) {
+    // A letter that is with the vendor, the post or the reader.
+    if (attempts.some(({ state }) => !UNPOSTED_LETTER_STATES.has(state))) {
+      return;
+    }
+
+    const latest = attempts[attempts.length - 1];
+
+    // Taken back at the vendor: somebody settled it there.
+    if (latest?.state === MailLogState.canceled) {
+      return;
+    }
+
+    // Every upload is a letter of its own at the vendor, which keeps no track
+    // of duplicates. What it stores is not handed over a second time: at most
+    // a letter it holds for someone to act on is replaced, further down.
+    const held =
+      latest?.providerLetterID ?
+        await this.replaceableHeldLetter(runDate, latest)
+      : null;
+
+    if (latest?.providerLetterID && !held) {
       return;
     }
 
     if (attempts.length >= INVOICE_LETTER_ATTEMPTS) {
       this.logger.error(
-        `The invoice letter for invoice ${invoice.id} was refused ${attempts.length} times and is not posted again`
+        `The invoice letter for invoice ${invoice.id} was handed over ${attempts.length} times without getting through and is not posted again`
       );
 
       return;
@@ -669,6 +858,7 @@ export class PeriodicJobService {
       prisma: this.prismaService,
       letterSender: this.mailContext.letterSender,
       recipient: subscription.user,
+      mailTemplateId: creationEvent.mailTemplateId,
       asLetter: true,
       withPaymentSlip: true,
       logger: this.logger,
@@ -699,13 +889,34 @@ export class PeriodicJobService {
       return;
     }
 
+    // Only now, with the new letter ready: the held one is taken back, and
+    // without it gone no other may follow. Its replacement is on record from
+    // then on, so the next night posts again whatever stops it tonight.
+    const replacementLogId = held ? uuidv7() : undefined;
+
+    if (
+      held &&
+      (await this.mailContext.letterSender!.withdrawHeldLetter(
+        held.id,
+        replacementLogId!
+      )) !== 'withdrawn'
+    ) {
+      return;
+    }
+
     await this.sendTemplateMail(
       creationEvent,
       subscription.user,
       false,
       { subscriptionToCreateInvoice: subscription, invoice },
       runDate,
-      { letterRecipient, letterAttachment }
+      {
+        letterRecipient,
+        letterAttachment,
+        mailLogId: replacementLogId,
+        subscriptionId: subscription.id,
+        invoiceId: invoice.id,
+      }
     );
   }
 
@@ -737,6 +948,7 @@ export class PeriodicJobService {
         paymentMethodId: invoiceToCharge.subscription.paymentMethodID,
         periodicity: invoiceToCharge.subscription.paymentPeriodicity,
         autorenwal: invoiceToCharge.subscription.autoRenew,
+        legacy: isLegacySubscription(invoiceToCharge.subscription),
         events: [
           SubscriptionEvent.RENEWAL_SUCCESS,
           SubscriptionEvent.RENEWAL_FAILED,
@@ -773,7 +985,8 @@ export class PeriodicJobService {
         items,
         subscription,
       },
-      periodicJobRunObject.date
+      periodicJobRunObject.date,
+      { subscriptionId: subscription.id, invoiceId: invoice.id }
     );
   }
 
@@ -819,6 +1032,7 @@ export class PeriodicJobService {
         paymentMethodId: unpaidInvoice.subscription.paymentMethodID,
         periodicity: unpaidInvoice.subscription.paymentPeriodicity,
         autorenwal: unpaidInvoice.subscription.autoRenew,
+        legacy: isLegacySubscription(unpaidInvoice.subscription),
         events: [SubscriptionEvent.DEACTIVATION_UNPAID],
       });
 
@@ -853,7 +1067,8 @@ export class PeriodicJobService {
       unpaidInvoice.subscription.user,
       periodicJobRunObject.isRetry,
       { subscription, invoice },
-      periodicJobRunObject.date
+      periodicJobRunObject.date,
+      { subscriptionId: subscription.id, invoiceId: invoice.id }
     );
   }
 
@@ -881,6 +1096,17 @@ export class PeriodicJobService {
 
     this.runningJob = claimed;
     this.logger.warn('Retry failed job!');
+
+    // The retry runs every step again and notes them anew.
+    try {
+      await this.prismaService.periodicJobStep.deleteMany({
+        where: { periodicJobId: claimed.id, key: { in: [...CORE_STEP_KEYS] } },
+      });
+    } catch (error) {
+      this.logger.error(
+        `Could not clear the failed try's steps: ${describeError(error)}`
+      );
+    }
 
     return claimed;
   }
@@ -1051,7 +1277,7 @@ export class PeriodicJobService {
     isRetry: boolean,
     optionalData: Record<string, any>,
     periodicJobRunDate: Date,
-    paper?: PaperSide
+    delivery?: PaperSide & MailTrigger
   ) {
     return this.invoiceDelivery.sendFlowMail(
       action,
@@ -1059,8 +1285,7 @@ export class PeriodicJobService {
       isRetry,
       optionalData,
       periodicJobRunDate,
-      paper,
-      true
+      { ...delivery, retryTransient: true }
     );
   }
 }

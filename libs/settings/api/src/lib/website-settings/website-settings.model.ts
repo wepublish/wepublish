@@ -25,6 +25,21 @@ export class KeyEnabledInput extends OmitType(
 ) {}
 
 @ObjectType()
+export class UmamiAnalytics extends KeyEnabled {
+  @Field(() => [String], {
+    description:
+      'Search params removed from the url and referrer before they are sent to Umami.',
+  })
+  excludedSearchParams!: string[];
+}
+
+@InputType()
+export class UmamiAnalyticsInput extends KeyEnabledInput {
+  @Field(() => [String], { nullable: true })
+  excludedSearchParams?: string[];
+}
+
+@ObjectType()
 export class WebsiteAnalytics {
   @Field(() => KeyEnabled)
   googleAnalytics!: KeyEnabled;
@@ -34,8 +49,8 @@ export class WebsiteAnalytics {
   plausible!: KeyEnabled;
   @Field(() => KeyEnabled)
   piwik!: KeyEnabled;
-  @Field(() => KeyEnabled)
-  umami!: KeyEnabled;
+  @Field(() => UmamiAnalytics)
+  umami!: UmamiAnalytics;
 }
 
 @InputType()
@@ -48,8 +63,8 @@ export class WebsiteAnalyticsInput {
   plausible!: KeyEnabledInput;
   @Field(() => KeyEnabledInput)
   piwik!: KeyEnabledInput;
-  @Field(() => KeyEnabledInput)
-  umami!: KeyEnabledInput;
+  @Field(() => UmamiAnalyticsInput)
+  umami!: UmamiAnalyticsInput;
 }
 
 @ObjectType()

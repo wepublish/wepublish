@@ -11,19 +11,10 @@ import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
 import { MemberPlan } from '@wepublish/member-plan/api';
 import { PaymentPeriodicity } from '@prisma/client';
+import { SubscribeBlockField } from './subscribe-block-field.model';
+import { Page } from '@wepublish/page/api';
 
-export enum SubscribeBlockField {
-  FirstName = 'firstName',
-  Address = 'address',
-  Birthday = 'birthday',
-  EmailRepeated = 'emailRepeated',
-  Password = 'password',
-  PasswordRepeated = 'passwordRepeated',
-}
-
-registerEnumType(SubscribeBlockField, {
-  name: 'SubscribeBlockField',
-});
+export { SubscribeBlockField };
 
 export enum SubscribePeriodicityDisplay {
   Dropdown = 'dropdown',
@@ -190,6 +181,15 @@ export class SubscribeBlock extends BaseBlock<typeof BlockType.Subscribe> {
   @Field(() => Boolean, { defaultValue: false })
   hideRepeatGoodieOnUpgrade!: boolean;
 
+  @Field(() => Boolean, { defaultValue: false })
+  showGiftCodeRedemption!: boolean;
+  @Field(() => String, { nullable: true })
+  giftCodeRedemptionPageId?: string | null;
+  @Field(() => String, { nullable: true })
+  giftCodeRedemptionLinkText?: string | null;
+  @Field(() => Page, { nullable: true })
+  giftCodeRedemptionPage?: Page | null;
+
   @Field(() => [MemberPlan])
   memberPlans!: MemberPlan[];
 }
@@ -197,7 +197,12 @@ export class SubscribeBlock extends BaseBlock<typeof BlockType.Subscribe> {
 @InputType()
 export class SubscribeBlockInput extends OmitType(
   SubscribeBlock,
-  ['type', 'memberPlans', 'memberPlanRenderSettings'] as const,
+  [
+    'type',
+    'memberPlans',
+    'memberPlanRenderSettings',
+    'giftCodeRedemptionPage',
+  ] as const,
   InputType
 ) {
   @Field(() => [SubscribeBlockMemberPlanRenderSettingInput])

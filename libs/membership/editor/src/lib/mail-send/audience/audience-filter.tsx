@@ -2,19 +2,19 @@ import { useQuery } from '@apollo/client/react';
 import {
   MailEmailSegment,
   MailRecipientBase,
+  MailRollingKind,
   MailSubscriptionState,
   MemberPlanListDocument,
   PaymentMethodListDocument,
   PaymentPeriodicity,
 } from '@wepublish/editor/api';
-import { DateRangeFilter } from '@wepublish/ui/editor';
+import { useFeature } from '@wepublish/ui/editor';
 import {
   Autocomplete,
   Divider,
   FormControl,
   FormControlLabel,
   FormHelperText,
-  InputAdornment,
   MenuItem,
   Radio,
   RadioGroup,
@@ -26,9 +26,28 @@ import {
 import { ReactNode, useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FieldLabel } from '../../field-label';
-import { AudienceFilterState, EndedMode, TriState } from './audience-state';
+import {
+  AudienceFilterState,
+  selectsSubscriptions,
+  TriState,
+} from './audience-state';
+import { DateWindowFilter } from './date-window-filter';
 import { MailHistoryFilter } from './mail-history-filter';
 import { EmailQualityRefreshButton } from '../email-quality-refresh-button';
+
+/** The rolling ranges each date offers; the first is where it starts. */
+const ENDED_KINDS = [MailRollingKind.LastDays];
+const STARTS_KINDS = [
+  MailRollingKind.LastDays,
+  MailRollingKind.OlderThanDays,
+  MailRollingKind.NextDays,
+];
+// An end is mostly looked at ahead: what runs out soon.
+const ENDS_KINDS = [
+  MailRollingKind.NextDays,
+  MailRollingKind.LastDays,
+  MailRollingKind.OlderThanDays,
+];
 
 export type AudienceFilterProps = {
   state: AudienceFilterState;
@@ -67,6 +86,15 @@ export function AudienceFilter({
   onSegmentsRefreshed,
 }: AudienceFilterProps) {
   const { t } = useTranslation();
+  // The API only reports the placeholder status when the medium has a
+  // placeholder pattern; until the counts arrive it is held back, so a medium
+  // without one never sees it flash up.
+  const offersPlaceholder = !!segmentCounts?.some(
+    ({ segment }) => segment === MailEmailSegment.Placeholder
+  );
+  const visibleSegments = EMAIL_SEGMENT_ORDER.filter(
+    segment => offersPlaceholder || segment !== MailEmailSegment.Placeholder
+  );
   const fieldId = useId();
   const labelId = (field: string) => `${fieldId}-${field}`;
   const { data: memberPlanData } = useQuery(MemberPlanListDocument, {
@@ -74,6 +102,7 @@ export function AudienceFilter({
   });
   const { data: paymentMethodData } = useQuery(PaymentMethodListDocument);
 
+  const legacyFilter = useFeature('legacy-subscriptions');
   const isSubscriptionBase = state.base === MailRecipientBase.HasSubscription;
   const isWinBackBase = state.base === MailRecipientBase.EndedSubscription;
   const memberPlans = memberPlanData?.memberPlans.nodes ?? [];
@@ -107,6 +136,16 @@ export function AudienceFilter({
       {hint && <FormHelperText>{hint}</FormHelperText>}
     </FormControl>
   );
+
+  const legacySelect =
+    legacyFilter &&
+    triStateSelect(
+      'is-legacy',
+      t('mailSend.isLegacy'),
+      state.isLegacy,
+      isLegacy => ({ isLegacy }),
+      { hint: t('mailSend.isLegacyHint') }
+    );
 
   const memberPlanPicker = (
     <FormControl fullWidth>
@@ -212,7 +251,7 @@ export function AudienceFilter({
           useFlexGap
           sx={{ alignItems: 'center', flexWrap: 'wrap', marginTop: 0.5 }}
         >
-          {EMAIL_SEGMENT_ORDER.map(segment => {
+          {visibleSegments.map(segment => {
             const picked = state.emailSegments.includes(segment);
             const people = segmentCounts?.find(
               count => count.segment === segment
@@ -242,13 +281,18 @@ export function AudienceFilter({
           })}
           <EmailQualityRefreshButton onDone={onSegmentsRefreshed} />
         </Stack>
-        <FormHelperText>{t('mailSend.emailSegments.hint')}</FormHelperText>
+        <FormHelperText>
+          {offersPlaceholder ?
+            t('mailSend.emailSegments.hint')
+          : t('mailSend.emailSegments.hintWithoutPlaceholder')}
+        </FormHelperText>
       </FormControl>
 
       <Divider />
       <MailHistoryFilter
         value={state.mailHistory}
         onChange={mailHistory => onChange({ mailHistory })}
+        subscriptionBase={selectsSubscriptions(state.base)}
       />
 
       {isWinBackBase && (
@@ -259,78 +303,42 @@ export function AudienceFilter({
               id={labelId('ended-window')}
               label={t('mailSend.endedWindow.label')}
             />
-            <RadioGroup
-              aria-labelledby={labelId('ended-window')}
-              row
-              value={state.endedMode}
-              onChange={(_event, value) =>
-                onChange({ endedMode: value as EndedMode })
-              }
-            >
-              <FormControlLabel
-                value="days"
-                control={<Radio />}
-                label={t('mailSend.endedWindow.relative')}
-              />
-              <FormControlLabel
-                value="period"
-                control={<Radio />}
-                label={t('mailSend.endedWindow.period')}
-              />
-            </RadioGroup>
-
-            {state.endedMode === 'days' ?
-              <>
-                <TextField
-                  type="number"
-                  value={state.endedWithinDays}
-                  onChange={event => {
-                    const parsed = parseInt(event.target.value, 10);
-
-                    if (Number.isFinite(parsed) && parsed > 0) {
-                      onChange({ endedWithinDays: parsed });
-                    }
-                  }}
-                  slotProps={{
-                    htmlInput: {
-                      min: 1,
-                      max: 3650,
-                      'aria-label': t('mailSend.endedWindow.relative'),
-                    },
-                    input: {
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          {t('mailSend.endedWindow.days')}
-                        </InputAdornment>
-                      ),
-                    },
-                  }}
-                  style={{ width: 180 }}
-                />
-                <FormHelperText>
-                  {t('mailSend.endedWithinDaysHint')}
-                </FormHelperText>
-              </>
-            : <>
-                <DateRangeFilter
-                  label={t('mailSend.endedWindow.periodFrom')}
-                  disableFuture
-                  value={{
-                    from: state.endedPeriod?.[0] ?? null,
-                    to: state.endedPeriod?.[1] ?? null,
-                  }}
-                  onChange={({ from, to }) =>
-                    onChange({ endedPeriod: from && to ? [from, to] : null })
+            <DateWindowFilter
+              label={t('mailSend.endedWindow.window')}
+              disableFuture
+              kinds={ENDED_KINDS}
+              range={{
+                from: state.endedPeriod?.[0] ?? null,
+                to: state.endedPeriod?.[1] ?? null,
+              }}
+              rolling={
+                state.endedMode === 'days' ?
+                  {
+                    kind: MailRollingKind.LastDays,
+                    days: state.endedWithinDays,
                   }
-                />
-                <FormHelperText>
-                  {t('mailSend.endedWindow.periodHint')}
-                </FormHelperText>
-              </>
-            }
+                : null
+              }
+              onRangeChange={({ from, to }) =>
+                onChange({ endedPeriod: from && to ? [from, to] : null })
+              }
+              onRollingChange={rolling =>
+                onChange(
+                  rolling ?
+                    { endedMode: 'days', endedWithinDays: rolling.days }
+                  : { endedMode: 'period' }
+                )
+              }
+            />
+            <FormHelperText>
+              {state.endedMode === 'days' ?
+                t('mailSend.endedWithinDaysHint')
+              : t('mailSend.endedWindow.periodHint')}
+            </FormHelperText>
           </FormControl>
 
           {memberPlanPicker}
+          {legacySelect}
         </>
       )}
 
@@ -445,22 +453,28 @@ export function AudienceFilter({
           </FormControl>
 
           <FormControl fullWidth>
-            <DateRangeFilter
+            <DateWindowFilter
               label={t('mailSend.startsAt')}
-              value={{ from: state.startsAtFrom, to: state.startsAtTo }}
-              onChange={({ from, to }) =>
+              kinds={STARTS_KINDS}
+              range={{ from: state.startsAtFrom, to: state.startsAtTo }}
+              rolling={state.startsAtRolling}
+              onRangeChange={({ from, to }) =>
                 onChange({ startsAtFrom: from, startsAtTo: to })
               }
+              onRollingChange={startsAtRolling => onChange({ startsAtRolling })}
             />
           </FormControl>
 
           <FormControl fullWidth>
-            <DateRangeFilter
+            <DateWindowFilter
               label={t('mailSend.endsAt')}
-              value={{ from: state.endsAtFrom, to: state.endsAtTo }}
-              onChange={({ from, to }) =>
+              kinds={ENDS_KINDS}
+              range={{ from: state.endsAtFrom, to: state.endsAtTo }}
+              rolling={state.endsAtRolling}
+              onRangeChange={({ from, to }) =>
                 onChange({ endsAtFrom: from, endsAtTo: to })
               }
+              onRollingChange={endsAtRolling => onChange({ endsAtRolling })}
             />
             <FormHelperText>{t('mailSend.endsAtHint')}</FormHelperText>
           </FormControl>
@@ -486,6 +500,7 @@ export function AudienceFilter({
             hasReplaced => ({ hasReplaced }),
             { hint: t('mailSend.hasReplacedSubscriptionHint') }
           )}
+          {legacySelect}
         </>
       )}
     </Stack>

@@ -69,6 +69,10 @@ interface MergeFieldMapping {
 interface InterestGroupMapping {
   groupId: string;
   expression: string;
+  /** Flip the group to true for a new matching subscription. Missing means off. */
+  autoAdd?: boolean;
+  /** Flip the group to false once matching subscriptions ended. Missing means off. */
+  autoRemove?: boolean;
 }
 
 export interface DryRunChange {
@@ -99,6 +103,14 @@ export interface SyncProgress {
   errorMessage: string | null;
 }
 
+/** What one night's Mailchimp sync did, for the job log. */
+export interface MailchimpSyncRunResult {
+  /** Audiences synced. */
+  synced: number;
+  failed: number;
+  firstError?: string;
+}
+
 @Injectable()
 export class MailchimpSyncService {
   private logger = new Logger('MailchimpSyncService');
@@ -115,9 +127,10 @@ export class MailchimpSyncService {
   /**
    * Execute sync for all enabled configurations.
    */
-  async executeAllSync(): Promise<void> {
+  async executeAllSync(): Promise<MailchimpSyncRunResult> {
     const configs =
       await this.syncProviderSettingsService.getEnabledSyncConfigs();
+    const result: MailchimpSyncRunResult = { synced: 0, failed: 0 };
 
     for (const config of configs) {
       try {
@@ -126,11 +139,14 @@ export class MailchimpSyncService {
         );
         await this.executeSyncForConfig(config);
         await this.syncProviderSettingsService.updateSyncResult(config.id);
+        result.synced++;
         this.logger.log(
           `Mailchimp sync for "${config.name || config.id}" completed successfully.`
         );
       } catch (error) {
         const errorMessage = describeError(error);
+        result.failed++;
+        result.firstError ??= errorMessage;
         this.logger.error(
           `Mailchimp sync failed for "${config.name || config.id}": ${errorMessage}`
         );
@@ -140,6 +156,8 @@ export class MailchimpSyncService {
         );
       }
     }
+
+    return result;
   }
 
   /**
@@ -1012,8 +1030,11 @@ export class MailchimpSyncService {
     const hasActive = activeSubs.length > 0;
 
     if (hasActive) {
-      const newestActive = activeSubs[0];
+      const newestActive = activeSubs.reduce((newest, sub) =>
+        sub.startsAt > newest.startsAt ? sub : newest
+      );
       if (
+        mapping.autoAdd &&
         !currentValue &&
         now.getTime() - newestActive.startsAt.getTime() <=
           NEW_SUBSCRIPTION_WINDOW_MS &&
@@ -1024,7 +1045,11 @@ export class MailchimpSyncService {
       return currentValue;
     }
 
-    if (currentValue && this.isDefinitivelyEnded(matchingSubs, now)) {
+    if (
+      mapping.autoRemove &&
+      currentValue &&
+      this.isDefinitivelyEnded(matchingSubs, now)
+    ) {
       return false;
     }
 

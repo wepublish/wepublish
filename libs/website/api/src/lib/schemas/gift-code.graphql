@@ -1,0 +1,59 @@
+fragment FullGiftCodeOffer on GiftCodeOffer {
+  id
+  name
+  description
+  image {
+    ...FullImage
+  }
+  periodicity
+  redemptionWindowMonths
+  allowDiscountCodes
+  price
+  memberPlan {
+    id
+    name
+    currency
+  }
+  paymentMethods {
+    ...FullPaymentMethod
+  }
+}
+
+fragment FullGiftCodeRedemption on GiftCodeRedemption {
+  action
+  subscription {
+    ...FullSubscription
+  }
+  invoice {
+    id
+    paidAt
+  }
+}
+
+mutation PurchaseGiftCode(
+  $offerId: String!
+  $recipientName: String
+  $discountCode: String
+  $paymentMethodId: String
+  $paymentMethodSlug: Slug
+  $successURL: String
+  $failureURL: String
+) {
+  purchaseGiftCode(
+    offerId: $offerId
+    recipientName: $recipientName
+    discountCode: $discountCode
+    paymentMethodId: $paymentMethodId
+    paymentMethodSlug: $paymentMethodSlug
+    successURL: $successURL
+    failureURL: $failureURL
+  ) {
+    ...FullPayment
+  }
+}
+
+mutation RedeemGiftCode($code: String!) {
+  redeemGiftCode(code: $code) {
+    ...FullGiftCodeRedemption
+  }
+}

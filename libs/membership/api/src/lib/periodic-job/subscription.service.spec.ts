@@ -21,6 +21,7 @@ import {
 } from '../testing/module-registrars';
 import { SubscriptionService } from './subscription.service';
 import type { Mock } from 'vitest';
+import { FeaturesService } from '@wepublish/features/api';
 
 const { loggerError } = vi.hoisted(() => ({ loggerError: vi.fn() }));
 
@@ -133,6 +134,10 @@ describe('SubscriptionPaymentsService', () => {
       ],
       providers: [
         SubscriptionFlowService,
+        {
+          provide: FeaturesService,
+          useValue: { isEnabled: async () => false },
+        },
         SubscriptionService,
         {
           provide: PrismaClient,

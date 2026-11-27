@@ -73,6 +73,9 @@ function setup({
       })),
     },
     userDeliveryPreference: { findUnique: vi.fn(async () => preference) },
+    mailTemplateVariant: {
+      findUnique: vi.fn(async () => ({ id: 'variant-1' })),
+    },
   };
 
   const mailContext = {
@@ -114,6 +117,8 @@ describe('MailController letter mode', () => {
       log: {
         mailIdentifier: expectedIdentifier,
         type: MailLogType.subscriptionFlow,
+        subscriptionId: null,
+        invoiceId: null,
       },
     });
     // The letter side writes its own log entry.

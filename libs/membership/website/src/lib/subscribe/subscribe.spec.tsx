@@ -653,6 +653,55 @@ describe('Subscribe', () => {
     });
   });
 
+  describe('extras a tenant adds to the subscription', () => {
+    const extras = {
+      firstPrintIssue: { currentIssueId: 'issue-117', choice: 'current' },
+    } as never;
+
+    it('adds them to what is subscribed', async () => {
+      const { user, onSubscribe } = renderLoggedIn({
+        subscribeExtras: () => extras,
+      });
+
+      await confirm(user);
+
+      await waitFor(() =>
+        expect(onSubscribe).toHaveBeenCalledWith({
+          ...expectedSubscribe,
+          ...(extras as object),
+        })
+      );
+    });
+
+    it('adds them for a returning reader too', async () => {
+      const { user, onResubscribe } = renderSubscribe({
+        returningUserId: 'returning-user',
+        defaults: { firstName: 'Foo', name: 'Bar' },
+        subscribeExtras: () => extras,
+      });
+
+      await user.click(subscribeButton());
+
+      await waitFor(() =>
+        expect(onResubscribe).toHaveBeenCalledWith({
+          ...expectedSubscribe,
+          ...(extras as object),
+          userId: 'returning-user',
+        })
+      );
+    });
+
+    it('subscribes nothing while the tenant says something is missing', async () => {
+      const subscribeExtras = vi.fn(() => false as const);
+      const { user, onSubscribe } = renderLoggedIn({ subscribeExtras });
+
+      await confirm(user);
+
+      await waitFor(() => expect(subscribeExtras).toHaveBeenCalled());
+      expect(onSubscribe).not.toHaveBeenCalled();
+    });
+  });
+
   describe('logged in', () => {
     it('warns about open invoices and the existing subscription instead of asking for user data', () => {
       renderLoggedIn();
@@ -916,6 +965,12 @@ describe('Subscribe', () => {
       expect(subscribeButton()).toBeDisabled();
     });
 
+    it('does not wait for the challenge', () => {
+      renderLoggedIn({ challenge: loading as Props['challenge'] });
+
+      expect(subscribeButton()).toBeEnabled();
+    });
+
     it('shows the error when subscribing fails', async () => {
       const { user, onSubscribe } = renderLoggedIn();
 
@@ -1137,5 +1192,42 @@ describe('Subscribe', () => {
         })
       ).toBeInTheDocument();
     });
+  });
+});
+
+describe('Subscribe gift code redemption', () => {
+  it('links to the redemption page next to the plan heading', () => {
+    renderSubscribe({ giftCodeRedemptionUrl: '/geschenk-einloesen' });
+
+    const heading = screen.getByRole('heading', {
+      name: t('subscribe.chooseSubscription'),
+    });
+    const link = screen.getByRole('link', {
+      name: t('subscribe.giftCodeRedemption.link'),
+    });
+
+    expect(link).toHaveAttribute('href', '/geschenk-einloesen');
+    expect(heading.parentElement).toContainElement(link);
+  });
+
+  it('uses the given link text', () => {
+    renderSubscribe({
+      giftCodeRedemptionUrl: '/geschenk-einloesen',
+      giftCodeRedemptionText: 'Geschenk erhalten? Hier einlösen.',
+    });
+
+    expect(
+      screen.getByRole('link', { name: 'Geschenk erhalten? Hier einlösen.' })
+    ).toHaveAttribute('href', '/geschenk-einloesen');
+  });
+
+  it('shows no link without a redemption page', () => {
+    renderSubscribe();
+
+    expect(
+      screen.queryByRole('link', {
+        name: t('subscribe.giftCodeRedemption.link'),
+      })
+    ).not.toBeInTheDocument();
   });
 });

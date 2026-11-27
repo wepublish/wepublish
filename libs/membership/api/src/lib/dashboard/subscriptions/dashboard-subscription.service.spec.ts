@@ -207,6 +207,71 @@ describe('DashboardSubscriptionService', () => {
     expect(mockFunction.mock.calls[0][0]).toMatchSnapshot();
   });
 
+  describe('activeSubscriberFirstNames', () => {
+    test('counts the same subscriptions as active as activeSubscribers', async () => {
+      const findMany = vi
+        .spyOn(prisma.subscription, 'findMany')
+        .mockResolvedValue([]);
+
+      await service.activeSubscribers();
+      await service.activeSubscriberFirstNames();
+
+      const [[activeSubscribersArgs], [firstNamesArgs]] = findMany.mock.calls;
+      expect(firstNamesArgs?.where).toBeDefined();
+      expect(firstNamesArgs?.where).toEqual(activeSubscribersArgs?.where);
+    });
+
+    test('reads only the first name and the creation date, newest first', async () => {
+      const findMany = vi
+        .spyOn(prisma.subscription, 'findMany')
+        .mockResolvedValue([]);
+
+      await service.activeSubscriberFirstNames();
+
+      expect(findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          select: {
+            createdAt: true,
+            user: { select: { firstName: true } },
+          },
+          orderBy: { createdAt: 'desc' },
+        })
+      );
+      expect(findMany.mock.calls[0][0]).not.toHaveProperty('include');
+    });
+
+    test('passes on nothing but the first name and the creation date', async () => {
+      vi.spyOn(prisma.subscription, 'findMany').mockResolvedValue([
+        {
+          id: 'subscription-1',
+          createdAt: new Date('2022-12-24T08:00:00.000Z'),
+          paidUntil: new Date('2023-12-24T08:00:00.000Z'),
+          user: {
+            id: 'user-1',
+            firstName: 'Anna',
+            name: 'Muster',
+            email: 'anna@example.com',
+          },
+        },
+        {
+          id: 'subscription-2',
+          createdAt: new Date('2022-11-01T08:00:00.000Z'),
+          user: { id: 'user-2', firstName: null, email: 'nn@example.com' },
+        },
+      ] as never);
+
+      await expect(service.activeSubscriberFirstNames()).resolves.toStrictEqual(
+        [
+          {
+            firstName: 'Anna',
+            createdAt: new Date('2022-12-24T08:00:00.000Z'),
+          },
+          { firstName: null, createdAt: new Date('2022-11-01T08:00:00.000Z') },
+        ]
+      );
+    });
+  });
+
   describe('daily stats and upgrades', () => {
     const day = new Date('2023-01-01');
 

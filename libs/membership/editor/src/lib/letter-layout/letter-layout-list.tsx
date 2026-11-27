@@ -26,6 +26,7 @@ import {
   IconButtonTooltip,
   ListViewContainer,
   ListViewHeader,
+  PageTitle,
   PermissionControl,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
@@ -60,13 +61,15 @@ function LetterLayoutList() {
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('letterLayouts.title')}</h2>
-          <Typography
-            component="p"
-            sx={{ color: 'text.secondary', maxWidth: 720 }}
-          >
-            {t('letterLayouts.intro')}
-          </Typography>
+          <Stack spacing={1}>
+            <PageTitle>{t('letterLayouts.title')}</PageTitle>
+            <Typography
+              component="p"
+              sx={{ color: 'text.secondary', maxWidth: 720 }}
+            >
+              {t('letterLayouts.intro')}
+            </Typography>
+          </Stack>
         </ListViewHeader>
         <PermissionControl
           qualifyingPermissions={['CAN_CREATE_MAIL-TEMPLATES']}

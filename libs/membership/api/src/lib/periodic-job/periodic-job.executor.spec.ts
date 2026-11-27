@@ -3,6 +3,7 @@ import {
   type ClaimResult,
   type DistributedClaims,
 } from '@wepublish/dragonfly/api';
+import { SellableReconciliationService } from '@wepublish/payment/api';
 import { PeriodicJobExecutor } from './periodic-job.executor';
 import { MailchimpSyncService } from '../mailchimp-sync/mailchimp-sync.service';
 import { MailLogSyncService } from '../mail-send/mail-log-sync.service';
@@ -10,6 +11,8 @@ import { SuppressionSyncService } from '../mail-send/suppression-sync.service';
 import { EmailQualityService } from '../email-quality/email-quality.service';
 import { DeliverySuggestionService } from '../delivery-mode/delivery-suggestion.service';
 import { BexioContactSyncService } from '@wepublish/payment/api';
+import { LetterLogSyncService } from '@wepublish/letter/api';
+import type { NightStepRecord } from './periodic-job.service';
 
 describe('PeriodicJobExecutor', () => {
   afterEach(() => {
@@ -25,44 +28,59 @@ describe('PeriodicJobExecutor', () => {
       concurrentExecute: vi.fn(async () => {
         ran.push('periodic jobs guarded by the database');
       }),
+      recordNightStep: vi.fn(async (_step: NightStepRecord) => undefined),
     };
     const bexioContactSync = {
-      syncAll: vi.fn(async () => {
+      syncAll: vi.fn(async (): Promise<unknown> => {
         ran.push('bexio contact sync');
       }),
     };
     const mailchimpSync = {
-      executeAllSync: vi.fn(async () => {
+      executeAllSync: vi.fn(async (): Promise<unknown> => {
         ran.push('mailchimp sync');
       }),
     };
     const mailLogSync = {
-      syncOpenStates: vi.fn(async () => {
+      syncOpenStates: vi.fn(async (): Promise<unknown> => {
         ran.push('mail log sync');
       }),
     };
+    const letterLogSync = {
+      syncOpenStates: vi.fn(async (): Promise<unknown> => {
+        ran.push('letter log sync');
+      }),
+    };
     const suppressionSync = {
-      syncSuppressions: vi.fn(async () => {
+      syncSuppressions: vi.fn(async (): Promise<unknown> => {
         ran.push('suppression sync');
       }),
     };
     const emailQuality = {
-      recomputeAll: vi.fn(async () => {
+      recomputeAll: vi.fn(async (): Promise<unknown> => {
         ran.push('email quality');
       }),
     };
     const deliverySuggestions = {
-      recomputeAll: vi.fn(async () => {
+      recomputeAll: vi.fn(async (): Promise<unknown> => {
         ran.push('delivery suggestions');
+      }),
+    };
+    const sellableReconciliation = {
+      reconcile: vi.fn(async () => {
+        ran.push('sellable reconciliation');
+
+        return { polled: 1, canceled: 2, resynced: 3, failed: 0 };
       }),
     };
     const services = new Map<unknown, unknown>([
       [BexioContactSyncService, bexioContactSync],
       [MailchimpSyncService, mailchimpSync],
       [MailLogSyncService, mailLogSync],
+      [LetterLogSyncService, letterLogSync],
       [SuppressionSyncService, suppressionSync],
       [EmailQualityService, emailQuality],
       [DeliverySuggestionService, deliverySuggestions],
+      [SellableReconciliationService, sellableReconciliation],
     ]);
     const claims = {
       claim: vi.fn(
@@ -81,7 +99,20 @@ describe('PeriodicJobExecutor', () => {
       claims as unknown as DistributedClaims
     );
 
-    return { executor, ran, claims, periodicJobs, mailLogSync };
+    return {
+      executor,
+      ran,
+      claims,
+      periodicJobs,
+      bexioContactSync,
+      mailchimpSync,
+      mailLogSync,
+      letterLogSync,
+      deliverySuggestions,
+      sellableReconciliation,
+      recorded: () =>
+        periodicJobs.recordNightStep.mock.calls.map(([step]) => step),
+    };
   };
 
   it('runs the periodic jobs, the Mailchimp sync, both provider syncs and the email quality on the replica that claims the night', async () => {
@@ -94,9 +125,11 @@ describe('PeriodicJobExecutor', () => {
       'bexio contact sync',
       'mailchimp sync',
       'mail log sync',
+      'letter log sync',
       'suppression sync',
       'email quality',
       'delivery suggestions',
+      'sellable reconciliation',
     ]);
   });
 
@@ -111,10 +144,75 @@ describe('PeriodicJobExecutor', () => {
       'periodic jobs',
       'bexio contact sync',
       'mailchimp sync',
+      'letter log sync',
+      'suppression sync',
+      'email quality',
+      'delivery suggestions',
+      'sellable reconciliation',
+    ]);
+  });
+
+  it('logs the sellable reconciliation result', async () => {
+    const logged = vi
+      .spyOn(Logger.prototype, 'log')
+      .mockImplementation(() => undefined);
+    const { executor } = setup('claimed');
+
+    await executor.handleCron();
+
+    expect(logged).toHaveBeenCalledWith(
+      'Sellable reconciliation: 1 polled, 2 canceled, 3 resynced, 0 failed'
+    );
+  });
+
+  it('logs a failing sellable reconciliation without stopping the night', async () => {
+    const failed = vi
+      .spyOn(Logger.prototype, 'error')
+      .mockImplementation(() => undefined);
+    const { executor, ran, sellableReconciliation } = setup('claimed');
+    const error = new Error('reconcile down');
+    sellableReconciliation.reconcile.mockRejectedValue(error);
+
+    await expect(executor.handleCron()).resolves.toBeUndefined();
+
+    expect(ran).toEqual([
+      'periodic jobs',
+      'bexio contact sync',
+      'mailchimp sync',
+      'mail log sync',
+      'letter log sync',
       'suppression sync',
       'email quality',
       'delivery suggestions',
     ]);
+    expect(failed).toHaveBeenCalledWith(
+      'sellableReconciliation failed during periodic job:',
+      error
+    );
+  });
+
+  it('runs the sellable reconciliation once per night', async () => {
+    const { executor, sellableReconciliation } = setup('claimed');
+
+    await executor.handleCron();
+
+    expect(sellableReconciliation.reconcile).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not run the sellable reconciliation on a replica that lost the night', async () => {
+    const { executor, sellableReconciliation } = setup('taken');
+
+    await executor.handleCron();
+
+    expect(sellableReconciliation.reconcile).not.toHaveBeenCalled();
+  });
+
+  it('asks the letter provider about a whole print run of letters', async () => {
+    const { executor, letterLogSync } = setup('claimed');
+
+    await executor.handleCron();
+
+    expect(letterLogSync.syncOpenStates).toHaveBeenCalledWith(2000);
   });
 
   it('leaves the night to the replica that claimed it', async () => {
@@ -150,9 +248,11 @@ describe('PeriodicJobExecutor', () => {
       'bexio contact sync',
       'mailchimp sync',
       'mail log sync',
+      'letter log sync',
       'suppression sync',
       'email quality',
       'delivery suggestions',
+      'sellable reconciliation',
     ]);
     expect(failed).not.toHaveBeenCalled();
   });
@@ -170,9 +270,11 @@ describe('PeriodicJobExecutor', () => {
       'bexio contact sync',
       'mailchimp sync',
       'mail log sync',
+      'letter log sync',
       'suppression sync',
       'email quality',
       'delivery suggestions',
+      'sellable reconciliation',
     ]);
   });
 
@@ -194,5 +296,199 @@ describe('PeriodicJobExecutor', () => {
 
     const [[, , options]] = claims.claim.mock.calls;
     expect(options?.retryForMs).toBeGreaterThanOrEqual(30_000);
+  });
+
+  describe('what the night did', () => {
+    it('records each step with its counts on the job log', async () => {
+      const { executor, mailLogSync, recorded } = setup('claimed');
+      mailLogSync.syncOpenStates.mockResolvedValue({ checked: 12, updated: 3 });
+
+      await executor.handleCron();
+
+      expect(recorded().map(step => step.key)).toEqual([
+        'bexioContactSync',
+        'mailchimpSync',
+        'mailLogSync',
+        'letterLogSync',
+        'suppressionSync',
+        'emailQuality',
+        'deliverySuggestions',
+        'sellableReconciliation',
+      ]);
+      expect(recorded()[2]).toEqual(
+        expect.objectContaining({
+          key: 'mailLogSync',
+          status: 'ok',
+          counts: { checked: 12, updated: 3 },
+          startedAt: expect.any(Date),
+          finishedAt: expect.any(Date),
+        })
+      );
+    });
+
+    it('records what the sellable reconciliation did', async () => {
+      const { executor, recorded } = setup('claimed');
+
+      await executor.handleCron();
+
+      expect(recorded()[7]).toEqual(
+        expect.objectContaining({
+          key: 'sellableReconciliation',
+          status: 'ok',
+          counts: { polled: 1, canceled: 2, resynced: 3, failed: 0 },
+        })
+      );
+    });
+
+    it('records a step that throws as failed, with what went wrong', async () => {
+      vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
+      const { executor, mailLogSync, recorded } = setup('claimed');
+      mailLogSync.syncOpenStates.mockRejectedValue(new Error('provider down'));
+
+      await executor.handleCron();
+
+      expect(recorded()[2]).toEqual(
+        expect.objectContaining({
+          key: 'mailLogSync',
+          status: 'error',
+          error: 'provider down',
+        })
+      );
+    });
+
+    it('records the letter states on their own, apart from the mail states', async () => {
+      vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
+      const { executor, mailLogSync, letterLogSync, recorded } =
+        setup('claimed');
+      mailLogSync.syncOpenStates.mockRejectedValue(new Error('provider down'));
+      letterLogSync.syncOpenStates.mockResolvedValue({
+        checked: 40,
+        updated: 7,
+      });
+
+      await executor.handleCron();
+
+      expect(recorded()[3]).toEqual(
+        expect.objectContaining({
+          key: 'letterLogSync',
+          status: 'ok',
+          counts: { checked: 40, updated: 7 },
+        })
+      );
+    });
+
+    it('records the letter states as skipped where no letters are printed', async () => {
+      const { executor, letterLogSync, recorded } = setup('claimed');
+      letterLogSync.syncOpenStates.mockResolvedValue({
+        checked: 0,
+        updated: 0,
+        skipped: true,
+      });
+
+      await executor.handleCron();
+
+      expect(recorded()[3]).toEqual(
+        expect.objectContaining({ key: 'letterLogSync', status: 'skipped' })
+      );
+    });
+
+    it('records a step the medium does not use as skipped', async () => {
+      const { executor, deliverySuggestions, recorded } = setup('claimed');
+      deliverySuggestions.recomputeAll.mockResolvedValue({ skipped: true });
+
+      await executor.handleCron();
+
+      expect(recorded()[6]).toEqual(
+        expect.objectContaining({
+          key: 'deliverySuggestions',
+          status: 'skipped',
+        })
+      );
+    });
+
+    it('warns when bexio refused some readers, and says why', async () => {
+      const { executor, bexioContactSync, recorded } = setup('claimed');
+      bexioContactSync.syncAll.mockResolvedValue([
+        {
+          providerId: 'bexio',
+          readers: 1821,
+          pushed: 1814,
+          failed: 7,
+          firstError: '422 mail is invalid',
+        },
+      ]);
+
+      await executor.handleCron();
+
+      expect(recorded()[0]).toEqual(
+        expect.objectContaining({
+          key: 'bexioContactSync',
+          status: 'warning',
+          counts: { readers: 1821, pushed: 1814, failed: 7 },
+          error: '422 mail is invalid',
+        })
+      );
+    });
+
+    it('fails the bexio step when bexio stopped the sync or refused every reader', async () => {
+      const { executor, bexioContactSync, recorded } = setup('claimed');
+      bexioContactSync.syncAll.mockResolvedValue([
+        {
+          providerId: 'bexio',
+          readers: 40,
+          pushed: 0,
+          failed: 1,
+          stopped: 'key-rejected',
+          firstError: '401 Unauthorized',
+        },
+      ]);
+
+      await executor.handleCron();
+
+      expect(recorded()[0]).toEqual(
+        expect.objectContaining({ status: 'error', error: '401 Unauthorized' })
+      );
+    });
+
+    it('records the bexio step as skipped when no integration syncs contacts', async () => {
+      const { executor, bexioContactSync, recorded } = setup('claimed');
+      bexioContactSync.syncAll.mockResolvedValue([]);
+
+      await executor.handleCron();
+
+      expect(recorded()[0]).toEqual(
+        expect.objectContaining({ status: 'skipped' })
+      );
+    });
+
+    it('warns when a Mailchimp audience failed to sync', async () => {
+      const { executor, mailchimpSync, recorded } = setup('claimed');
+      mailchimpSync.executeAllSync.mockResolvedValue({
+        synced: 1,
+        failed: 1,
+        firstError: '401 API key invalid',
+      });
+
+      await executor.handleCron();
+
+      expect(recorded()[1]).toEqual(
+        expect.objectContaining({
+          key: 'mailchimpSync',
+          status: 'warning',
+          counts: { synced: 1, failed: 1 },
+          error: '401 API key invalid',
+        })
+      );
+    });
+
+    it('still runs the night when the job log cannot take a step', async () => {
+      vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
+      const { executor, ran, periodicJobs } = setup('claimed');
+      periodicJobs.recordNightStep.mockRejectedValue(new Error('db down'));
+
+      await executor.handleCron();
+
+      expect(ran).toContain('delivery suggestions');
+    });
   });
 });

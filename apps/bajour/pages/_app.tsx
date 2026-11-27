@@ -13,7 +13,7 @@ import {
 } from '@wepublish/tenant/bajour';
 import {
   authLink,
-  getWebsiteShell,
+  useLiveWebsiteShell,
   initWePublishTranslator,
   WebsiteShellProps,
   withJwtHandler,
@@ -89,7 +89,7 @@ function CustomApp({
       (window.PUBLIC_ENV as typeof publicEnv)
     : undefined);
 
-  const shell = getWebsiteShell(pageProps);
+  const shell = useLiveWebsiteShell(pageProps);
 
   return (
     <PlausibleProvider

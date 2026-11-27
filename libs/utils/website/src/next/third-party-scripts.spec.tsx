@@ -1,5 +1,9 @@
 import { render } from '@testing-library/react';
 import { WebsiteSettingsFragment } from '@wepublish/website/api';
+import {
+  UMAMI_BEFORE_SEND,
+  umamiBeforeSendScript,
+} from '../lib/umami-before-send';
 import { ThirdPartyScripts } from './third-party-scripts';
 
 vi.mock('next/script', () => ({
@@ -91,6 +95,41 @@ describe('ThirdPartyScripts', () => {
       'https://cloud.umami.is/script.js'
     );
     expect(script?.getAttribute('data-website-id')).toBe('website-id');
+  });
+
+  it('renders Umami without a before-send hook when no params are excluded', () => {
+    const { container } = render(
+      <ThirdPartyScripts
+        settings={settings({
+          umami: { enabled: true, key: 'website-id', excludedSearchParams: [] },
+        })}
+      />
+    );
+
+    expect(container.querySelectorAll('script')).toHaveLength(1);
+    expect(
+      container.querySelector('script')?.hasAttribute('data-before-send')
+    ).toBe(false);
+  });
+
+  it('strips the excluded search params in a hook defined before Umami', () => {
+    const { container } = render(
+      <ThirdPartyScripts
+        settings={settings({
+          umami: {
+            enabled: true,
+            key: 'website-id',
+            excludedSearchParams: ['mail', 'firstName'],
+          },
+        })}
+      />
+    );
+    const [hook, umami] = Array.from(container.querySelectorAll('script'));
+
+    expect(hook.id).toBe('umami-before-send');
+    expect(hook.textContent).toBe(umamiBeforeSendScript(['mail', 'firstName']));
+    expect(umami.getAttribute('src')).toBe('https://cloud.umami.is/script.js');
+    expect(umami.getAttribute('data-before-send')).toBe(UMAMI_BEFORE_SEND);
   });
 
   it('renders Piwik PRO with the container id', () => {

@@ -88,6 +88,9 @@ function createContext(
   };
 
   const create = vi.fn();
+  // The log entry may exist already, written for a replacement before it was
+  // posted. What an upsert would create is what a new entry holds.
+  const upsert = vi.fn(async ({ create: data }) => create({ data }));
   const documentUrl = vi.fn(async (id: string) => `https://media/${id}.pdf`);
 
   const layouts = {
@@ -98,9 +101,11 @@ function createContext(
   const providerSettings = { findUnique: vi.fn().mockResolvedValue(null) };
 
   const prisma = {
-    mailTemplate: {
+    mailTemplateVariant: {
       findUnique: vi.fn().mockResolvedValue({
-        id: 'template-1',
+        id: 'variant-1',
+        templateId: 'template-1',
+        channel: MailChannel.letter,
         subject: 'Ihre Rechnung',
         htmlContent: '<p>Hallo {{user_firstName}}</p>',
         letterLayoutId: null,
@@ -108,9 +113,15 @@ function createContext(
         ...template,
       }),
     },
+    // The attachments are the template's, shared by its email and letter.
+    mailTemplate: {
+      findUnique: vi.fn().mockResolvedValue({
+        attachments: template.attachments ?? [],
+      }),
+    },
     letterLayout: layouts,
     settingLetterProvider: providerSettings,
-    mailLog: { create },
+    mailLog: { create, upsert },
   } as unknown as PrismaClient;
 
   const context = new LetterContext({
@@ -129,6 +140,7 @@ function createContext(
     context,
     rendered,
     create,
+    upsert,
     prisma,
     layouts,
     documentUrl,
@@ -163,6 +175,41 @@ describe('LetterContext automated sends', () => {
         type: MailLogType.subscriptionFlow,
       }),
     });
+  });
+
+  it('logs the subscription and the invoice the letter is about', async () => {
+    const { context, create } = createContext(sendLetter());
+
+    await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print,
+      log: { subscriptionId: 'sub-1', invoiceId: 'inv-1' },
+    });
+
+    expect(create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        subscription: { connect: { id: 'sub-1' } },
+        invoice: { connect: { id: 'inv-1' } },
+      }),
+    });
+  });
+
+  it('logs no trigger for a letter that has none', async () => {
+    const { context, create } = createContext(sendLetter());
+
+    await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print,
+    });
+
+    const { data } = create.mock.calls[0][0];
+
+    expect(data.subscription).toBeUndefined();
+    expect(data.invoice).toBeUndefined();
   });
 
   it('logs a manual send under its own id, as before', async () => {
@@ -473,9 +520,45 @@ describe('LetterContext.resolveLayout', () => {
 });
 
 describe('LetterContext.sendLetter', () => {
+  it('prints what the template says on paper, not its email', async () => {
+    const { context, prisma } = createContext();
+
+    await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print,
+    });
+
+    expect(prisma.mailTemplateVariant.findUnique).toHaveBeenCalledWith({
+      where: {
+        templateId_channel: {
+          templateId: 'template-1',
+          channel: MailChannel.letter,
+        },
+      },
+    });
+  });
+
+  it('refuses a template that was not written as a letter', async () => {
+    const sendLetter = vi.fn();
+    const { context, prisma } = createContext(sendLetter);
+    (prisma.mailTemplateVariant.findUnique as Mock).mockResolvedValue(null);
+
+    await expect(
+      context.sendLetter({
+        mailTemplateId: 'template-1',
+        recipient: user,
+        data: { user },
+        print,
+      })
+    ).rejects.toThrow('MailTemplate <template-1> has no letter version!');
+    expect(sendLetter).not.toHaveBeenCalled();
+  });
+
   it('prints the letter on the stationery the template points at', async () => {
     const { context, rendered, prisma, layouts } = createContext();
-    (prisma.mailTemplate.findUnique as Mock).mockResolvedValue({
+    (prisma.mailTemplateVariant.findUnique as Mock).mockResolvedValue({
       id: 'template-1',
       subject: 'Ihre Rechnung',
       htmlContent: '<p>Hallo</p>',
@@ -557,6 +640,32 @@ describe('LetterContext.sendLetter', () => {
     });
   });
 
+  it('writes over the entry a replacement was given before it was posted', async () => {
+    const { context, upsert } = createContext();
+
+    await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print,
+      mailLogId: 'log-2',
+    });
+
+    expect(upsert).toHaveBeenCalledWith({
+      where: { id: 'log-2' },
+      create: expect.objectContaining({
+        id: 'log-2',
+        state: MailLogState.submitted,
+        providerLetterID: 'pingen-1',
+      }),
+      update: expect.objectContaining({
+        state: MailLogState.submitted,
+        providerLetterID: 'pingen-1',
+        error: null,
+      }),
+    });
+  });
+
   it('logs a rejected letter and rethrows when the vendor fails', async () => {
     const { context, create } = createContext(
       vi.fn().mockRejectedValue(new Error('vendor down'))
@@ -590,6 +699,196 @@ describe('LetterContext.sendLetter', () => {
         print,
       })
     ).rejects.toThrow('has no address');
+  });
+});
+
+describe('LetterContext.sendsAutomatically', () => {
+  it.each([true, false])(
+    'answers what the letter provider says: %s',
+    async auto => {
+      const { context } = createContext();
+      context.letterProvider.sendsAutomatically = async () => auto;
+
+      await expect(context.sendsAutomatically()).resolves.toBe(auto);
+    }
+  );
+});
+
+describe('LetterContext.withdrawHeldLetter', () => {
+  const held = {
+    id: 'log-1',
+    state: MailLogState.actionRequired,
+    providerLetterID: 'pingen-1',
+    recipientID: 'user-1',
+    mailTemplateId: 'template-1',
+    mailIdentifier: 'subscriptionFlow-run-3-template-1-user-1',
+    type: MailLogType.subscriptionFlow,
+    subject: 'Ihre Rechnung',
+  };
+
+  const setup = (
+    log: unknown,
+    remote: unknown[] | Error = [],
+    deleteLetter = vi.fn().mockResolvedValue(undefined)
+  ) => {
+    const { context, prisma, create } = createContext();
+    const findUnique = vi.fn().mockResolvedValue(log);
+    const update = vi.fn().mockResolvedValue({});
+    const $transaction = vi.fn(async (steps: Promise<unknown>[]) =>
+      Promise.all(steps)
+    );
+    const getMessageStates =
+      remote instanceof Error ?
+        vi.fn().mockRejectedValue(remote)
+      : vi.fn().mockResolvedValue(remote);
+
+    Object.assign(prisma.mailLog, { findUnique, update });
+    Object.assign(prisma, { $transaction });
+    Object.assign(context.letterProvider, { getMessageStates, deleteLetter });
+
+    return {
+      context,
+      update,
+      create,
+      $transaction,
+      getMessageStates,
+      deleteLetter,
+    };
+  };
+
+  it('removes a letter the vendor still holds and settles its entry', async () => {
+    const { context, update, getMessageStates, deleteLetter } = setup(held, [
+      { providerLetterID: 'pingen-1', state: LetterState.actionRequired },
+    ]);
+
+    await expect(context.withdrawHeldLetter('log-1', 'log-2')).resolves.toBe(
+      'withdrawn'
+    );
+    expect(getMessageStates).toHaveBeenCalledWith(['pingen-1']);
+    expect(deleteLetter).toHaveBeenCalledWith('pingen-1');
+    expect(update).toHaveBeenCalledWith({
+      where: { id: 'log-1' },
+      data: { state: MailLogState.canceled },
+    });
+  });
+
+  // Should the replacement die on its way, the next night finds an attempt
+  // that never reached the vendor and posts again, instead of a held letter
+  // taken back for nothing that reads as settled there.
+  it('records the replacement as not handed over yet, in the same step', async () => {
+    const { context, update, create, $transaction } = setup(held, [
+      { providerLetterID: 'pingen-1', state: LetterState.actionRequired },
+    ]);
+
+    await context.withdrawHeldLetter('log-1', 'log-2');
+
+    expect($transaction).toHaveBeenCalledTimes(1);
+    expect(update).toHaveBeenCalledTimes(1);
+    expect(create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        id: 'log-2',
+        channel: MailChannel.letter,
+        state: MailLogState.rejected,
+        providerLetterID: null,
+        recipient: { connect: { id: 'user-1' } },
+        mailTemplate: { connect: { id: 'template-1' } },
+        mailIdentifier: 'subscriptionFlow-run-3-template-1-user-1',
+        type: MailLogType.subscriptionFlow,
+        mailProviderID: 'pingen',
+        error: expect.stringContaining('log-1'),
+      }),
+    });
+  });
+
+  // Someone fixed, sent or cancelled it at the vendor in the meantime.
+  it.each([
+    [LetterState.accepted, MailLogState.accepted],
+    [LetterState.dispatched, MailLogState.dispatched],
+    [LetterState.canceled, MailLogState.canceled],
+  ])(
+    'leaves a letter alone that is %s at the vendor by now, and notes that',
+    async (remoteState, logState) => {
+      const { context, update, deleteLetter } = setup(held, [
+        {
+          providerLetterID: 'pingen-1',
+          state: remoteState,
+          letterData: '{"status":"x"}',
+        },
+      ]);
+
+      await expect(context.withdrawHeldLetter('log-1', 'log-2')).resolves.toBe(
+        'left'
+      );
+      expect(deleteLetter).not.toHaveBeenCalled();
+      expect(update).toHaveBeenCalledWith({
+        where: { id: 'log-1' },
+        data: { state: logState, mailData: '{"status":"x"}', error: null },
+      });
+    }
+  );
+
+  it('takes a letter someone removed at the vendor as dealt with', async () => {
+    const { context, update, deleteLetter } = setup(held, [
+      { providerLetterID: 'pingen-1', state: LetterState.canceled, gone: true },
+    ]);
+
+    await expect(context.withdrawHeldLetter('log-1', 'log-2')).resolves.toBe(
+      'left'
+    );
+    expect(deleteLetter).not.toHaveBeenCalled();
+    expect(update).toHaveBeenCalledWith({
+      where: { id: 'log-1' },
+      data: { state: MailLogState.canceled, mailData: undefined, error: null },
+    });
+  });
+
+  it('leaves a letter alone whose state the vendor does not tell', async () => {
+    const { context, update, deleteLetter } = setup(held, []);
+
+    await expect(context.withdrawHeldLetter('log-1', 'log-2')).resolves.toBe(
+      'left'
+    );
+    expect(deleteLetter).not.toHaveBeenCalled();
+    expect(update).not.toHaveBeenCalled();
+  });
+
+  it('leaves a letter alone while the vendor cannot be asked', async () => {
+    const { context, update, deleteLetter } = setup(held, new Error('down'));
+
+    await expect(context.withdrawHeldLetter('log-1', 'log-2')).resolves.toBe(
+      'left'
+    );
+    expect(deleteLetter).not.toHaveBeenCalled();
+    expect(update).not.toHaveBeenCalled();
+  });
+
+  // Never a second copy: without the old one gone, no new one may follow.
+  it('leaves a letter alone the vendor does not let go', async () => {
+    const { context, update, create } = setup(
+      held,
+      [{ providerLetterID: 'pingen-1', state: LetterState.actionRequired }],
+      vi.fn().mockRejectedValue(new Error('409'))
+    );
+
+    await expect(context.withdrawHeldLetter('log-1', 'log-2')).resolves.toBe(
+      'left'
+    );
+    expect(update).not.toHaveBeenCalled();
+    expect(create).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ['is not held', { ...held, state: MailLogState.accepted }],
+    ['never reached the vendor', { ...held, providerLetterID: null }],
+    ['does not exist', null],
+  ])('does not ask the vendor about an entry that %s', async (_, log) => {
+    const { context, getMessageStates, deleteLetter } = setup(log);
+
+    await expect(context.withdrawHeldLetter('log-1', 'log-2')).resolves.toBe(
+      'left'
+    );
+    expect(getMessageStates).not.toHaveBeenCalled();
+    expect(deleteLetter).not.toHaveBeenCalled();
   });
 });
 
@@ -676,6 +975,7 @@ describe('LetterContext attachments', () => {
       letterAppendixId?: string | null;
       country?: string;
       printMode?: LetterPrintMode;
+      invoice?: { name: string; content: Buffer };
     }
   ) =>
     context.renderLetter({
@@ -688,6 +988,7 @@ describe('LetterContext attachments', () => {
       data: { user },
       recipient: { ...recipient, country: props.country ?? 'CH' },
       printMode: props.printMode,
+      attachment: props.invoice,
     });
 
   it('prints the attachments after the letter, filled in with its data', async () => {
@@ -740,6 +1041,20 @@ describe('LetterContext attachments', () => {
     expect(await pageCount(pdf)).toBe(5);
   });
 
+  it('keeps the invoice the sender hands in last', async () => {
+    const { context } = createContext(undefined, {}, attachmentRenderer());
+
+    const pdf = await render(context, {
+      attachmentIds: ['contract'],
+      printMode: LetterPrintMode.duplex,
+      invoice: { name: 'Rechnung.pdf', content: await makePdf(1) },
+    });
+
+    // letter, blank, contract (two pages), invoice; the other way round it
+    // would be letter, blank, invoice, blank, contract.
+    expect(await pageCount(pdf)).toBe(5);
+  });
+
   it('refuses an attachment that is not A4, naming it', async () => {
     const { context } = createContext(
       undefined,
@@ -780,7 +1095,7 @@ describe('LetterContext attachments', () => {
 
     expect(prisma.mailTemplate.findUnique).toHaveBeenCalledWith(
       expect.objectContaining({
-        include: {
+        select: {
           attachments: {
             select: { documentId: true },
             orderBy: { position: 'asc' },

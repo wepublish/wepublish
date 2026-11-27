@@ -8,8 +8,16 @@ import {
   readIssueOrder,
 } from './parse';
 import { addMonths } from '../rules/dates';
-import { owedWindowMonths, type RuleIssue } from '../rules/entitlement';
-import { sameIssue } from '../rules/issue';
+import {
+  owedWindowMonths,
+  type PrintIssueCounting,
+  type RuleIssue,
+} from '../rules/entitlement';
+import {
+  DEFAULT_ISSUE_NUMBERING,
+  type IssueNumberingConfig,
+} from '@wepublish/utils';
+import { issueLabel, type IssueNumbering, namesIssue } from '../rules/issue';
 
 export type BexioInvoice = {
   id: number;
@@ -48,6 +56,8 @@ export type BexioTopUp = {
   countsAs?: number;
   /** copies in delivered lists by `${invoiceId}:${recipientId}:${period.from}` */
   delivered: Map<string, number>;
+  /** `perCopy` also stops a running period once it got its number; default `perPeriod` */
+  counting?: PrintIssueCounting;
 };
 
 export type SelectStats = {
@@ -64,6 +74,8 @@ export type SelectStats = {
   /** of a kind the options leave out */
   excludedKind: number;
   zeroCopies: number;
+  /** counting per copy: recipients whose running period already got its number */
+  exhausted: number;
   /** invoices whose billed quantity differs from the linked recipients */
   quantityMismatch: number;
   detailFetched: number;
@@ -71,7 +83,10 @@ export type SelectStats = {
 };
 
 type Options = {
-  issue: string;
+  /** the issue's numbers: what single-copy orders must name */
+  issue: IssueNumbering;
+  /** how the medium numbers and writes its issues; default «6.26» per year */
+  numbering?: IssueNumberingConfig;
   /** the issue's ship day, YYYY-MM-DD */
   shipDay: string;
   kinds: BexioKind[];
@@ -107,6 +122,7 @@ export async function selectBexioOrders(
   invoices: BexioInvoice[],
   {
     issue,
+    numbering = DEFAULT_ISSUE_NUMBERING,
     shipDay,
     kinds,
     links,
@@ -128,6 +144,7 @@ export async function selectBexioOrders(
     noValidPeriod: 0,
     excludedKind: 0,
     zeroCopies: 0,
+    exhausted: 0,
     quantityMismatch: 0,
     detailFetched: 0,
     ungeprueft: 0,
@@ -213,6 +230,18 @@ export async function selectBexioOrders(
           continue;
         }
 
+        if (
+          topUp?.issuesPerYear &&
+          topUp.counting === 'perCopy' &&
+          receivedItsNumber(
+            { invoice, recipientId: link.contactId, period },
+            topUp
+          )
+        ) {
+          stats.exhausted++;
+          continue;
+        }
+
         selected.push({
           invoice,
           payerId: invoice.contact_id,
@@ -260,7 +289,7 @@ export async function selectBexioOrders(
     let quantified = false;
 
     for (const position of positions) {
-      const order = readIssueOrder(position.text, kinds);
+      const order = readIssueOrder(position.text, kinds, numbering.format);
 
       if (!order) {
         if (position.quantity !== null) {
@@ -272,7 +301,7 @@ export async function selectBexioOrders(
 
       if (!order.issue) {
         stats.noValidPeriod++;
-      } else if (!sameIssue(order.issue, issue)) {
+      } else if (!namesIssue(order.issue, issue, numbering.counting)) {
         stats.otherPeriod++;
       } else if (!wanted(order.kind)) {
         stats.excludedKind++;
@@ -289,7 +318,15 @@ export async function selectBexioOrders(
             kind: order.kind,
             copies,
             period: null,
-            issue: order.issue,
+            // as ordered: «3.27» for the double issue «3/4.27»
+            issue: issueLabel(
+              {
+                number: order.issue.from,
+                numberTo: order.issue.to,
+                year: order.issue.year ?? issue.year,
+              },
+              numbering
+            ),
           });
         }
       }
@@ -368,6 +405,18 @@ export async function selectBexioOrders(
 }
 
 const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** Counting per copy: the running period already got what it is worth. */
+function receivedItsNumber(
+  entry: { invoice: BexioInvoice; recipientId: number; period: BexioPeriod },
+  topUp: BexioTopUp
+): boolean {
+  const { delivered, entitled } = owedCopies(entry, topUp);
+
+  // A share that rounds to 0 (a short period at a few issues a year) is no
+  // number to have received.
+  return entitled > 0 && delivered >= entitled;
+}
 
 /** What a period is worth (its share of the issues per year) and what it got. */
 function owedCopies(

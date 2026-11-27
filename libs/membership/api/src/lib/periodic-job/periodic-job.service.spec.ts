@@ -41,6 +41,7 @@ const createMockPrisma = () => ({
         default: true,
         memberPlanId: null,
         autoRenewal: [],
+        legacy: [true, false],
         periodicities: [],
         paymentMethods: [],
         intervals: [
@@ -108,6 +109,10 @@ const createMockPrisma = () => ({
   subscriptionInterval: {
     create: vi.fn(),
     deleteMany: vi.fn(),
+  },
+  periodicJobStep: {
+    create: vi.fn().mockResolvedValue({}),
+    deleteMany: vi.fn().mockResolvedValue({ count: 0 }),
   },
   periodicJob: {
     findFirst: vi.fn().mockResolvedValue(null),
@@ -244,6 +249,14 @@ const createLocksWithoutDragonfly = (
 describe('PeriodicJobService', () => {
   let service: PeriodicJobService;
   let mockPrisma: ReturnType<typeof createMockPrisma>;
+
+  /** What each mail of the run was logged as being about. */
+  const loggedTriggers = () =>
+    mockPrisma.mailLog.create.mock.calls.map(([{ data }]) => ({
+      subscription: data.subscription?.connect.id,
+      invoice: data.invoice?.connect.id,
+    }));
+
   let mockSubscriptionController: ReturnType<
     typeof createMockSubscriptionController
   >;
@@ -372,6 +385,10 @@ describe('PeriodicJobService', () => {
 
     await service.execute();
 
+    expect(loggedTriggers()).toEqual([
+      { subscription: 'sub-1', invoice: 'inv-new' },
+    ]);
+
     // Verify invoice was created
     expect(mockSubscriptionController.createInvoice).toHaveBeenCalledTimes(1);
     expect(mockSubscriptionController.createInvoice).toHaveBeenCalledWith(
@@ -383,6 +400,90 @@ describe('PeriodicJobService', () => {
     expect(
       mockSubscriptionController.deactivateSubscription
     ).not.toHaveBeenCalled();
+  });
+
+  describe('a flow that creates invoices 38 days ahead', () => {
+    const runDate = startOfDay(new Date());
+
+    const subscriptionEnding = (
+      daysAhead: number,
+      paymentPeriodicity: PaymentPeriodicity
+    ): any => ({
+      id: 'sub-1',
+      userID: 'user-1',
+      memberPlanID: 'plan-1',
+      paymentMethodID: 'stripe',
+      paymentPeriodicity,
+      paidUntil: add(runDate, { days: daysAhead }),
+      autoRenew: true,
+      monthlyAmount: 200,
+      currency: Currency.CHF,
+      user: { id: 'user-1', name: 'test user', email: 'reader@example.com' },
+      memberPlan: { name: 'plan', slug: 'plan' },
+      periods: [],
+    });
+
+    const createInvoiceFor = (subscription: any) =>
+      service['createInvoice']({ isRetry: false, date: runDate }, subscription);
+
+    beforeEach(() => {
+      mockPrisma.subscriptionFlow.findMany.mockResolvedValue([
+        {
+          id: 'default-flow',
+          default: true,
+          memberPlanId: null,
+          autoRenewal: [],
+          periodicities: [],
+          paymentMethods: [],
+          intervals: [
+            {
+              id: 'interval-invoice-creation',
+              event: SubscriptionEvent.INVOICE_CREATION,
+              daysAwayFromEnding: -38,
+              mailTemplate: null,
+            },
+            {
+              id: 'interval-deactivation-unpaid',
+              event: SubscriptionEvent.DEACTIVATION_UNPAID,
+              daysAwayFromEnding: 5,
+              mailTemplate: null,
+            },
+          ],
+        },
+      ]);
+      mockSubscriptionController.createInvoice.mockResolvedValue({
+        id: 'inv-new',
+        items: [],
+      });
+    });
+
+    it('invoices a yearly subscription 38 days before it ends', async () => {
+      await createInvoiceFor(subscriptionEnding(38, PaymentPeriodicity.yearly));
+
+      expect(mockSubscriptionController.createInvoice).toHaveBeenCalledTimes(1);
+    });
+
+    it('leaves a yearly subscription alone that ends later than that', async () => {
+      await createInvoiceFor(subscriptionEnding(39, PaymentPeriodicity.yearly));
+
+      expect(mockSubscriptionController.createInvoice).not.toHaveBeenCalled();
+    });
+
+    // 38 days is longer than a month: the invoice of the month after would
+    // be created the day the month before begins.
+    it('waits with a monthly subscription until 25 days before it ends', async () => {
+      await createInvoiceFor(
+        subscriptionEnding(26, PaymentPeriodicity.monthly)
+      );
+
+      expect(mockSubscriptionController.createInvoice).not.toHaveBeenCalled();
+
+      await createInvoiceFor(
+        subscriptionEnding(25, PaymentPeriodicity.monthly)
+      );
+
+      expect(mockSubscriptionController.createInvoice).toHaveBeenCalledTimes(1);
+    });
   });
 
   it('charge invoice offsession', async () => {
@@ -504,6 +605,62 @@ describe('PeriodicJobService', () => {
     ).not.toHaveBeenCalled();
   });
 
+  it('logs the invoice a failed-charge mail is about', async () => {
+    const mail = 'dev-mail@test.wepublish.com';
+    const renewalDate = new Date();
+
+    const mockInvoice = {
+      id: 'inv-1',
+      dueAt: renewalDate,
+      mail,
+      paidAt: null,
+      canceledAt: null,
+      manuallySetAsPaidByUserId: null,
+      scheduledDeactivationAt: add(renewalDate, { days: 5 }),
+      currency: Currency.CHF,
+      items: [{ amount: 2400, quantity: 1, name: 'Yearly Sub' }],
+      subscriptionPeriods: [],
+      subscription: {
+        id: 'sub-1',
+        memberPlanID: 'plan-yearly',
+        paymentMethodID: 'payrexx',
+        paymentPeriodicity: PaymentPeriodicity.yearly,
+        paidUntil: renewalDate,
+        autoRenew: true,
+        monthlyAmount: 200,
+        currency: Currency.CHF,
+        paymentMethod: {
+          id: 'payrexx',
+          paymentProviderID: 'payrexx',
+        },
+        memberPlan: { name: 'yearly' },
+        user: {
+          id: 'user-1',
+          email: mail,
+          paymentProviderCustomers: [],
+        },
+      },
+    };
+
+    mockSubscriptionController.findUnpaidDueInvoices.mockResolvedValue([
+      mockInvoice,
+    ]);
+    mockSubscriptionController.chargeInvoice.mockResolvedValue({
+      action: {
+        type: SubscriptionEvent.RENEWAL_FAILED,
+        daysAwayFromEnding: null,
+        mailTemplateId: 'template-failed',
+      },
+      errorCode: 'card_declined',
+    });
+
+    await service.execute();
+
+    expect(loggedTriggers()).toEqual([
+      { subscription: 'sub-1', invoice: 'inv-1' },
+    ]);
+  });
+
   it('disable subscription', async () => {
     const mail = 'dev-mail@test.wepublish.com';
     const renewalDate = sub(new Date(), { days: 1 });
@@ -537,6 +694,10 @@ describe('PeriodicJobService', () => {
     );
 
     await service.execute();
+
+    expect(loggedTriggers()).toEqual([
+      { subscription: 'sub-1', invoice: 'inv-1' },
+    ]);
 
     // Verify subscription was deactivated
     expect(
@@ -579,6 +740,10 @@ describe('PeriodicJobService', () => {
     mockPrisma.invoice.findMany.mockResolvedValue([]);
 
     await service.execute();
+
+    expect(loggedTriggers()).toEqual([
+      { subscription: 'sub-1', invoice: undefined },
+    ]);
 
     // The custom mail sending is triggered through MailController internally.
     // The test verifies the subscription query was made for custom events.
@@ -752,6 +917,7 @@ describe('PeriodicJobService', () => {
         default: true,
         memberPlanId: null,
         autoRenewal: [],
+        legacy: [true, false],
         periodicities: [],
         paymentMethods: [],
         intervals: [],
@@ -779,6 +945,7 @@ describe('PeriodicJobService', () => {
         default: true,
         memberPlanId: null,
         autoRenewal: [],
+        legacy: [true, false],
         periodicities: [],
         paymentMethods: [],
         intervals: [
@@ -846,6 +1013,7 @@ describe('PeriodicJobService', () => {
       type: SubscriptionEvent.INVOICE_CREATION,
       daysAwayFromEnding: 10,
       mailTemplateId: 'template',
+      sendAsLetter: false,
     };
     await service['sendTemplateMail'](
       action,
@@ -907,6 +1075,9 @@ describe('PeriodicJobService', () => {
       (mockMailContext as any).letterSender = letterSender;
       (mockPrisma as any).userDeliveryPreference = {
         findUnique: vi.fn(async () => ({ channel: 'letter' })),
+      };
+      (mockPrisma as any).mailTemplateVariant = {
+        findUnique: vi.fn(async () => ({ id: 'variant-1' })),
       };
       (mockPrisma as any).user = {
         findUnique: vi.fn(async () => ({ ...user, address: { city: 'Bern' } })),
@@ -990,6 +1161,7 @@ describe('PeriodicJobService', () => {
           default: true,
           memberPlanId: null,
           autoRenewal: [],
+          legacy: [true, false],
           periodicities: [],
           paymentMethods: [],
           intervals: [
@@ -1038,11 +1210,16 @@ describe('PeriodicJobService', () => {
         isConfigured: vi.fn(async () => true),
         canReceiveLetters: vi.fn(() => true),
         sendLetter: vi.fn(async () => 'log-1'),
+        sendsAutomatically: vi.fn(async () => false),
+        withdrawHeldLetter: vi.fn(async () => 'left'),
       };
       (mockMailContext as any).letterSender = letterSender;
       (mockPrisma as any).userDeliveryPreference = {
         findUnique: vi.fn(async () => ({ channel: MailChannel.letter })),
         findMany: vi.fn(async () => [{ userId: 'user-1' }]),
+      };
+      (mockPrisma as any).mailTemplateVariant = {
+        findUnique: vi.fn(async () => ({ id: 'variant-1' })),
       };
       (mockPrisma as any).user = {
         findUnique: vi.fn(async () => ({
@@ -1234,6 +1411,145 @@ describe('PeriodicJobService', () => {
           })
         );
         expect(provider.createRemoteInvoice).not.toHaveBeenCalled();
+      });
+
+      // Each upload is a letter of its own at the vendor, which keeps no
+      // track of duplicates: what it stores is never handed over twice.
+      it('does not post again a refused letter the vendor stores', async () => {
+        mockPrisma.mailLog.findMany.mockResolvedValue([
+          { state: MailLogState.rejected, providerLetterID: 'pingen-1' },
+        ]);
+
+        await service.postMissingInvoiceLetters(runDate);
+
+        expect(letterSender.sendLetter).not.toHaveBeenCalled();
+      });
+
+      it('leaves a letter alone that someone took back at the vendor', async () => {
+        mockPrisma.mailLog.findMany.mockResolvedValue([
+          { state: MailLogState.canceled, providerLetterID: 'pingen-1' },
+        ]);
+
+        await service.postMissingInvoiceLetters(runDate);
+
+        expect(letterSender.sendLetter).not.toHaveBeenCalled();
+      });
+
+      describe('a letter the vendor holds for someone to act on', () => {
+        const nightBefore = new Date(runDate.getTime() - 20 * 60 * 60 * 1000);
+        const held = (sentDate: Date) => ({
+          id: 'log-held',
+          state: MailLogState.actionRequired,
+          providerLetterID: 'pingen-1',
+          sentDate,
+        });
+
+        beforeEach(() => {
+          mockPrisma.mailLog.findMany.mockResolvedValue([held(nightBefore)]);
+        });
+
+        // Someone confirms every letter there anyway: it is theirs.
+        it('is left to the people at the vendor while letters are confirmed by hand', async () => {
+          await service.postMissingInvoiceLetters(runDate);
+
+          expect(letterSender.withdrawHeldLetter).not.toHaveBeenCalled();
+          expect(letterSender.sendLetter).not.toHaveBeenCalled();
+        });
+
+        describe('while letters are printed without anyone confirming them', () => {
+          beforeEach(() => {
+            letterSender.sendsAutomatically.mockResolvedValue(true);
+          });
+
+          it('is replaced on a later night once the vendor let the held one go', async () => {
+            letterSender.withdrawHeldLetter.mockResolvedValue('withdrawn');
+
+            await service.postMissingInvoiceLetters(runDate);
+
+            expect(letterSender.withdrawHeldLetter).toHaveBeenCalledWith(
+              'log-held',
+              expect.any(String)
+            );
+            expect(letterSender.sendLetter).toHaveBeenCalledWith(
+              expect.objectContaining({
+                attachment: { content: Buffer.from('pdf'), name: 'RE-1.pdf' },
+              })
+            );
+          });
+
+          // Recorded as not handed over yet when the held one went: whatever
+          // stops the replacement, the next night posts it again.
+          it('posts the replacement under the entry written with the withdrawal', async () => {
+            letterSender.withdrawHeldLetter.mockResolvedValue('withdrawn');
+
+            await service.postMissingInvoiceLetters(runDate);
+
+            const [[, replacementLogId]] =
+              letterSender.withdrawHeldLetter.mock.calls;
+
+            expect(replacementLogId).toEqual(expect.any(String));
+            expect(letterSender.sendLetter).toHaveBeenCalledWith(
+              expect.objectContaining({ mailLogId: replacementLogId })
+            );
+          });
+
+          // Fixed, sent or removed there by a person, or not given up.
+          it('is not replaced when the vendor keeps it or someone dealt with it', async () => {
+            letterSender.withdrawHeldLetter.mockResolvedValue('left');
+
+            await service.postMissingInvoiceLetters(runDate);
+
+            expect(letterSender.withdrawHeldLetter).toHaveBeenCalled();
+            expect(letterSender.sendLetter).not.toHaveBeenCalled();
+          });
+
+          // The same pdf would be held for the same reason.
+          it('is not replaced in the run that posted it', async () => {
+            mockPrisma.mailLog.findMany.mockResolvedValue([
+              held(new Date(runDate.getTime() + 60 * 60 * 1000)),
+            ]);
+
+            await service.postMissingInvoiceLetters(runDate);
+
+            expect(letterSender.withdrawHeldLetter).not.toHaveBeenCalled();
+            expect(letterSender.sendLetter).not.toHaveBeenCalled();
+          });
+
+          // Taking the held letter back first would leave the reader with
+          // nothing at the vendor.
+          it('is not taken back while the invoice cannot be rendered', async () => {
+            provider.renderRemoteInvoice.mockRejectedValue(new Error('down'));
+
+            await service.postMissingInvoiceLetters(runDate);
+
+            expect(letterSender.withdrawHeldLetter).not.toHaveBeenCalled();
+            expect(letterSender.sendLetter).not.toHaveBeenCalled();
+          });
+
+          it('is not replaced a third time', async () => {
+            mockPrisma.mailLog.findMany.mockResolvedValue([
+              { state: MailLogState.canceled, providerLetterID: 'pingen-a' },
+              { state: MailLogState.canceled, providerLetterID: 'pingen-b' },
+              held(nightBefore),
+            ]);
+
+            await service.postMissingInvoiceLetters(runDate);
+
+            expect(letterSender.withdrawHeldLetter).not.toHaveBeenCalled();
+            expect(letterSender.sendLetter).not.toHaveBeenCalled();
+          });
+        });
+      });
+
+      it('posts again after a replacement that could not be handed over', async () => {
+        mockPrisma.mailLog.findMany.mockResolvedValue([
+          { state: MailLogState.canceled, providerLetterID: 'pingen-1' },
+          { state: MailLogState.rejected, providerLetterID: null },
+        ]);
+
+        await service.postMissingInvoiceLetters(runDate);
+
+        expect(letterSender.sendLetter).toHaveBeenCalledTimes(1);
       });
 
       it('leaves a letter alone that got through', async () => {
@@ -1565,6 +1881,7 @@ describe('PeriodicJobService', () => {
         default: true,
         memberPlanId: null,
         autoRenewal: [],
+        legacy: [true, false],
         periodicities: [],
         paymentMethods: [],
         intervals: [
@@ -1581,6 +1898,7 @@ describe('PeriodicJobService', () => {
         default: false,
         memberPlanId: 'mp-1',
         autoRenewal: [true],
+        legacy: [true, false],
         periodicities: [PaymentPeriodicity.biannual],
         paymentMethods: [{ id: 'pm-1' }],
         intervals: [],
@@ -1614,6 +1932,7 @@ describe('PeriodicJobService', () => {
         default: true,
         memberPlanId: null,
         autoRenewal: [],
+        legacy: [true, false],
         periodicities: [],
         paymentMethods: [],
         intervals: [],
@@ -1623,6 +1942,7 @@ describe('PeriodicJobService', () => {
         default: false,
         memberPlanId: 'mp-1',
         autoRenewal: [true],
+        legacy: [true, false],
         periodicities: [PaymentPeriodicity.biannual],
         paymentMethods: [{ id: 'pm-1' }],
         intervals: [
@@ -1652,6 +1972,7 @@ describe('PeriodicJobService', () => {
         default: true,
         memberPlanId: null,
         autoRenewal: [],
+        legacy: [true, false],
         periodicities: [],
         paymentMethods: [],
         intervals: [],
@@ -1661,6 +1982,7 @@ describe('PeriodicJobService', () => {
         default: false,
         memberPlanId: 'mp-1',
         autoRenewal: [true],
+        legacy: [true, false],
         periodicities: [PaymentPeriodicity.biannual],
         paymentMethods: [{ id: 'pm-1' }],
         intervals: [
@@ -1721,6 +2043,7 @@ describe('PeriodicJobService', () => {
         default: true,
         memberPlanId: null,
         autoRenewal: [],
+        legacy: [true, false],
         periodicities: [],
         paymentMethods: [],
         intervals: [],
@@ -1730,6 +2053,7 @@ describe('PeriodicJobService', () => {
         default: false,
         memberPlanId: 'mp-2',
         autoRenewal: [true],
+        legacy: [true, false],
         periodicities: [PaymentPeriodicity.biannual],
         paymentMethods: [{ id: 'pm-2' }],
         intervals: [],
@@ -1867,6 +2191,98 @@ describe('PeriodicJobService', () => {
       `Invoice ${invoice.id} has no subscription assigned!`
     );
   });
+  describe('the job log of a run', () => {
+    const recordedSteps = () =>
+      mockPrisma.periodicJobStep.create.mock.calls.map(
+        ([{ data }]: [{ data: Record<string, unknown> }]) => data
+      );
+
+    it('records each step of the run on the job', async () => {
+      await service.execute(new Date('2026-11-07T03:00:00Z'));
+
+      expect(recordedSteps().map(step => [step.key, step.status])).toEqual([
+        ['customMails', 'ok'],
+        ['invoiceStates', 'ok'],
+        ['invoiceCreation', 'ok'],
+        ['invoiceLetters', 'ok'],
+        ['paymentMethodChanges', 'ok'],
+        ['charging', 'ok'],
+        ['deactivationUnpaid', 'ok'],
+        ['deactivationNotRenewed', 'ok'],
+      ]);
+      expect(recordedSteps()[0]).toEqual(
+        expect.objectContaining({
+          periodicJobId: 'job-1',
+          startedAt: expect.any(Date),
+          finishedAt: expect.any(Date),
+        })
+      );
+    });
+
+    it('records the step that failed, with why, and none after it', async () => {
+      mockSubscriptionController.findAllOpenInvoices.mockResolvedValue([
+        { id: 'inv-1', subscription: { id: 'sub-1' } },
+      ]);
+      mockSubscriptionController.checkInvoiceState.mockRejectedValue({
+        code: 401,
+        message: { message: 'Unauthorized' },
+      });
+
+      await expect(service.execute()).rejects.toThrow();
+
+      expect(recordedSteps().map(step => [step.key, step.status])).toEqual([
+        ['customMails', 'ok'],
+        ['invoiceStates', 'error'],
+      ]);
+      expect(recordedSteps()[1].error).toContain(
+        'Checking the state of invoice inv-1 failed: 401 Unauthorized'
+      );
+    });
+
+    it('records a step of the night on the newest job', async () => {
+      mockPrisma.periodicJob.findFirst.mockResolvedValue({ id: 'job-9' });
+      const startedAt = new Date('2026-11-07T04:00:00Z');
+      const finishedAt = new Date('2026-11-07T04:02:00Z');
+
+      await service.recordNightStep({
+        key: 'bexioContactSync',
+        status: 'warning',
+        counts: { readers: 1821, pushed: 1814, failed: 7 },
+        error: '422 mail is invalid',
+        startedAt,
+        finishedAt,
+      });
+
+      expect(mockPrisma.periodicJob.findFirst).toHaveBeenCalledWith(
+        expect.objectContaining({ orderBy: { date: 'desc' } })
+      );
+      expect(recordedSteps()).toEqual([
+        {
+          periodicJobId: 'job-9',
+          key: 'bexioContactSync',
+          status: 'warning',
+          counts: { readers: 1821, pushed: 1814, failed: 7 },
+          error: '422 mail is invalid',
+          startedAt,
+          finishedAt,
+        },
+      ]);
+    });
+
+    it('drops a step of the night when no job has ever run', async () => {
+      mockPrisma.periodicJob.findFirst.mockResolvedValue(null);
+
+      await service.recordNightStep({
+        key: 'emailQuality',
+        status: 'ok',
+        startedAt: new Date(),
+        finishedAt: new Date(),
+      });
+
+      expect(mockPrisma.periodicJobStep.create).not.toHaveBeenCalled();
+    });
+  });
+
   describe('a run that fails', () => {
     const unauthorized = { code: 401, message: { message: 'Unauthorized' } };
     const user = { id: 'user-1', email: 'dev-mail@test.wepublish.com' };
@@ -2114,6 +2530,20 @@ describe('PeriodicJobService', () => {
       });
 
       otherPod = startPod();
+    });
+
+    it("drops the failed try's steps before the retry records its own", async () => {
+      failedNight(daysAgo(1));
+
+      await service.retryAndCatchUp();
+      await lockReleased();
+
+      expect(mockPrisma.periodicJobStep.deleteMany).toHaveBeenCalledWith({
+        where: {
+          periodicJobId: 'job-1',
+          key: { in: expect.arrayContaining(['customMails', 'charging']) },
+        },
+      });
     });
 
     it('retries the failed night and then runs every night up to today', async () => {

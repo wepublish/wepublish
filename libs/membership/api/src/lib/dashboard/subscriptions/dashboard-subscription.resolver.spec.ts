@@ -9,6 +9,16 @@ import {
   PaymentPeriodicity,
   SubscriptionDeactivationReason,
 } from '@prisma/client';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthSession, AuthSessionType } from '@wepublish/authentication/api';
+import { OneOfGuard } from '@wepublish/nest-modules';
+import {
+  CanGetActiveSubscriberFirstNames,
+  CanGetSubscription,
+  CanGetSubscriptions,
+  CanGetUsers,
+} from '@wepublish/permissions';
+import { PermissionsGuard } from '@wepublish/permissions/api';
 import { DashboardSubscriptionResolver } from './dashboard-subscription.resolver';
 import { DashboardSubscriptionService } from './dashboard-subscription.service';
 import type { Mocked } from 'vitest';
@@ -262,4 +272,146 @@ describe('DashboardSubscriptionResolver', () => {
         ).toHaveBeenCalled();
       });
   });
+});
+
+const activeSubscriberFirstNamesQuery = `
+  query ActiveSubscriberFirstNames {
+    activeSubscriberFirstNames {
+      firstName
+      createdAt
+    }
+  }
+`;
+
+const anonymousSubscriberFieldsQuery = `
+  query AnonymousSubscriberFields {
+    __type(name: "AnonymousSubscriber") {
+      fields {
+        name
+      }
+    }
+  }
+`;
+
+const userWith = (...permissionIDs: string[]) =>
+  ({
+    type: AuthSessionType.User,
+    id: 'session-1',
+    user: { id: 'user-1' },
+    roles: [{ id: 'reader', permissionIDs }],
+  }) as unknown as AuthSession;
+
+const apiKeyWith = (...permissions: string[]): AuthSession => ({
+  type: AuthSessionType.ApiToken,
+  id: 'api-token-1',
+  name: 'Supporter wall',
+  token: 'secret',
+  permissions,
+  createdBy: { id: 'creator-1', email: 'creator@example.test' },
+});
+
+describe('DashboardSubscriptionResolver.activeSubscriberFirstNames', () => {
+  let app: INestApplication;
+  let session: AuthSession | undefined;
+  const activeSubscriberFirstNames = vi.fn();
+
+  beforeAll(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        GraphQLModule.forRoot<ApolloDriverConfig>({
+          driver: NodeApolloDriver,
+          autoSchemaFile: true,
+          path: '/',
+          cache: 'bounded',
+          context: ({ req }: { req: { user?: AuthSession } }) => {
+            req.user = session;
+            return { req };
+          },
+        }),
+      ],
+      providers: [
+        DashboardSubscriptionResolver,
+        {
+          provide: DashboardSubscriptionService,
+          useValue: { activeSubscriberFirstNames },
+        },
+        // The guards as the API registers them: OneOfGuard runs globally and
+        // calls whichever guards the operation declared.
+        { provide: APP_GUARD, useClass: OneOfGuard },
+        PermissionsGuard,
+      ],
+    }).compile();
+
+    app = module.createNestApplication(new NodeAdapter());
+    await app.listen(0, '127.0.0.1');
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    session = undefined;
+  });
+
+  const expectForbidden = () =>
+    request(app.getHttpServer())
+      .post('/')
+      .send({ query: activeSubscriberFirstNamesQuery })
+      .expect(200)
+      .expect(({ body }) => {
+        expect(body.data).toBeNull();
+        expect(body.errors[0].message).toBe('Forbidden resource');
+        expect(activeSubscriberFirstNames).not.toHaveBeenCalled();
+      });
+
+  test('is refused without a session', () => expectForbidden());
+
+  test('is refused with the general subscription permissions', () => {
+    session = userWith(
+      CanGetSubscriptions.id,
+      CanGetSubscription.id,
+      CanGetUsers.id
+    );
+
+    return expectForbidden();
+  });
+
+  test.each([
+    ['a user whose role', userWith(CanGetActiveSubscriberFirstNames.id)],
+    ['an API key that', apiKeyWith(CanGetActiveSubscriberFirstNames.id)],
+  ])(
+    'serves first names and creation dates to %s has the permission',
+    async (_, permittedSession) => {
+      session = permittedSession;
+      activeSubscriberFirstNames.mockResolvedValue([
+        { firstName: 'Anna', createdAt: new Date('2022-12-24T08:00:00.000Z') },
+        { firstName: null, createdAt: new Date('2022-11-01T08:00:00.000Z') },
+      ]);
+
+      await request(app.getHttpServer())
+        .post('/')
+        .send({ query: activeSubscriberFirstNamesQuery })
+        .expect(200)
+        .expect(({ body }) => {
+          expect(body.errors).toBeUndefined();
+          expect(body.data.activeSubscriberFirstNames).toEqual([
+            { firstName: 'Anna', createdAt: '2022-12-24T08:00:00.000Z' },
+            { firstName: null, createdAt: '2022-11-01T08:00:00.000Z' },
+          ]);
+        });
+    }
+  );
+
+  test('exposes nothing but the first name and the creation date', () =>
+    request(app.getHttpServer())
+      .post('/')
+      .send({ query: anonymousSubscriberFieldsQuery })
+      .expect(200)
+      .expect(({ body }) => {
+        expect(
+          body.data.__type.fields.map(({ name }: { name: string }) => name)
+        ).toEqual(['firstName', 'createdAt']);
+      }));
 });

@@ -31,6 +31,18 @@ const escape = (value: string) =>
 const tag = (name: string, value: string | null | undefined) =>
   value ? `<${name}>${escape(value)}</${name}>` : '';
 
+// Characters an url may contain as they are (RFC 3986), plus already
+// percent-encoded triplets. Everything else (spaces, umlauts, a lone %) is
+// percent-encoded. The API hands out page and article urls with the slug
+// unencoded, e.g. "https://bajour.ch/Basler*in des Tages".
+const UNSAFE_URL_CHAR =
+  /%(?![0-9A-Fa-f]{2})|[^A-Za-z0-9\-._~:/?#[\]@!$&'()*+,;=%]/gu;
+
+const encodeUrl = (url: string) =>
+  url.replace(UNSAFE_URL_CHAR, char => encodeURIComponent(char));
+
+const locTag = (url: string) => tag('loc', encodeUrl(url));
+
 const newsTag = (
   news: SitemapUrl['news'],
   publication: NewsPublication | undefined
@@ -47,7 +59,7 @@ const newsTag = (
 
 const urlTag = (url: SitemapUrl, publication: NewsPublication | undefined) =>
   '<url>' +
-  tag('loc', url.loc) +
+  locTag(url.loc) +
   tag('lastmod', url.lastmod) +
   tag('changefreq', url.changefreq) +
   tag('priority', url.priority?.toFixed(1)) +
@@ -72,7 +84,7 @@ export const buildSitemapIndex = (sitemaps: SitemapReference[]) =>
     ...sitemaps.map(
       sitemap =>
         '<sitemap>' +
-        tag('loc', sitemap.loc) +
+        locTag(sitemap.loc) +
         tag('lastmod', sitemap.lastmod) +
         '</sitemap>'
     ),

@@ -29,12 +29,14 @@ import {
   MailLogList,
   MailSendPage,
   DeliveryChannelPage,
+  LegacyFlowRedirect,
   LetterLayoutEdit,
   LetterLayoutList,
   MailTemplateEdit,
   MailTemplateList,
   MemberPlanEdit,
-  SubscriptionFlowList,
+  SubscriptionFlowOverview,
+  SubscriptionFlowPage,
 } from '@wepublish/membership/editor';
 import { SettingList } from '@wepublish/settings/editor';
 import {
@@ -60,6 +62,7 @@ import { EditorCommandPaletteSurface } from './commandPalette/editorCommandPalet
 import { EditorGlobalStyles } from './editorGlobalStyles';
 import { Login } from './login';
 import { LoginJwt } from './loginJwt';
+import { loginRedirectUrl } from './loginRedirect';
 import { LoginWepublish } from './loginWepublish';
 import { DocumentTitle } from './pageTitle/documentTitle';
 import { ResetPassword } from './resetPassword';
@@ -97,6 +100,10 @@ import { ExternalApps } from './routes/externalApps/externalAppsEdit';
 import { GoodieCreateView } from './routes/goodie/goodieCreateView';
 import { GoodieEditView } from './routes/goodie/goodieEditView';
 import { GoodieList } from './routes/goodie/goodieList';
+import { GiftCodeList as GiftCodeListRoute } from './routes/giftCode/giftCodeList';
+import { GiftCodeOfferCreateView as GiftCodeOfferCreateRoute } from './routes/giftCode/giftCodeOfferCreateView';
+import { GiftCodeOfferEditView as GiftCodeOfferEditRoute } from './routes/giftCode/giftCodeOfferEditView';
+import { GiftCodeOfferList as GiftCodeOfferListRoute } from './routes/giftCode/giftCodeOfferList';
 import { ImageList } from './routes/images/imageList';
 import { IntegrationEditView } from './routes/integrations/integrationEditView';
 import { IntegrationList } from './routes/integrations/integrationList';
@@ -163,6 +170,11 @@ const withMediaUploadsFeature = createCheckedFeatureComponent(
 );
 const VideoList = withMediaUploadsFeature(UncheckedVideoList);
 const AudioList = withMediaUploadsFeature(UncheckedAudioList);
+const withGiftCodesFeature = createCheckedFeatureComponent('gift-codes');
+const GiftCodeOfferList = withGiftCodesFeature(GiftCodeOfferListRoute);
+const GiftCodeOfferCreateView = withGiftCodesFeature(GiftCodeOfferCreateRoute);
+const GiftCodeOfferEditView = withGiftCodesFeature(GiftCodeOfferEditRoute);
+const GiftCodeList = withGiftCodesFeature(GiftCodeListRoute);
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -1057,6 +1069,38 @@ function AppRoutes() {
             </Base>
           }
         />
+        <Route
+          path="gift-codes/offers"
+          element={
+            <Base>
+              <GiftCodeOfferList />
+            </Base>
+          }
+        />
+        <Route
+          path="gift-codes/offers/create"
+          element={
+            <Base>
+              <GiftCodeOfferCreateView />
+            </Base>
+          }
+        />
+        <Route
+          path="gift-codes/offers/edit/:id"
+          element={
+            <Base>
+              <GiftCodeOfferEditView />
+            </Base>
+          }
+        />
+        <Route
+          path="gift-codes"
+          element={
+            <Base>
+              <GiftCodeList />
+            </Base>
+          }
+        />
         {/* Consents Routes */}
         <Route
           path="consents"
@@ -1108,12 +1152,25 @@ function AppRoutes() {
           }
         />
         <Route
-          path="communicationflows/edit/:id"
+          path="communicationflows"
           element={
             <Base>
-              <SubscriptionFlowList />
+              <SubscriptionFlowOverview />
             </Base>
           }
+        />
+        <Route
+          path="communicationflows/flow/:id"
+          element={
+            <Base>
+              <SubscriptionFlowPage />
+            </Base>
+          }
+        />
+        {/* Until the overview there was one page per member plan */}
+        <Route
+          path="communicationflows/edit/:id"
+          element={<LegacyFlowRedirect />}
         />
         <Route
           path="mailtemplates"
@@ -1163,12 +1220,12 @@ function AppRoutes() {
             </Base>
           }
         />
-        {/* System mails are now part of the automatic mails view */}
+        {/* System mails are part of the automated messages overview */}
         <Route
           path="systemmails"
           element={
             <Navigate
-              to="/communicationflows/edit/default"
+              to="/communicationflows"
               replace
             />
           }
@@ -1356,7 +1413,7 @@ export function App() {
 
   useEffect(() => {
     if (session === null && !window.location.pathname.startsWith('/login')) {
-      window.location.href = `/login?next=${window.location.pathname}`;
+      window.location.href = loginRedirectUrl(window.location);
     }
   }, [session]);
 

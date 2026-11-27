@@ -185,6 +185,14 @@ export const SubscribeNarrowSection = styled(SubscribeSection)`
 
 export const SubscribeOpenInvoicesNotice = styled('div')``;
 
+export const SubscribeMemberPlansHeading = styled('div')`
+  display: flex;
+  flex-flow: row wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: ${({ theme }) => theme.spacing(1, 3)};
+`;
+
 export const SubscribeExistingSubscriptionNotice = styled('div')``;
 
 export const clampMonthlyAmount = (amount: number, min: number, max?: number) =>
@@ -217,6 +225,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   periodicityDisplay,
   hiddenAreas = NO_HIDDEN_AREAS,
   onInvalid,
+  giftCodeRedemptionUrl,
+  giftCodeRedemptionText,
+  subscribeExtras,
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: { locale, siteTitle },
@@ -558,6 +569,13 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         return;
       }
 
+      // what the tenant adds, e.g. the first printed issue; false: not yet
+      const extras = subscribeExtras?.() ?? {};
+
+      if (extras === false) {
+        return;
+      }
+
       const subscribeData: SubscribeMutationVariables = {
         monthlyAmount,
         memberPlanId: data.memberPlanId,
@@ -566,6 +584,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         autoRenew: data.autoRenew,
         discountCode: data.discountCode,
         goodieId: data.goodieId,
+        ...extras,
       };
 
       if (hasUser) {
@@ -857,9 +876,21 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           )}
 
           <SubscribeSection area="memberPlans">
-            {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
-              <H5 component="h2">{t('subscribe.chooseSubscription')}</H5>
-            )}
+            {giftCodeRedemptionUrl ?
+              <SubscribeMemberPlansHeading>
+                {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
+                  <H5 component="h2">{t('subscribe.chooseSubscription')}</H5>
+                )}
+
+                <Link href={giftCodeRedemptionUrl}>
+                  {giftCodeRedemptionText ||
+                    t('subscribe.giftCodeRedemption.link')}
+                </Link>
+              </SubscribeMemberPlansHeading>
+            : (memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
+                <H5 component="h2">{t('subscribe.chooseSubscription')}</H5>
+              )
+            }
 
             {useOfferCards ?
               <Controller
@@ -1205,7 +1236,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             <SubscribeButton
               size={'large'}
               disabled={
-                challenge.loading ||
+                (!hasUserContext && challenge.loading) ||
                 userInvoices.loading ||
                 userSubscriptions.loading ||
                 loading ||

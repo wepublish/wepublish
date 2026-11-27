@@ -34,6 +34,7 @@ describe('editor page titles', () => {
     ['/images/upload', 'pageTitles.imageUpload'],
     ['/api-tokens/generate', 'pageTitles.apiTokenGenerate'],
     ['/settings/website/general', 'pageTitles.websiteSettings'],
+    ['/gift-codes/offers/edit/abc-123', 'pageTitles.giftCodeOfferEdit'],
     ['/', 'pageTitles.dashboard'],
   ])('titles %s as %s', (pathname, key) => {
     expect(pageTitleKey(pathname)).toBe(key);

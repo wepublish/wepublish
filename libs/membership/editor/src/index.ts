@@ -1,6 +1,9 @@
 export * from './lib/dashboard/dashboard';
 export * from './lib/mail-template/mail-template-list';
 export * from './lib/mail-template/mail-template-edit';
+export { formatTemplateLabel } from './lib/mail-template/mail-placeholders';
+export { useLetterChannel } from './lib/mail-template/use-letter-channel';
+export { TemplateAttachmentsNote } from './lib/mail-send/template-attachments-note';
 export * from './lib/letter-layout/letter-layout-list';
 export * from './lib/letter-layout/letter-layout-edit';
 export * from './lib/mail-send/mail-send-page';
@@ -16,5 +19,8 @@ export * from './lib/delivery-mode/user-delivery-mode-panel';
 export * from './lib/delivery-mode/delivery-channel-page';
 export * from './lib/memberplan/memberplan-edit';
 export * from './lib/system-mail/system-mail-section';
+export * from './lib/subscription-flow/flow-overview';
+export * from './lib/subscription-flow/legacy-flow-redirect';
 export * from './lib/subscription-flow/subscription-flow-list';
+export * from './lib/subscription-flow/subscription-flow-overview';
 export * from './lib/periodic-job/periodic-job-logs';

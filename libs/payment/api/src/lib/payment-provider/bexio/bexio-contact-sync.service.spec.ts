@@ -223,4 +223,52 @@ describe('BexioContactSyncService', () => {
       );
     }
   );
+
+  describe('what it reports to the job log', () => {
+    it('reports nothing while no integration syncs contacts', async () => {
+      const { service } = setup({ enabled: false });
+
+      expect(await service.syncAll()).toEqual([]);
+    });
+
+    it('counts the readers pushed and failed, with the first reason', async () => {
+      const { service, provider } = setup({
+        known: [
+          link(),
+          link({ userId: 'user-2', User: reader({ id: 'user-2' }) }),
+        ],
+        unknown: [reader({ id: 'user-3' })],
+      });
+      provider.syncContact.mockRejectedValueOnce(new Error('mail is invalid'));
+
+      expect(await service.syncAll()).toEqual([
+        {
+          providerId: 'bexio',
+          readers: 3,
+          pushed: 2,
+          failed: 1,
+          firstError: 'mail is invalid',
+        },
+      ]);
+    });
+
+    it.each([
+      ['rate-limited', { code: 429, message: 'Too Many Requests' }],
+      ['key-rejected', { code: 401, message: 'Unauthorized' }],
+    ])('says when bexio stopped the sync (%s)', async (stopped, rejection) => {
+      const { service, provider } = setup({
+        known: [
+          link(),
+          link({ userId: 'user-2', User: reader({ id: 'user-2' }) }),
+        ],
+      });
+      provider.syncContact.mockRejectedValueOnce(rejection);
+
+      const [result] = await service.syncAll();
+
+      expect(result).toEqual(
+        expect.objectContaining({ readers: 2, pushed: 0, failed: 1, stopped })
+      );
+    });
+  });
 });

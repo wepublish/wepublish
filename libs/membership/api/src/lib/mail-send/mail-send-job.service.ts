@@ -13,6 +13,7 @@ import {
   MailSendJobRecipientState,
   MailSendJobState,
   MailTemplate,
+  MailTemplateVariant,
   Prisma,
   PrismaClient,
 } from '@prisma/client';
@@ -20,6 +21,7 @@ import { v7 as uuidv7 } from 'uuid';
 import {
   attachmentIdsOf,
   composeMail,
+  findTemplateVariant,
   MAIL_TEMPLATE_ATTACHMENT_IDS,
   MailAttachmentError,
   MailContext,
@@ -41,6 +43,7 @@ import {
   MailAudienceInput,
   MailRecipientBase,
 } from './mail-send.model';
+import { freezeRollingDates } from './rolling-dates';
 import {
   MailRecipient,
   MailSendRecipientService,
@@ -135,6 +138,7 @@ export class MailSendJobService {
     currentUserId: string
   ): Promise<MailSendJob> {
     const template = await this.loadTemplate(templateId);
+    await this.loadVariant(template.id, MailChannel.mail);
 
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
@@ -189,9 +193,14 @@ export class MailSendJobService {
     await this.assertChannelAllowed(input.channel);
 
     const template = await this.loadTemplate(input.mailTemplateId);
+    await this.loadVariant(template.id, input.channel ?? MailChannel.mail);
+
+    // Rolling dates are fixed here: the count, the queue and the record of
+    // the send then all mean the same people, however long the queue takes.
+    const audience = freezeRollingDates(input.audience, new Date());
 
     const totalCount = await this.recipientService.count(
-      input.audience,
+      audience,
       input.channel
     );
 
@@ -199,12 +208,12 @@ export class MailSendJobService {
       data: {
         mailTemplateId: template.id,
         createdByUserId: currentUserId,
-        audience: this.audienceFor(input.audience),
+        audience: this.audienceFor(audience),
         channel: input.channel ?? MailChannel.mail,
         ...printSettings(input.print),
         status: MailSendJobState.queued,
         totalCount,
-        recipientFilter: input.audience as unknown as Prisma.InputJsonValue,
+        recipientFilter: audience as unknown as Prisma.InputJsonValue,
       },
     });
 
@@ -609,6 +618,7 @@ export class MailSendJobService {
           },
           mailSendJobId: job.id,
           mailLogId,
+          log: this.triggerOf(recipient, optionalData),
         });
       } else {
         await this.mailContext.sendMail({
@@ -619,6 +629,7 @@ export class MailSendJobService {
           mailSendJobId: job.id,
           mailLogId,
           isRetry: false,
+          ...this.triggerOf(recipient, optionalData),
         });
       }
 
@@ -783,6 +794,10 @@ export class MailSendJobService {
     await this.assertChannelAllowed(input.channel);
 
     const template = await this.loadTemplate(input.mailTemplateId);
+    const variant = await this.loadVariant(
+      template.id,
+      input.channel ?? MailChannel.mail
+    );
     const recipient = await this.findPreviewRecipient(
       input.audience,
       input.recipientId,
@@ -805,11 +820,11 @@ export class MailSendJobService {
       const print = printSettings(input.print);
       const pdf = await this.letterContext.renderLetter({
         template: {
-          htmlContent: template.htmlContent,
-          letterAppendixId: template.letterAppendixId,
+          htmlContent: variant.htmlContent,
+          letterAppendixId: variant.letterAppendixId,
           attachmentIds: attachmentIdsOf(template),
         },
-        layout: await this.letterContext.resolveLayout(template.letterLayoutId),
+        layout: await this.letterContext.resolveLayout(variant.letterLayoutId),
         addressPosition: print.addressPosition,
         printMode: print.printMode,
         data: { user: recipient.user, optional: optionalData },
@@ -817,7 +832,7 @@ export class MailSendJobService {
       });
 
       return {
-        subject: template.subject,
+        subject: variant.subject,
         html: '',
         pdf: pdf.toString('base64'),
         attachments: [],
@@ -833,9 +848,9 @@ export class MailSendJobService {
     };
     const composed = composeMail(
       {
-        subject: template.subject,
-        htmlContent: template.htmlContent,
-        textContent: template.textContent,
+        subject: variant.subject,
+        htmlContent: variant.htmlContent,
+        textContent: variant.textContent,
       },
       data
     );
@@ -905,6 +920,25 @@ export class MailSendJobService {
    * latest invoice) as `optional` data. Custom templates and user-only
    * recipients get an empty payload.
    */
+  /**
+   * What the mail log says a manual send is about: the recipient's
+   * subscription, and the invoice whose data the template was given. A
+   * template context that shows no invoice names none.
+   */
+  private triggerOf(
+    recipient: MailRecipient,
+    optionalData: Record<string, unknown>
+  ): { subscriptionId: string | null; invoiceId: string | null } {
+    const invoice = (optionalData['invoice'] ??
+      (optionalData['invoices'] as unknown[] | undefined)?.[0]) as
+      { id?: string } | null | undefined;
+
+    return {
+      subscriptionId: recipient.subscription?.id ?? null,
+      invoiceId: invoice?.id ?? null,
+    };
+  }
+
   private async buildOptionalData(
     template: MailTemplate,
     recipient: MailRecipient
@@ -933,12 +967,14 @@ export class MailSendJobService {
    */
   async missingPlaceholders(
     templateId: string,
-    withSubscriptionData: boolean
+    withSubscriptionData: boolean,
+    channel: MailChannel = MailChannel.mail
   ): Promise<string[]> {
     const template = await this.loadTemplate(templateId);
+    const variant = await this.loadVariant(template.id, channel);
 
     return findMissingPlaceholders(
-      template,
+      { ...variant, context: template.context },
       withSubscriptionData,
       await this.attachmentPlaceholders(attachmentIdsOf(template))
     );
@@ -991,5 +1027,26 @@ export class MailSendJobService {
     }
 
     return template;
+  }
+
+  /**
+   * What the template says on the channel of a send. A template is written
+   * per channel, so one without that version cannot go out on it.
+   */
+  private async loadVariant(
+    templateId: string,
+    channel: MailChannel
+  ): Promise<MailTemplateVariant> {
+    const variant = await findTemplateVariant(this.prisma, templateId, channel);
+
+    if (!variant) {
+      throw new BadRequestException(
+        channel === MailChannel.letter ?
+          'This template has no letter version.'
+        : 'This template has no email version.'
+      );
+    }
+
+    return variant;
   }
 }

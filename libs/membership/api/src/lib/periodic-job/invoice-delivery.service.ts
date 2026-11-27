@@ -34,12 +34,25 @@ import { describeError } from '@wepublish/utils/api';
 import { startOfDay } from 'date-fns';
 import { SubscriptionEventDictionary } from '../subscription-event-dictionary/subscription-event-dictionary';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
+import { isLegacySubscription } from '../subscription/legacy-subscription';
 
-/** What the invoice-creation mail is told about the paper side. */
+/**
+ * What the invoice-creation mail is told about the paper side. `mailLogId`:
+ * the entry a replacement letter was given when the held one was taken back.
+ */
 export type PaperSide = Pick<
   MailControllerConfig,
-  'letterRecipient' | 'letterAttachment'
+  'letterRecipient' | 'letterAttachment' | 'mailLogId'
 >;
+
+/** The subscription and invoice a flow mail is about, for the mail log. */
+export type MailTrigger = Pick<
+  MailControllerConfig,
+  'subscriptionId' | 'invoiceId'
+>;
+
+/** Retry a provider hiccup: only for the nightly run, nobody waits on it. */
+export type MailRetry = Pick<MailControllerConfig, 'retryTransient'>;
 
 /**
  * Whether the invoice-creation mail goes out now. `removed`: the provider
@@ -84,6 +97,7 @@ export class InvoiceDeliveryService {
         paymentMethodId: subscription.paymentMethodID,
         periodicity: subscription.paymentPeriodicity,
         autorenwal: subscription.autoRenew,
+        legacy: isLegacySubscription(subscription),
         events: [SubscriptionEvent.INVOICE_CREATION],
       })
     ).find(action => action.type === SubscriptionEvent.INVOICE_CREATION);
@@ -114,7 +128,11 @@ export class InvoiceDeliveryService {
       false,
       { subscriptionToCreateInvoice: subscription, invoice },
       startOfDay(new Date()),
-      outcome.send
+      {
+        ...outcome.send,
+        subscriptionId: subscription.id,
+        invoiceId: invoice.id,
+      }
     );
   }
 
@@ -135,6 +153,7 @@ export class InvoiceDeliveryService {
       prisma: this.prisma,
       letterSender: this.mailContext.letterSender,
       recipient: subscription.user,
+      mailTemplateId: creationEvent.mailTemplateId,
       asLetter: creationEvent.sendAsLetter,
       withPaymentSlip: true,
       logger: this.logger,
@@ -258,8 +277,7 @@ export class InvoiceDeliveryService {
   /**
    * Send a subscription-flow template as mail or, for a reader in letter mode,
    * as a letter. A refused address or a print vendor outage concerns this
-   * recipient only and is logged; anything else is thrown. `retryTransient`
-   * lets a provider hiccup be retried, for the nightly run only.
+   * recipient only and is logged; anything else is thrown.
    */
   async sendFlowMail(
     action: Action,
@@ -267,8 +285,7 @@ export class InvoiceDeliveryService {
     isRetry: boolean,
     optionalData: Record<string, any>,
     periodicJobRunDate: Date,
-    paper: PaperSide = {},
-    retryTransient = false
+    delivery: PaperSide & MailTrigger & MailRetry = {}
   ) {
     if (!action.mailTemplateId || !user) {
       return;
@@ -284,8 +301,7 @@ export class InvoiceDeliveryService {
         periodicJobRunDate,
         mailType: mailLogType.SubscriptionFlow,
         asLetter: action.sendAsLetter,
-        retryTransient,
-        ...paper,
+        ...delivery,
       }).sendMail();
     } catch (error) {
       // A refused address, a print vendor outage or attachments that cannot

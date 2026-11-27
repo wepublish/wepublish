@@ -14,6 +14,8 @@ export type MailProviderDeps = {
   kv: NamespacedCache;
 };
 
+const WEBHOOK_BODY_LIMIT = '10mb';
+
 export const createMailProvider = (
   id: string,
   type: MailProviderType,
@@ -23,21 +25,24 @@ export const createMailProvider = (
     case MailProviderType.MAILGUN:
       return new MailgunMailProvider({
         id,
-        incomingRequestHandler: bodyParser.json(),
+        incomingRequestHandler: bodyParser.json({ limit: WEBHOOK_BODY_LIMIT }),
         prisma,
         kv,
       });
     case MailProviderType.MAILCHIMP:
       return new MailchimpMailProvider({
         id,
-        incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
+        incomingRequestHandler: bodyParser.urlencoded({
+          extended: true,
+          limit: WEBHOOK_BODY_LIMIT,
+        }),
         prisma,
         kv,
       });
     case MailProviderType.BREVO:
       return new BrevoMailProvider({
         id,
-        incomingRequestHandler: bodyParser.json(),
+        incomingRequestHandler: bodyParser.json({ limit: WEBHOOK_BODY_LIMIT }),
         prisma,
         kv,
       });

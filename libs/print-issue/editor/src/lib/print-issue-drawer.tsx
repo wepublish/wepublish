@@ -26,6 +26,11 @@ import {
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdSave } from 'react-icons/md';
+import {
+  DEFAULT_ISSUE_NUMBERING,
+  formatIssueLabel,
+  type IssueNumberingConfig,
+} from '@wepublish/utils';
 import { IssueNumber, MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE } from './common';
 import { PrintIssueStatusChip } from './print-issue-status';
 
@@ -46,6 +51,7 @@ export function PrintIssueDrawer({
   open,
   issue,
   next = FIRST_ISSUE,
+  numbering = DEFAULT_ISSUE_NUMBERING,
   onClose,
 }: {
   open: boolean;
@@ -53,6 +59,8 @@ export function PrintIssueDrawer({
   issue: TinyPrintIssueFragment | null | undefined;
   /** what a new issue is called, see `nextIssue` */
   next?: IssueNumber;
+  /** how the medium numbers its issues; where they run on, the ship day gives the year */
+  numbering?: IssueNumberingConfig;
   onClose: () => void;
 }) {
   return (
@@ -69,6 +77,7 @@ export function PrintIssueDrawer({
         key={issue?.id ?? `new-${next.number}-${next.year}`}
         issue={issue ?? null}
         next={next}
+        numbering={numbering}
         onClose={onClose}
       />
     </Drawer>
@@ -78,10 +87,12 @@ export function PrintIssueDrawer({
 function PrintIssueForm({
   issue,
   next,
+  numbering,
   onClose,
 }: {
   issue: TinyPrintIssueFragment | null;
   next: IssueNumber;
+  numbering: IssueNumberingConfig;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
@@ -102,6 +113,14 @@ function PrintIssueForm({
 
   const numbers = numbersOf(number, numberTo);
   const numberToInvalid = numberTo !== null && numberTo <= number;
+  const continuous = numbering.counting === 'continuous';
+  // where numbers run on, the year is only the ship day's
+  const savedYear =
+    continuous && issueDate ? Number(issueDate.slice(0, 4)) : year;
+  const label = formatIssueLabel(
+    { number, numberTo: numberToInvalid ? null : numberTo, year: savedYear },
+    numbering.format
+  );
 
   // a double issue counts as the numbers it covers until told otherwise
   const changeNumbers = (from: number, to: number | null) => {
@@ -140,7 +159,7 @@ function PrintIssueForm({
   const input = (): PrintIssueInputModel => ({
     number,
     numberTo: numberTo !== null && numberTo > number ? numberTo : null,
-    year,
+    year: savedYear,
     countsAs: Math.min(countsAs, numbers),
     title: title.trim() || null,
     issueDate,
@@ -227,15 +246,26 @@ function PrintIssueForm({
           slotProps={{ htmlInput: { min: number + 1 } }}
           sx={{ width: 120 }}
         />
-        <TextField
-          label={t('printIssues.fields.year')}
-          type="number"
-          value={year}
-          onChange={event => setYear(Number(event.target.value) || thisYear())}
-          slotProps={{ htmlInput: { min: 2000, max: 2100 } }}
-          sx={{ width: 120 }}
-        />
+        {!continuous && (
+          <TextField
+            label={t('printIssues.fields.year')}
+            type="number"
+            value={year}
+            onChange={event =>
+              setYear(Number(event.target.value) || thisYear())
+            }
+            slotProps={{ htmlInput: { min: 2000, max: 2100 } }}
+            sx={{ width: 120 }}
+          />
+        )}
       </Stack>
+
+      <Typography
+        variant="body2"
+        color="text.secondary"
+      >
+        {t('printIssues.drawer.labelPreview')}: {label}
+      </Typography>
 
       {numbers > 1 && (
         <FormControl sx={{ width: 220 }}>

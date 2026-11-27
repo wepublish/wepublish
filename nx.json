@@ -230,6 +230,7 @@
         "libs/feed/website/**/*",
         "libs/form/core/**/*",
         "libs/form/editor/**/*",
+        "libs/gift-code/api/**/*",
         "libs/google-analytics/api/**/*",
         "libs/health/api/**/*",
         "libs/image/website/**/*",

@@ -3,6 +3,7 @@ import { timingSafeEqual } from 'crypto';
 import {
   MailLogStatus,
   MailProviderError,
+  MailProviderTransientError,
   MailProviderMessageState,
   MailProviderTemplate,
   MailProviderTemplateContent,
@@ -149,6 +150,14 @@ export class BrevoMailProvider extends BaseMailProvider {
         textContent: props.message,
         htmlContent: props.messageHtml,
         headers: { 'X-Mailin-custom': props.mailLogID },
+        ...(props.attachments?.length ?
+          {
+            attachment: props.attachments.map(({ filename, content }) => ({
+              name: filename,
+              content: content.toString('base64'),
+            })),
+          }
+        : {}),
       },
       `the mail to ${props.recipient}`
     );
@@ -354,7 +363,11 @@ export class BrevoMailProvider extends BaseMailProvider {
     return (await this.getConfig())?.name ?? 'Brevo';
   }
 
-  /** One call to Brevo's API; a non-2xx answer becomes a MailProviderError with Brevo's wording. */
+  /**
+   * One call to Brevo's API; a non-2xx answer becomes a MailProviderError
+   * with Brevo's wording. No answer, a rate limit (429) or a server error
+   * (5xx) is a {@link MailProviderTransientError}: worth another try.
+   */
   private async call<T>(
     method: 'GET' | 'POST',
     path: string,
@@ -375,6 +388,11 @@ export class BrevoMailProvider extends BaseMailProvider {
         ...(body !== undefined ? { 'content-type': 'application/json' } : {}),
       },
       ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
+    }).catch((error: Error) => {
+      throw new MailProviderTransientError(
+        `Brevo did not answer ${what}: ${error.message}`,
+        { cause: error }
+      );
     });
     const text = await response.text();
     const parsed =
@@ -385,12 +403,14 @@ export class BrevoMailProvider extends BaseMailProvider {
     if (!response.ok) {
       const error = parsed as { code?: string; message?: string };
 
-      throw new MailProviderError(
-        `Brevo refused ${what}: ${
-          [error.code, error.message].filter(Boolean).join(': ') ||
-          `${response.status} ${response.statusText}`
-        }`
-      );
+      const message = `Brevo refused ${what}: ${
+        [error.code, error.message].filter(Boolean).join(': ') ||
+        `${response.status} ${response.statusText}`
+      }`;
+
+      throw response.status === 429 || response.status >= 500 ?
+          new MailProviderTransientError(message)
+        : new MailProviderError(message);
     }
 
     return parsed;

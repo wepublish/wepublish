@@ -1,14 +1,18 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import {
   PaymentPeriodicity,
   PrismaClient,
   SubscriptionEvent,
 } from '@prisma/client';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
-import { InvoicePaidListener } from '@wepublish/payment/api';
+import {
+  InvoicePaidListener,
+  InvoicePaidNotifier,
+} from '@wepublish/payment/api';
 import { ActionMailNoMailReason } from '../action-mail/action-mail-reason';
 import { SubscriptionEventDictionary } from '../subscription-event-dictionary/subscription-event-dictionary';
 import { TemplateAction } from '../subscription-event-dictionary/subscription-event-dictionary.type';
+import { isLegacySubscription } from '../subscription/legacy-subscription';
 
 export type PaymentMail =
   TemplateAction | { noMailReason: ActionMailNoMailReason };
@@ -19,10 +23,14 @@ type TemplateLookupSubscription = {
   paymentMethodID: string;
   paymentPeriodicity: PaymentPeriodicity;
   autoRenew: boolean;
+  importedAt: Date | null;
+  legacyEndedAt: Date | null;
 };
 
 @Injectable()
-export class RenewalSuccessMailService implements InvoicePaidListener {
+export class RenewalSuccessMailService
+  implements InvoicePaidListener, OnModuleInit
+{
   private subscriptionEventDictionary = new SubscriptionEventDictionary(
     this.prisma
   );
@@ -30,8 +38,13 @@ export class RenewalSuccessMailService implements InvoicePaidListener {
 
   constructor(
     private prisma: PrismaClient,
-    private mailContext: MailContext
+    private mailContext: MailContext,
+    private notifier: InvoicePaidNotifier
   ) {}
+
+  onModuleInit() {
+    this.notifier.register(this);
+  }
 
   /**
    * The RENEWAL_SUCCESS template that paying this invoice would send, or why
@@ -85,6 +98,8 @@ export class RenewalSuccessMailService implements InvoicePaidListener {
         recipient: user,
         mailType: mailLogType.SubscriptionFlow,
         asLetter: sendAsLetter,
+        subscriptionId: subscription?.id ?? null,
+        invoiceId,
         optionalData: {
           errorCode: '',
           invoice: invoiceData,
@@ -193,6 +208,7 @@ export class RenewalSuccessMailService implements InvoicePaidListener {
           paymentMethodId: subscription.paymentMethodID,
           periodicity: subscription.paymentPeriodicity,
           autorenwal: subscription.autoRenew,
+          legacy: isLegacySubscription(subscription),
           events: [SubscriptionEvent.RENEWAL_SUCCESS],
         });
 

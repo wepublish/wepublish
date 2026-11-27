@@ -263,11 +263,34 @@ export class MemberPlanService {
   }
 
   async deleteMemberPlan(id: string) {
-    const memberPlan = await this.prisma.memberPlan.delete({
-      where: {
-        id,
-      },
-    });
+    // The database would only clear the plan of its flows. A flow that is
+    // neither the default one nor a plan's stops every automatic message, so
+    // the plan's flows go with it; their intervals follow by cascade. A plan
+    // still in use is refused by the transaction as a whole, which keeps the
+    // flows too.
+    const [, memberPlan] = await this.prisma
+      .$transaction([
+        this.prisma.subscriptionFlow.deleteMany({
+          where: { memberPlanId: id, default: false },
+        }),
+        this.prisma.memberPlan.delete({
+          where: {
+            id,
+          },
+        }),
+      ])
+      .catch(error => {
+        if (
+          error instanceof Prisma.PrismaClientKnownRequestError &&
+          error.code === 'P2003'
+        ) {
+          throw new BadRequestException(
+            'This member plan is still used by subscriptions or gift codes and cannot be deleted.'
+          );
+        }
+
+        throw error;
+      });
     await this.forgetMemberPlans();
 
     return memberPlan;

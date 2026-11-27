@@ -25,6 +25,8 @@ export enum mailLogType {
   UserFlow,
   SystemMail,
   Manual,
+  /** Mails about a gift code: bought, redeemed. */
+  GiftCode,
 }
 
 /**
@@ -44,6 +46,7 @@ const MAIL_LOG_TYPE_MAP: Record<mailLogType, MailLogType> = {
   [mailLogType.UserFlow]: MailLogType.userFlow,
   [mailLogType.SystemMail]: MailLogType.systemMail,
   [mailLogType.Manual]: MailLogType.manual,
+  [mailLogType.GiftCode]: MailLogType.giftCode,
 };
 
 export type MailControllerConfig = {
@@ -58,6 +61,13 @@ export type MailControllerConfig = {
   jwtOverride?: string;
   /** Set for mails produced by a manual bulk send job. */
   mailSendJobId?: string | null;
+  /**
+   * What the mail is about, for the log: the subscription and, for an invoice
+   * mail, the invoice. Said by the caller, never read out of `optionalData`,
+   * whose keys differ from one template context to the next.
+   */
+  subscriptionId?: string | null;
+  invoiceId?: string | null;
   /**
    * Id the mail log entry has to be written under. Passed in when the caller
    * needs to reference the entry regardless of how the delivery turns out.
@@ -277,6 +287,7 @@ export class MailController {
       prisma: this.prismaService,
       letterSender: this.mailContext.letterSender,
       recipient: this.config.recipient,
+      mailTemplateId: this.config.mailTemplateId,
       asLetter: this.config.asLetter,
       logger: this.logger,
     });
@@ -301,6 +312,8 @@ export class MailController {
         log: {
           mailIdentifier: this.generateMailIdentifier(),
           type: MAIL_LOG_TYPE_MAP[this.config.mailType],
+          subscriptionId: this.config.subscriptionId ?? null,
+          invoiceId: this.config.invoiceId ?? null,
         },
         ...(this.config.letterAttachment && {
           attachment: this.config.letterAttachment,
@@ -348,6 +361,12 @@ export class MailController {
           },
           ...(this.config.mailSendJobId ?
             { mailSendJob: { connect: { id: this.config.mailSendJobId } } }
+          : {}),
+          ...(this.config.subscriptionId ?
+            { subscription: { connect: { id: this.config.subscriptionId } } }
+          : {}),
+          ...(this.config.invoiceId ?
+            { invoice: { connect: { id: this.config.invoiceId } } }
           : {}),
         },
       });

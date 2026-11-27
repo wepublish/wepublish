@@ -180,6 +180,23 @@ loads it.
 
 ---
 
+### ⚠️ Prisma 7 drops empty filters inside an `AND`/`OR` list
+
+Prisma 7.10 compiles a top-level `OR: []` to "nobody", but silently drops every
+empty entry (`{}`, `{ OR: [] }`, `{ AND: [] }`) of an `AND`/`OR` list:
+`{ AND: [base, { OR: [] }] }` is just `base`, and `{ OR: [{}, x] }` is just `x`.
+Field filters such as `in: []` are never dropped. The mail-send "Platzhalter"
+segment put `{ OR: patterns.map(…) }` without patterns into an `AND` and counted
+(and would have mailed) the whole audience (TSRI, 2026-11).
+[where-matcher.ts](../../libs/membership/api/src/lib/mail-send/where-matcher.ts)
+now throws on an empty `AND`/`OR` and on `{}` inside an `OR`. Never build an
+`OR` from a list that can be empty: say "nobody" as `{ id: { in: [] } }`
+(`NOBODY` in `mail-send-recipient.service.ts`, `NO_SUBSCRIPTION` in
+`subscription-flow.resolver.ts`), and keep `{}` out of `OR` lists — say
+"everybody" as `{ id: { notIn: [] } }`, which compiles to `1=1` there too.
+
+---
+
 ### ⚠️ CI runs one Vitest worker per project — `maxWorkers: 1` is load-bearing
 
 The `ci` configuration in [nx.json](../../nx.json) sets `maxWorkers: 1`.
@@ -346,6 +363,33 @@ mode) after logging out in one.
 `sessionStorage.removeItem` on logout.
 
 Pinned by `session.provider.spec.tsx` and `preview-status-banner.spec.tsx`.
+
+The same reason makes a bare `…?preview` website URL useless anywhere else (new
+tab, the editor tab, a colleague): no opener, no frame, so no handshake and no
+login. The editor's "copy preview link" therefore copies an **editor** link
+(`/articles/edit/:id?preview=<device>`, `editorPreviewLink` in
+`apps/editor/src/app/previewFrame.tsx`). Don't switch it back to the website
+URL or put the JWT into a URL; a login token in history and chat is the leak
+the handshake exists to avoid.
+
+---
+
+### ⚠️ The content wrapper's column is `minmax(0, 1fr)`, not the implicit `auto`
+
+The editor preview loads at desktop width and its mobile/tablet buttons only
+shrink the same iframe. `ImageBlock` pins each caption to a measured px width;
+with an `auto` column, every other block's still-wide caption holds the column
+open while one re-measures, so they settle on viewport − left padding. Verified
+2026-11-19 on a hauptstadt article: 1000 → 390px left the page 406px wide
+(captions 374px, right padding gone); a fresh 390px load and a one-image article
+were fine. Real phones never shrink, so only the preview showed it.
+
+Remounting the iframe per device would reload it and lose the scroll position.
+
+**Load-bearing:** `grid-template-columns: minmax(0, 1fr)` in
+[`content-wrapper.tsx`](../../libs/content/website/src/lib/content-wrapper/content-wrapper.tsx).
+
+Pinned by `content-wrapper.spec.tsx`.
 
 ---
 
@@ -752,8 +796,13 @@ the top margin and Pingen rejects the letter; a fixed box offset into the
 margin area is clipped by Chromium. The band cap of 40mm (`LAYOUT_BAND_MAX_MM`)
 keeps a header out of the franking zone, whose bottom edge is at 87.5mm.
 
-**Load-bearing:** `margin: 0` in the `@page` rule, the thead/tfoot spacer rows,
-and `CONTENT_TOP_MM - headerSpace` for the body padding.
+The same spacers are the page margin of every page: they are never lower than
+`PAGE_MARGIN_MM` (20mm), also without stationery or with a band of height 0.
+At 0 a letter running onto a second page started at the very edge of the sheet
+there, which Pingen holds back («Validation failed»).
+
+**Load-bearing:** `margin: 0` in the `@page` rule, the thead/tfoot spacer rows
+and their floor, and `CONTENT_TOP_MM - headerSpace` for the body padding.
 
 Pinned by `libs/letter/api/src/lib/letter-renderer.spec.ts`.
 
@@ -1470,6 +1519,41 @@ hideContentAfter }`); `generateFeed` typed on `FeedArticleFragment` without a
 cast, so a tenant on the wrong document fails `tsc`. Pinned by
 `libs/feed/website/src/lib/feed-article-list.spec.ts`, which runs the real
 document against `schema-v2.graphql`.
+
+### ⚠️ A mail flow's earliest day depends on the flow alone
+
+`daysAwayFromEnding` has two lower limits (`SubscriptionFlowService.earliestDay`):
+the **default flow** is fixed at −25 (`DEFAULT_FLOW_EARLIEST_DAY`), because every
+subscription may fall back to it; a **member plan's flow** follows the shortest
+periodicity in its own conditions (`EARLIEST_INVOICE_DAY` in
+`libs/utils/api/src/lib/earliest-invoice-day.ts`: monthly −25 … yearly −360).
+Do not make the default flow's limit depend on what member plans offer: a plan
+change could then make a saved flow wrong after the fact. That was tried and
+taken out again. The clamp in `createInvoice` (periodic job) stays as a safety
+net for legacy data.
+
+### ⚠️ A subscription's flow is looked up in two places, in a fixed order
+
+Plan flow → flow for all plans (`allMemberPlans`) → default flow. The order is
+implemented twice in `subscription-event-dictionary.ts`: in memory in
+`getActionsForSubscriptions` and as queries in `getSubscriptionTemplateAction`.
+Change both. A non-default flow with neither a `memberPlanId` nor
+`allMemberPlans` is an orphan of a deleted plan: `initialize()` throws on it and
+no message goes out, so "all plans" must never be modelled as "plan empty".
+Overlap is only refused within a kind (`filterHasOverlap`). An empty condition
+means "matches nothing" on a member plan's flow but "any value" on a flow for
+all plans (which needs at least one condition); every place that matches
+conditions has to make that distinction.
+Inactive flows (`active = false`, never the default flow) are skipped by both
+lookups and by the overlap check; switching one on runs the overlap check.
+`SubscriptionFlowService.countSubscriptions` is the one count rule: running
+subscriptions plus those ended within the flow's latest event day, minus what
+an earlier tier takes (by conditions, not by its day). The counts add up to
+the subscriptions that can still get a message, not to all of them: an ended
+subscription past its own flow's last day counts nowhere, though the default
+flow would still message it with that flow off. So switching a flow can move
+the sum (29 → 30 on review02, 2026-11-23); that is correct. Don't count
+elsewhere.
 
 ## Adding an entry
 

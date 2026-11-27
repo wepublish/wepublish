@@ -33,6 +33,7 @@ const flow = (sendAsLetter: boolean) => ({
   default: true,
   memberPlanId: null,
   autoRenewal: [],
+  legacy: [true, false],
   periodicities: [],
   paymentMethods: [],
   intervals: [
@@ -72,6 +73,9 @@ function setup({ letters = false }: { letters?: boolean } = {}) {
       findUnique: vi.fn(async () =>
         letters ? { channel: MailChannel.letter } : null
       ),
+    },
+    mailTemplateVariant: {
+      findUnique: vi.fn(async () => ({ id: 'variant-1' })),
     },
     user: {
       findUnique: vi.fn(async () => ({
@@ -121,6 +125,10 @@ describe('InvoiceDeliveryService.deliverRenewal', () => {
       })
     );
     expect(mailContext.sendComposedMail).toHaveBeenCalledTimes(1);
+    expect(prisma.mailLog.create.mock.calls[0][0].data).toMatchObject({
+      subscription: { connect: { id: 'sub-1' } },
+      invoice: { connect: { id: 'inv-1' } },
+    });
   });
 
   it('sends the invoice-creation mail only once, the editor is waiting for it', async () => {
