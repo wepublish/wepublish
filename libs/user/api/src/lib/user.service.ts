@@ -38,6 +38,17 @@ import {
 } from '@wepublish/mail/api';
 import * as crypto from 'crypto';
 import { HibpService } from './hibp.service';
+import {
+  EMAIL_SEGMENTS_IN_ORDER,
+  emailSegmentWhere,
+  MailEmailSegment,
+  placeholderEmailPatterns,
+} from './email-segment';
+import {
+  emailQualitySinceSlices,
+  emailQualitySlices,
+  findAcrossSlices,
+} from './email-quality-order';
 import { USER_LIST_ORDER, type UserListOrder } from './user-list-order';
 
 const COMMENT_AUTHOR_FIELDS = [
@@ -87,7 +98,11 @@ export class UserService {
     skip = 0,
     take = 10,
   }: UserListArgs) {
-    const where = createUserFilter(filter ?? {});
+    const placeholderPatterns =
+      filter?.emailSegments?.length ?
+        await placeholderEmailPatterns(this.prisma)
+      : [];
+    const where = createUserFilter(filter ?? {}, placeholderPatterns);
     const include = { address: true, paymentProviderCustomers: true };
     const listOrder = (this.listOrders ?? []).find(o => o.sort === sort);
     const orderedIds = await listOrder?.orderedIds(
@@ -108,23 +123,49 @@ export class UserService {
       return toUserPage(users, orderedIds.length, skip, take);
     }
 
-    const orderBy = createUserOrder(sort, order);
+    const slices =
+      cursorId ? null
+      : sort === UserSort.EmailQuality ? emailQualitySlices(order)
+      : sort === UserSort.EmailQualitySince ? emailQualitySinceSlices(order)
+      : null;
 
-    const [totalCount, users] = await Promise.all([
-      this.prisma.user.count({
-        where,
-      }),
-      this.prisma.user.findMany({
-        where,
-        skip,
-        take: getMaxTake(take) + 1,
-        orderBy,
-        cursor: cursorId ? { id: cursorId } : undefined,
-        include,
-      }),
-    ]);
+    const [totalCount, users] =
+      slices ?
+        await findAcrossSlices(
+          where,
+          slices,
+          { skip, take: getMaxTake(take) + 1 },
+          where => this.prisma.user.count({ where }),
+          args => this.prisma.user.findMany({ ...args, include })
+        ).then(({ totalCount, nodes }) => [totalCount, nodes] as const)
+      : await Promise.all([
+          this.prisma.user.count({
+            where,
+          }),
+          this.prisma.user.findMany({
+            where,
+            skip,
+            take: getMaxTake(take) + 1,
+            orderBy: createUserOrder(sort, order),
+            cursor: cursorId ? { id: cursorId } : undefined,
+            include,
+          }),
+        ]);
 
     return toUserPage(users, totalCount, skip, take);
+  }
+
+  /**
+   * The email segments worth filtering by. Without a configured placeholder
+   * pattern nobody is a placeholder, so that segment is not offered.
+   */
+  async getEmailSegments(): Promise<MailEmailSegment[]> {
+    const hasPatterns =
+      (await placeholderEmailPatterns(this.prisma)).length > 0;
+
+    return EMAIL_SEGMENTS_IN_ORDER.filter(
+      segment => hasPatterns || segment !== MailEmailSegment.placeholder
+    );
   }
 
   async updateUserPassword(
@@ -519,6 +560,21 @@ export const createUserOrder = (
         { subscriptions: { _count: graphQLSortOrderToPrisma(sortOrder) } },
         { id: graphQLSortOrderToPrisma(sortOrder) },
       ];
+
+    // Only reached when paging by cursor; skip-based paging orders these by
+    // slices so that people without a level do not bunch up at one end (see
+    // email-quality-order.ts).
+    case UserSort.EmailQuality:
+      return [
+        { emailQuality: { level: graphQLSortOrderToPrisma(sortOrder) } },
+        { id: graphQLSortOrderToPrisma(sortOrder) },
+      ];
+
+    case UserSort.EmailQualitySince:
+      return [
+        { emailQuality: { since: graphQLSortOrderToPrisma(sortOrder) } },
+        { id: graphQLSortOrderToPrisma(sortOrder) },
+      ];
   }
 };
 
@@ -750,13 +806,15 @@ const createTextFilter = (
 };
 
 export const createUserFilter = (
-  filter: Partial<UserFilter>
+  filter: Partial<UserFilter>,
+  placeholderPatterns: readonly string[] = []
 ): Prisma.UserWhereInput => {
   return {
     AND: [
       createNameFilter(filter),
       createTextFilter(filter),
       createUserRoleFilter(filter),
+      emailSegmentWhere(filter.emailSegments ?? [], placeholderPatterns),
     ],
   };
 };

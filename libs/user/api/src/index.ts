@@ -8,3 +8,4 @@ export * from './lib/user.service';
 export * from './lib/user-list-order';
 export * from './lib/managed-by-wepublish-login';
 export * from './lib/hibp.service';
+export * from './lib/email-segment';
