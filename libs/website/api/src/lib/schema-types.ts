@@ -7581,6 +7581,22 @@ export type PrintIssueOptionsInput = {
   memberPlanIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
+/** How many of the printed issues a subscription paid for it received, as the print export counts: the running period, else the latest paid one. */
+export type PrintIssueProgress = {
+  __typename: 'PrintIssueProgress';
+  /** What the period is worth; null = unlimited (lifetime). */
+  entitled?: Maybe<Scalars['Int']['output']>;
+  issues: Array<ReceivedPrintIssue>;
+  /** Still to send, never below 0. */
+  owed: Scalars['Int']['output'];
+  periodId: Scalars['String']['output'];
+  /** Copies received in that period, historic issues inside it included. */
+  received: Scalars['Int']['output'];
+  /** Running, or ended and still owed copies within the time of two issues. */
+  relevant: Scalars['Boolean']['output'];
+  subscriptionId: Scalars['String']['output'];
+};
+
 /** One line of the print run: one address, `anzahl` copies. */
 export type PrintIssueRow = {
   __typename: 'PrintIssueRow';
@@ -7752,6 +7768,8 @@ export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   /** A payment method change that is waiting for the reader to pay or authorize. Until it completes, the subscription keeps its payment method. */
   pendingPaymentMethodChange?: Maybe<SubscriptionPaymentMethodChange>;
   periods: Array<SubscriptionPeriod>;
+  /** The printed issues the subscription received in its running (else latest paid) period; null where nothing is promised. */
+  printIssueProgress?: Maybe<PrintIssueProgress>;
   properties: Array<Property>;
   startsAt: Scalars['DateTime']['output'];
   url: Scalars['String']['output'];
@@ -9278,6 +9296,21 @@ export enum RatingSystemType {
   Star = 'star'
 }
 
+/** A printed issue a subscription received: a list handed to the printshop. */
+export type ReceivedPrintIssue = {
+  __typename: 'ReceivedPrintIssue';
+  /** 0 = the print list, n = Nachlieferung n. */
+  batch: Scalars['Int']['output'];
+  /** How many issues it counts as: 2 for a double issue. */
+  countsAs: Scalars['Int']['output'];
+  /** When the list went to the printshop. */
+  deliveredAt: Scalars['String']['output'];
+  /** The ship day (YYYY-MM-DD). */
+  issueDate: Scalars['String']['output'];
+  /** As the medium writes it, e.g. «6.26» or «#117». */
+  label: Scalars['String']['output'];
+};
+
 export type RedeemGiftCodeBlock = BaseBlock & {
   __typename: 'RedeemGiftCodeBlock';
   blockStyle?: Maybe<Scalars['String']['output']>;
@@ -9383,6 +9416,10 @@ export type SensitiveDataUser = BaseUser & {
   paymentProviderCustomers?: Maybe<Array<PaymentProviderCustomer>>;
   pendingEmail?: Maybe<Scalars['String']['output']>;
   permissions: Array<Scalars['String']['output']>;
+  /** The printed issues each of the user's subscriptions received; null without print issues. */
+  printIssueProgress?: Maybe<Array<PrintIssueProgress>>;
+  /** Printed issues still to send to the user, over subscriptions running or still owed copies; null without printed issues. */
+  printIssuesOwed?: Maybe<Scalars['Int']['output']>;
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']['output']>;
   roles: Array<UserRole>;
@@ -10681,6 +10718,7 @@ export enum UserSort {
   FirstName = 'FirstName',
   ModifiedAt = 'ModifiedAt',
   Name = 'Name',
+  PrintIssuesOwed = 'PrintIssuesOwed',
   SubscriptionCount = 'SubscriptionCount'
 }
 

@@ -6454,6 +6454,26 @@ input PrintIssueOptionsInput {
   memberPlanIds: [String!]
 }
 
+"""
+How many of the printed issues a subscription paid for it received, as the print export counts: the running period, else the latest paid one.
+"""
+type PrintIssueProgress {
+  """What the period is worth; null = unlimited (lifetime)."""
+  entitled: Int
+  issues: [ReceivedPrintIssue!]!
+
+  """Still to send, never below 0."""
+  owed: Int!
+  periodId: String!
+
+  """Copies received in that period, historic issues inside it included."""
+  received: Int!
+
+  """Running, or ended and still owed copies within the time of two issues."""
+  relevant: Boolean!
+  subscriptionId: String!
+}
+
 """One line of the print run: one address, `anzahl` copies."""
 type PrintIssueRow {
   aboTyp: String!
@@ -6656,6 +6676,11 @@ type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   """
   pendingPaymentMethodChange: SubscriptionPaymentMethodChange
   periods: [SubscriptionPeriod!]!
+
+  """
+  The printed issues the subscription received in its running (else latest paid) period; null where nothing is promised.
+  """
+  printIssueProgress: PrintIssueProgress
   properties: [Property!]!
   startsAt: DateTime!
   url: String!
@@ -7546,6 +7571,26 @@ enum RatingSystemType {
   star
 }
 
+"""
+A printed issue a subscription received: a list handed to the printshop.
+"""
+type ReceivedPrintIssue {
+  """0 = the print list, n = Nachlieferung n."""
+  batch: Int!
+
+  """How many issues it counts as: 2 for a double issue."""
+  countsAs: Int!
+
+  """When the list went to the printshop."""
+  deliveredAt: String!
+
+  """The ship day (YYYY-MM-DD)."""
+  issueDate: String!
+
+  """As the medium writes it, e.g. «6.26» or «#117»."""
+  label: String!
+}
+
 type RedeemGiftCodeBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -7668,6 +7713,16 @@ type SensitiveDataUser implements BaseUser {
   paymentProviderCustomers: [PaymentProviderCustomer!]
   pendingEmail: String
   permissions: [String!]!
+
+  """
+  The printed issues each of the user's subscriptions received; null without print issues.
+  """
+  printIssueProgress: [PrintIssueProgress!]
+
+  """
+  Printed issues still to send to the user, over subscriptions running or still owed copies; null without printed issues.
+  """
+  printIssuesOwed: Int
   properties: [Property!]!
   roleIDs: [String!]!
   roles: [UserRole!]!
@@ -9059,6 +9114,7 @@ enum UserSort {
   FirstName
   ModifiedAt
   Name
+  PrintIssuesOwed
   SubscriptionCount
 }
 
