@@ -45,6 +45,12 @@ import {
 } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { MailColorPicker } from './color-picker';
+import {
+  BAND_SELECTOR,
+  bandDocument,
+  cleanEditorMarkup,
+  serializeBand,
+} from './letter-band-frame';
 import { appendJwtParam, hasJwtParam, JWT_QUERY_PARAM } from './mail-html';
 
 type Device = 'desktop' | 'tablet' | 'mobile';
@@ -267,6 +273,12 @@ export interface HtmlVisualEditorProps {
    * in an iframe, so they never surface as focus events on the host page.
    */
   onActivate?: () => void;
+  /**
+   * Edits a band of letter stationery instead of an email: the value is an
+   * html fragment, shown on a sheet as wide as the printed one, and the email
+   * only tools (device widths, buttons, login links) are left out.
+   */
+  band?: { heightMm: number };
 }
 
 const EDITABLE_SELECTOR = '.mail-body';
@@ -277,26 +289,9 @@ const EDITOR_STYLE_ID = '__wepublish_editor_only';
 const serializeDocument = (doc: Document): string => {
   const clone = doc.documentElement.cloneNode(true) as HTMLElement;
 
-  // Remove browser-extension injected nodes (e.g. Grammarly) that otherwise
-  // leak into the saved/sent template HTML.
-  clone
-    .querySelectorAll(
-      'grammarly-desktop-integration, [data-grammarly-shadow-root]'
-    )
-    .forEach(el => el.remove());
-
-  // Strip editor-only and extension-injected attributes.
-  clone.querySelectorAll('*').forEach(el => {
-    Array.from(el.attributes).forEach(attr => {
-      if (
-        /^data-(new-)?gr/i.test(attr.name) ||
-        attr.name === 'spellcheck' ||
-        attr.name === 'contenteditable'
-      ) {
-        el.removeAttribute(attr.name);
-      }
-    });
-  });
+  // Editor-only and extension-injected nodes and attributes (e.g. Grammarly)
+  // would otherwise leak into the saved/sent template HTML.
+  cleanEditorMarkup(clone);
 
   // Remove the editor-only style and any empty style tags.
   clone.querySelector(`#${EDITOR_STYLE_ID}`)?.remove();
@@ -353,7 +348,7 @@ function JwtParamButton({
 const HtmlVisualEditorComponent = forwardRef<
   HtmlVisualEditorHandle,
   HtmlVisualEditorProps
->(function HtmlVisualEditor({ value, onChange, onActivate }, ref) {
+>(function HtmlVisualEditor({ value, onChange, onActivate, band }, ref) {
   const { t } = useTranslation();
   const [device, setDevice] = useState<Device>('desktop');
   const [linkDialog, setLinkDialog] = useState<LinkDialogState>({
@@ -408,13 +403,17 @@ const HtmlVisualEditorComponent = forwardRef<
     if (!doc) {
       return null;
     }
-    return doc.querySelector<HTMLElement>(EDITABLE_SELECTOR) ?? doc.body;
+    return (
+      doc.querySelector<HTMLElement>(
+        band ? BAND_SELECTOR : EDITABLE_SELECTOR
+      ) ?? doc.body
+    );
   };
 
   const emit = () => {
     const doc = getDoc();
     if (doc) {
-      onChange(serializeDocument(doc));
+      onChange(band ? serializeBand(doc) : serializeDocument(doc));
     }
   };
 
@@ -465,7 +464,10 @@ const HtmlVisualEditorComponent = forwardRef<
       style.id = EDITOR_STYLE_ID;
       // Give the editable cell a comfortable minimum writing area (editor-only;
       // stripped before saving so it never affects the sent mail).
-      style.textContent = '[contenteditable]{outline:none;min-height:360px;}';
+      style.textContent =
+        band ?
+          '[contenteditable]{outline:none;}'
+        : '[contenteditable]{outline:none;min-height:360px;}';
       doc.head.appendChild(style);
     }
     try {
@@ -906,7 +908,7 @@ const HtmlVisualEditorComponent = forwardRef<
   );
 
   return (
-    <EditorWrapper>
+    <EditorWrapper sx={band ? { minHeight: 0 } : undefined}>
       <Toolbar
         role="toolbar"
         aria-label={t('mailTemplates.editor.toolbar')}
@@ -1087,69 +1089,97 @@ const HtmlVisualEditorComponent = forwardRef<
           </ToggleButton>
         </Tooltip>
 
-        <Tooltip title={t('mailTemplates.editor.button', 'Button')}>
-          <ToggleButton
-            size="small"
-            value="button"
-            aria-label={t('mailTemplates.editor.button', 'Button')}
-            aria-pressed={undefined}
-            aria-haspopup="dialog"
-            sx={SQUARE_BUTTON_SX}
-            onMouseDown={event => event.preventDefault()}
-            onClick={event => {
-              returnFocusRef.current = event.currentTarget;
-              openButtonDialog();
-            }}
-          >
-            <MdSmartButton />
-          </ToggleButton>
-        </Tooltip>
+        {!band && (
+          <Tooltip title={t('mailTemplates.editor.button', 'Button')}>
+            <ToggleButton
+              size="small"
+              value="button"
+              aria-label={t('mailTemplates.editor.button', 'Button')}
+              aria-pressed={undefined}
+              aria-haspopup="dialog"
+              sx={SQUARE_BUTTON_SX}
+              onMouseDown={event => event.preventDefault()}
+              onClick={event => {
+                returnFocusRef.current = event.currentTarget;
+                openButtonDialog();
+              }}
+            >
+              <MdSmartButton />
+            </ToggleButton>
+          </Tooltip>
+        )}
 
-        <ToolbarSpacer />
+        {!band && (
+          <>
+            <ToolbarSpacer />
 
-        <ToggleButtonGroup
-          size="small"
-          exclusive
-          value={device}
-          onChange={(_event, next: Device | null) => next && setDevice(next)}
-        >
-          <Tooltip title={t('mailTemplates.editor.desktop', 'Desktop')}>
-            <ToggleButton
-              value="desktop"
-              aria-label={t('mailTemplates.editor.desktop', 'Desktop')}
-              sx={SQUARE_BUTTON_SX}
+            <ToggleButtonGroup
+              size="small"
+              exclusive
+              value={device}
+              onChange={(_event, next: Device | null) =>
+                next && setDevice(next)
+              }
             >
-              <MdLaptopMac />
-            </ToggleButton>
-          </Tooltip>
-          <Tooltip title={t('mailTemplates.editor.tablet', 'Tablet')}>
-            <ToggleButton
-              value="tablet"
-              aria-label={t('mailTemplates.editor.tablet', 'Tablet')}
-              sx={SQUARE_BUTTON_SX}
-            >
-              <MdTabletMac />
-            </ToggleButton>
-          </Tooltip>
-          <Tooltip title={t('mailTemplates.editor.mobile', 'Mobile')}>
-            <ToggleButton
-              value="mobile"
-              aria-label={t('mailTemplates.editor.mobile', 'Mobile')}
-              sx={SQUARE_BUTTON_SX}
-            >
-              <MdPhoneIphone />
-            </ToggleButton>
-          </Tooltip>
-        </ToggleButtonGroup>
+              <Tooltip title={t('mailTemplates.editor.desktop', 'Desktop')}>
+                <ToggleButton
+                  value="desktop"
+                  aria-label={t('mailTemplates.editor.desktop', 'Desktop')}
+                  sx={SQUARE_BUTTON_SX}
+                >
+                  <MdLaptopMac />
+                </ToggleButton>
+              </Tooltip>
+              <Tooltip title={t('mailTemplates.editor.tablet', 'Tablet')}>
+                <ToggleButton
+                  value="tablet"
+                  aria-label={t('mailTemplates.editor.tablet', 'Tablet')}
+                  sx={SQUARE_BUTTON_SX}
+                >
+                  <MdTabletMac />
+                </ToggleButton>
+              </Tooltip>
+              <Tooltip title={t('mailTemplates.editor.mobile', 'Mobile')}>
+                <ToggleButton
+                  value="mobile"
+                  aria-label={t('mailTemplates.editor.mobile', 'Mobile')}
+                  sx={SQUARE_BUTTON_SX}
+                >
+                  <MdPhoneIphone />
+                </ToggleButton>
+              </Tooltip>
+            </ToggleButtonGroup>
+          </>
+        )}
       </Toolbar>
-      <Canvas>
-        <DeviceFrame sx={{ maxWidth: DEVICE_WIDTH[device] }}>
+      <Canvas sx={band ? { justifyContent: 'flex-start' } : undefined}>
+        <DeviceFrame
+          sx={
+            band ?
+              // A sheet wider than the window scrolls instead of being cut.
+              { width: '210mm', flexShrink: 0, margin: '0 auto' }
+            : { maxWidth: DEVICE_WIDTH[device] }
+          }
+        >
           <Frame
             ref={frameRef}
             title={t('mailTemplates.editor.frameTitle')}
             sandbox="allow-same-origin"
-            srcDoc={value}
+            srcDoc={
+              band ?
+                bandDocument(
+                  value,
+                  band.heightMm,
+                  t('mailTemplates.editor.bandCutOff')
+                )
+              : value
+            }
             onLoad={handleLoad}
+            style={
+              band ?
+                { minHeight: 0, height: `${band.heightMm + 15}mm` }
+              : undefined
+            }
           />
         </DeviceFrame>
       </Canvas>
@@ -1177,10 +1207,12 @@ const HtmlVisualEditorComponent = forwardRef<
                 setLinkDialog(state => ({ ...state, url: event.target.value }))
               }
             />
-            <JwtParamButton
-              url={linkDialog.url}
-              onAppend={url => setLinkDialog(state => ({ ...state, url }))}
-            />
+            {!band && (
+              <JwtParamButton
+                url={linkDialog.url}
+                onAppend={url => setLinkDialog(state => ({ ...state, url }))}
+              />
+            )}
             <TextField
               fullWidth
               label={t('mailTemplates.editor.linkText', 'Link text')}
@@ -1296,10 +1328,12 @@ const HtmlVisualEditorComponent = forwardRef<
                 }))
               }
             />
-            <JwtParamButton
-              url={imageDialog.link}
-              onAppend={link => setImageDialog(state => ({ ...state, link }))}
-            />
+            {!band && (
+              <JwtParamButton
+                url={imageDialog.link}
+                onAppend={link => setImageDialog(state => ({ ...state, link }))}
+              />
+            )}
           </Stack>
         </DialogContent>
         <DialogActions>
@@ -1354,10 +1388,12 @@ const HtmlVisualEditorComponent = forwardRef<
                 }))
               }
             />
-            <JwtParamButton
-              url={buttonDialog.url}
-              onAppend={url => setButtonDialog(state => ({ ...state, url }))}
-            />
+            {!band && (
+              <JwtParamButton
+                url={buttonDialog.url}
+                onAppend={url => setButtonDialog(state => ({ ...state, url }))}
+              />
+            )}
             <Stack
               spacing={2}
               sx={{

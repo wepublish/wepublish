@@ -77,6 +77,29 @@ vi.mock('../mail-template/html-source-editor', () => ({
   }),
 }));
 
+// The visual editor works in an iframe jsdom doesn't render; a textarea
+// carries the same value and shows which band height it was given.
+vi.mock('../mail-template/html-visual-editor', () => ({
+  HtmlVisualEditor: forwardRef<
+    HTMLTextAreaElement,
+    {
+      value: string;
+      onChange: (value: string) => void;
+      band?: { heightMm: number };
+    }
+  >(function HtmlVisualEditor({ value, onChange, band }, ref) {
+    return (
+      <textarea
+        ref={ref}
+        aria-label="visual"
+        data-height={band?.heightMm}
+        defaultValue={value}
+        onChange={event => onChange(event.target.value)}
+      />
+    );
+  }),
+}));
+
 // The real preview turns the pdf into an object url, which jsdom lacks.
 vi.mock('../mail-template/letter-preview', () => ({
   LetterPreview: ({ pdf }: { pdf: string }) => (
@@ -258,5 +281,90 @@ describe('LetterLayoutEdit', () => {
     await waitFor(() =>
       expect(screen.queryByTestId('letter-preview')).not.toBeInTheDocument()
     );
+  });
+
+  it('edits each band visually first and as html on demand', () => {
+    renderEdit();
+
+    expect(
+      screen.getAllByRole('button', { name: 'mailTemplates.wysiwyg' })
+    ).toHaveLength(2);
+    const [header, footer] = screen.getAllByLabelText('visual');
+    expect(header).toHaveValue('<b>Zwölf</b>');
+    expect(footer).toHaveValue('<i>IBAN</i>');
+    expect(screen.queryByLabelText('html')).toBeNull();
+
+    fireEvent.click(
+      screen.getAllByRole('button', { name: 'mailTemplates.rawHtml' })[0]
+    );
+
+    expect(screen.getByLabelText('html')).toHaveValue('<b>Zwölf</b>');
+    expect(screen.getAllByLabelText('visual')).toHaveLength(1);
+  });
+
+  it('keeps a band unchanged when switching back and forth', () => {
+    renderEdit();
+
+    fireEvent.click(
+      screen.getAllByRole('button', { name: 'mailTemplates.rawHtml' })[1]
+    );
+    fireEvent.click(
+      screen.getAllByRole('button', { name: 'mailTemplates.wysiwyg' })[1]
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'save' }));
+
+    expect(updateLayout).toHaveBeenCalledWith({
+      variables: {
+        id: 'layout-1',
+        input: expect.objectContaining({
+          headerHtml: '<b>Zwölf</b>',
+          footerHtml: '<i>IBAN</i>',
+        }),
+      },
+    });
+  });
+
+  it('saves what was written in the visual editor', () => {
+    renderEdit();
+
+    fireEvent.change(screen.getAllByLabelText('visual')[1], {
+      target: { value: '<p>IBAN CH00</p>' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'save' }));
+
+    expect(updateLayout).toHaveBeenCalledWith({
+      variables: {
+        id: 'layout-1',
+        input: expect.objectContaining({ footerHtml: '<p>IBAN CH00</p>' }),
+      },
+    });
+  });
+
+  it('draws each band at its height', () => {
+    renderEdit();
+
+    fireEvent.change(screen.getByDisplayValue('30'), {
+      target: { value: '35' },
+    });
+
+    const [header, footer] = screen.getAllByLabelText('visual');
+    expect(header).toHaveAttribute('data-height', '35');
+    expect(footer).toHaveAttribute('data-height', '20');
+  });
+
+  it('offers its own image button only in the html view', () => {
+    renderEdit();
+
+    expect(
+      screen.queryByRole('button', { name: 'letterLayouts.insertImage' })
+    ).toBeNull();
+
+    fireEvent.click(
+      screen.getAllByRole('button', { name: 'mailTemplates.rawHtml' })[0]
+    );
+
+    expect(
+      screen.getAllByRole('button', { name: 'letterLayouts.insertImage' })
+    ).toHaveLength(1);
   });
 });

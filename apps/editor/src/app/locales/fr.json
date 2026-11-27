@@ -1717,6 +1717,7 @@
         "letterLayoutHelp": "En-tête et pied de page"
       },
       "editor": {
+        "bandCutOff": "Rien n’est imprimé sous cette ligne",
         "undo": "Annuler",
         "redo": "Rétablir",
         "bold": "Gras",
@@ -5754,7 +5755,7 @@
       "footerHeight": "Hauteur du pied de page (mm)",
       "headerHeightHint": "Au maximum 40 mm, pour que l’en-tête n’empiète pas sur la zone d’affranchissement. Il se répète sur chaque page ; 0 mm le supprime.",
       "footerHeightHint": "Au maximum 40 mm. Le texte de la lettre garde cet espace par rapport au bord inférieur, et jamais moins de 20 mm. Le pied de page se répète sur chaque page ; 0 mm le supprime.",
-      "htmlHint": "HTML avec des variables comme {{user_firstName}}. Indiquez les tailles en mm et donnez aux images une largeur et une hauteur fixes.",
+      "htmlHint": "Modifiez en mode visuel ou en HTML, tous deux avec des variables comme {{user_firstName}}. Ce qui se trouve sous la ligne rouge n’est pas imprimé. En HTML, indiquez les tailles en mm et donnez aux images une largeur et une hauteur fixes.",
       "insertImage": "Insérer une image",
       "preview": "Aperçu",
       "previewTitle": "Lettre type sur ce papier",

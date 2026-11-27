@@ -28,6 +28,7 @@ import {
   HtmlSourceEditor,
   HtmlSourceEditorHandle,
 } from '../mail-template/html-source-editor';
+import { HtmlVisualEditor } from '../mail-template/html-visual-editor';
 import { LetterPreview } from '../mail-template/letter-preview';
 import { PreviewDialogTitle } from '../mail-template/preview-dialog-title';
 import {
@@ -43,6 +44,8 @@ import {
   Stack,
   Switch,
   TextField,
+  ToggleButton,
+  ToggleButtonGroup,
 } from '@mui/material';
 
 /** The tallest band the API accepts; mirrors the renderer's cap. */
@@ -52,6 +55,33 @@ const BAND_MAX_MM = 40;
 const BAND_EDITOR_HEIGHT = 240;
 
 type Band = 'header' | 'footer';
+
+type BandMode = 'visual' | 'html';
+
+/**
+ * The visual editor loads its value into an iframe, so a new value would
+ * reload it on every keystroke. It gets the band's html as it was when it
+ * mounted; the page remounts it (by key) whenever it has to start over.
+ */
+function BandVisualEditor({
+  value,
+  heightMm,
+  onChange,
+}: {
+  value: string;
+  heightMm: number;
+  onChange: (value: string) => void;
+}) {
+  const [initial] = useState(value);
+
+  return (
+    <HtmlVisualEditor
+      value={initial}
+      onChange={onChange}
+      band={{ heightMm }}
+    />
+  );
+}
 
 function LetterLayoutEdit() {
   const { t } = useTranslation();
@@ -67,6 +97,13 @@ function LetterLayoutEdit() {
   const [footerHeightMm, setFooterHeightMm] = useState(20);
   const [imageTarget, setImageTarget] = useState<Band | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [modes, setModes] = useState<Record<Band, BandMode>>({
+    header: 'visual',
+    footer: 'visual',
+  });
+  // Bumped when the stored stationery arrives, so the visual editors start
+  // over with it.
+  const [loaded, setLoaded] = useState(0);
 
   const headerRef = useRef<HtmlSourceEditorHandle>(null);
   const footerRef = useRef<HtmlSourceEditorHandle>(null);
@@ -84,6 +121,7 @@ function LetterLayoutEdit() {
     setFooterHtml(layout.footerHtml);
     setHeaderHeightMm(layout.headerHeightMm);
     setFooterHeightMm(layout.footerHeightMm);
+    setLoaded(count => count + 1);
   });
 
   const [createLayout, { loading: creating }] = useMutation(
@@ -191,43 +229,72 @@ function LetterLayoutEdit() {
     band: Band,
     html: string,
     onChange: (value: string) => void,
-    ref: typeof headerRef
+    ref: typeof headerRef,
+    heightMm: number
   ) => (
     <Card
       variant="outlined"
-      sx={{ flex: 1, minWidth: 360, bgcolor: 'background.paper' }}
+      sx={{ bgcolor: 'background.paper' }}
     >
       <CardHeader
         title={
           <Stack
             direction="row"
-            sx={{ alignItems: 'center', justifyContent: 'space-between' }}
+            spacing={1}
+            sx={{ alignItems: 'center', flexWrap: 'wrap' }}
           >
-            <span>
+            <span style={{ flex: 1 }}>
               {t(`letterLayouts.${band}`)}{' '}
               <InfoTooltip text={t('letterLayouts.htmlHint')} />
             </span>
-            <Button
-              variant="text"
+            {modes[band] === 'html' && (
+              <Button
+                variant="text"
+                size="small"
+                startIcon={<MdImage />}
+                onClick={() => setImageTarget(band)}
+              >
+                {t('letterLayouts.insertImage')}
+              </Button>
+            )}
+            <ToggleButtonGroup
               size="small"
-              startIcon={<MdImage />}
-              onClick={() => setImageTarget(band)}
+              exclusive
+              value={modes[band]}
+              onChange={(_event, mode: BandMode | null) =>
+                mode && setModes(current => ({ ...current, [band]: mode }))
+              }
             >
-              {t('letterLayouts.insertImage')}
-            </Button>
+              <ToggleButton value="visual">
+                {t('mailTemplates.wysiwyg')}
+              </ToggleButton>
+              <ToggleButton value="html">
+                {t('mailTemplates.rawHtml')}
+              </ToggleButton>
+            </ToggleButtonGroup>
           </Stack>
         }
       />
 
       <CardContent>
-        <div style={{ height: BAND_EDITOR_HEIGHT }}>
-          <HtmlSourceEditor
-            ref={ref}
+        {modes[band] === 'visual' ?
+          <BandVisualEditor
+            // Starts over with the current html when the band height changes
+            // or the stored stationery arrives.
+            key={`${heightMm}-${loaded}`}
             value={html}
+            heightMm={heightMm}
             onChange={onChange}
-            minHeight={BAND_EDITOR_HEIGHT}
           />
-        </div>
+        : <div style={{ height: BAND_EDITOR_HEIGHT }}>
+            <HtmlSourceEditor
+              ref={ref}
+              value={html}
+              onChange={onChange}
+              minHeight={BAND_EDITOR_HEIGHT}
+            />
+          </div>
+        }
       </CardContent>
     </Card>
   );
@@ -332,12 +399,26 @@ function LetterLayoutEdit() {
         </CardContent>
       </Card>
 
-      <div
-        style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 16 }}
+      {/* One above the other: a band is drawn as wide as the A4 sheet. */}
+      <Stack
+        spacing={2}
+        sx={{ marginTop: 2 }}
       >
-        {bandPanel('header', headerHtml, setHeaderHtml, headerRef)}
-        {bandPanel('footer', footerHtml, setFooterHtml, footerRef)}
-      </div>
+        {bandPanel(
+          'header',
+          headerHtml,
+          setHeaderHtml,
+          headerRef,
+          headerHeightMm
+        )}
+        {bandPanel(
+          'footer',
+          footerHtml,
+          setFooterHtml,
+          footerRef,
+          footerHeightMm
+        )}
+      </Stack>
 
       <Drawer
         anchor="right"
