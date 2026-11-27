@@ -4,6 +4,7 @@ import { InfoTrigger, ClickPopover } from '@wepublish/ui/editor';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { MdHelpOutline } from 'react-icons/md';
+import { useLetterChannel } from '../mail-template/use-letter-channel';
 
 const STATE_COLORS: Record<
   MailLogState,
@@ -103,6 +104,7 @@ export function MailLogStateTag({ state }: { state: MailLogState }) {
  */
 export function MailLogStateLegend() {
   const { t } = useTranslation();
+  const { paperLetters } = useLetterChannel();
 
   return (
     <ClickPopover
@@ -170,6 +172,7 @@ export function MailLogStateLegend() {
         }}
       >
         {t('mailLog.stateHelp.legendFooter')}
+        {paperLetters && `\n${t('mailLog.stateHelp.legendFooterLetters')}`}
       </Typography>
     </ClickPopover>
   );

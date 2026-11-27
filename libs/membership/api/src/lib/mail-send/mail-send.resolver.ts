@@ -8,6 +8,7 @@ import {
   canReceiveLetters,
   formatAddressLines,
   LetterAddress,
+  LetterLogSyncService,
 } from '@wepublish/letter/api';
 import {
   actorOf,
@@ -21,7 +22,7 @@ import {
   EmailQualityRefreshModel,
   MailAudienceInput,
   MailLogFilter,
-  MailLogSyncModel,
+  MailAndLetterLogSyncModel,
   MailSendJobInput,
   MailSendJobModel,
   MailSendPreviewInput,
@@ -62,7 +63,8 @@ export class MailSendResolver {
     private mailLogSyncService: MailLogSyncService,
     private emailQualityService: EmailQualityService,
     private emailEvidenceService: EmailEvidenceService,
-    private suppressionSyncService: SuppressionSyncService
+    private suppressionSyncService: SuppressionSyncService,
+    private letterLogSyncService: LetterLogSyncService
   ) {}
 
   @Permissions(CanSendMailTemplates)
@@ -382,13 +384,32 @@ export class MailSendResolver {
   }
 
   @Permissions(CanGetMailLogs)
-  @Mutation(() => MailLogSyncModel, {
-    description: `Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development.`,
+  @Mutation(() => MailAndLetterLogSyncModel, {
+    description: `Ask the mail provider and the letter provider for the current delivery state of mails and letters that are still open. Complements the provider webhooks, which are not reachable in local development.`,
   })
   async syncMailLogStates(
     @Args('limit', { type: () => Int, nullable: true }) limit?: number
-  ): Promise<MailLogSyncModel> {
-    return this.mailLogSyncService.syncOpenStates(limit ?? undefined);
+  ): Promise<MailAndLetterLogSyncModel> {
+    // One provider being down is no reason to leave the other unasked.
+    const [mails, letters] = await Promise.allSettled([
+      this.mailLogSyncService.syncOpenStates(limit ?? undefined),
+      this.letterLogSyncService.syncOpenStates(limit ?? undefined),
+    ]);
+
+    if (mails.status === 'rejected') {
+      throw mails.reason;
+    }
+
+    if (letters.status === 'rejected') {
+      throw letters.reason;
+    }
+
+    return {
+      checked: mails.value.checked,
+      updated: mails.value.updated,
+      lettersChecked: letters.value.checked,
+      lettersUpdated: letters.value.updated,
+    };
   }
 
   @Permissions(CanGetMailLogs)
