@@ -5142,7 +5142,8 @@
           "rejected": "Rejected",
           "dispatched": "Dispatched",
           "undeliverable": "Undeliverable",
-          "canceled": "Canceled"
+          "canceled": "Canceled",
+          "actionRequired": "Action required"
         }
       },
       "audienceSummary": {
@@ -5307,6 +5308,11 @@
           "name": "Canceled",
           "meaning": "The letter was withdrawn before it was printed.",
           "next": "Nothing to do. Nothing was printed and nothing was charged."
+        },
+        "actionRequired": {
+          "name": "Action required",
+          "meaning": "The print vendor took the letter but does not print it: it holds the letter until someone deals with it there, for example because its check of the pdf failed. The letter is at the print vendor; the column «Error» gives the reason.",
+          "next": "Open the letter at the print vendor and fix, release or delete it there. The state here follows on its own. Do not send it again: that creates a duplicate at the print vendor. Where letters are sent automatically, We.Publish replaces an invoice letter itself the following night, unless someone has dealt with it by then."
         }
       },
       "channel": "Delivery",

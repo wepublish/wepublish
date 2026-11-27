@@ -42,6 +42,7 @@ import {
   sub,
   subMinutes,
 } from 'date-fns';
+import { v7 as uuidv7 } from 'uuid';
 import { inspect } from 'util';
 import { SubscriptionEventDictionary } from '../subscription-event-dictionary/subscription-event-dictionary';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
@@ -69,6 +70,17 @@ const RUN_LOCK_TTL_MS = 2 * 60 * 1000;
 
 /** How often a refused invoice letter is offered again before someone has to look. */
 const INVOICE_LETTER_ATTEMPTS = 3;
+
+/**
+ * The states of an invoice letter that is not on its way: the vendor never
+ * got it or turned it away, holds it for someone to act on, or it was taken
+ * back there.
+ */
+const UNPOSTED_LETTER_STATES = new Set<MailLogState>([
+  MailLogState.rejected,
+  MailLogState.actionRequired,
+  MailLogState.canceled,
+]);
 
 type OpenInvoice = Awaited<
   ReturnType<SubscriptionService['findAllOpenInvoices']>
@@ -747,6 +759,27 @@ export class PeriodicJobService {
     }
   }
 
+  /**
+   * The letter itself when the vendor holds it for someone to act on and
+   * nobody is there to do so: where every letter is confirmed by hand at the
+   * vendor, a held one is theirs. Not in the run that posted it either, the
+   * same pdf would be held for the same reason.
+   */
+  private async replaceableHeldLetter<
+    Attempt extends { state: MailLogState; sentDate: Date },
+  >(runDate: Date, attempt: Attempt): Promise<Attempt | null> {
+    if (
+      attempt.state !== MailLogState.actionRequired ||
+      attempt.sentDate >= runDate
+    ) {
+      return null;
+    }
+
+    return (await this.mailContext.letterSender!.sendsAutomatically()) ?
+        attempt
+      : null;
+  }
+
   private async postInvoiceLetter(runDate: Date, invoice: OpenInvoice) {
     const subscription = invoice.subscription;
 
@@ -776,16 +809,37 @@ export class PeriodicJobService {
         channel: MailChannel.letter,
         sentDate: { gte: invoice.createdAt },
       },
-      select: { state: true },
+      select: { id: true, state: true, providerLetterID: true, sentDate: true },
+      orderBy: { sentDate: 'asc' },
     });
 
-    if (attempts.some(({ state }) => state !== MailLogState.rejected)) {
+    // A letter that is with the vendor, the post or the reader.
+    if (attempts.some(({ state }) => !UNPOSTED_LETTER_STATES.has(state))) {
+      return;
+    }
+
+    const latest = attempts[attempts.length - 1];
+
+    // Taken back at the vendor: somebody settled it there.
+    if (latest?.state === MailLogState.canceled) {
+      return;
+    }
+
+    // Every upload is a letter of its own at the vendor, which keeps no track
+    // of duplicates. What it stores is not handed over a second time: at most
+    // a letter it holds for someone to act on is replaced, further down.
+    const held =
+      latest?.providerLetterID ?
+        await this.replaceableHeldLetter(runDate, latest)
+      : null;
+
+    if (latest?.providerLetterID && !held) {
       return;
     }
 
     if (attempts.length >= INVOICE_LETTER_ATTEMPTS) {
       this.logger.error(
-        `The invoice letter for invoice ${invoice.id} was refused ${attempts.length} times and is not posted again`
+        `The invoice letter for invoice ${invoice.id} was handed over ${attempts.length} times without getting through and is not posted again`
       );
 
       return;
@@ -826,13 +880,28 @@ export class PeriodicJobService {
       return;
     }
 
+    // Only now, with the new letter ready: the held one is taken back, and
+    // without it gone no other may follow. Its replacement is on record from
+    // then on, so the next night posts again whatever stops it tonight.
+    const replacementLogId = held ? uuidv7() : undefined;
+
+    if (
+      held &&
+      (await this.mailContext.letterSender!.withdrawHeldLetter(
+        held.id,
+        replacementLogId!
+      )) !== 'withdrawn'
+    ) {
+      return;
+    }
+
     await this.sendTemplateMail(
       creationEvent,
       subscription.user,
       false,
       { subscriptionToCreateInvoice: subscription, invoice },
       runDate,
-      { letterRecipient, letterAttachment }
+      { letterRecipient, letterAttachment, mailLogId: replacementLogId }
     );
   }
 

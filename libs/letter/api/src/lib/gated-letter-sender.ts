@@ -1,5 +1,6 @@
 import { FeaturesService } from '@wepublish/features/api';
 import {
+  HeldLetterOutcome,
   LetterRecipient,
   LetterRecipientOptions,
   LetterSender,
@@ -35,6 +36,17 @@ export class GatedLetterSender implements LetterSender {
 
   sendLetter(props: SendTemplateLetterProps): Promise<string> {
     return this.context.sendLetter(props);
+  }
+
+  sendsAutomatically(): Promise<boolean> {
+    return this.context.sendsAutomatically();
+  }
+
+  withdrawHeldLetter(
+    mailLogId: string,
+    replacementLogId: string
+  ): Promise<HeldLetterOutcome> {
+    return this.context.withdrawHeldLetter(mailLogId, replacementLogId);
   }
 }
 

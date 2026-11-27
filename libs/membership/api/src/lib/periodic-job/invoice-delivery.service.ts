@@ -36,10 +36,13 @@ import { SubscriptionEventDictionary } from '../subscription-event-dictionary/su
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { isLegacySubscription } from '../subscription/legacy-subscription';
 
-/** What the invoice-creation mail is told about the paper side. */
+/**
+ * What the invoice-creation mail is told about the paper side. `mailLogId`:
+ * the entry a replacement letter was given when the held one was taken back.
+ */
 export type PaperSide = Pick<
   MailControllerConfig,
-  'letterRecipient' | 'letterAttachment'
+  'letterRecipient' | 'letterAttachment' | 'mailLogId'
 >;
 
 /**

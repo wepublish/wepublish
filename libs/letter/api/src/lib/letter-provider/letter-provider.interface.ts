@@ -10,6 +10,12 @@ export enum LetterState {
   undeliverable = 'undeliverable',
   rejected = 'rejected',
   canceled = 'canceled',
+  /**
+   * The vendor took the letter and holds it until someone looks at it there,
+   * e.g. because its check of the pdf failed. Unlike `rejected` the letter
+   * exists at the vendor.
+   */
+  actionRequired = 'actionRequired',
 }
 
 export type LetterAddressPosition = 'left' | 'right';
@@ -75,6 +81,11 @@ export interface LetterProviderMessageState {
   providerLetterID: string;
   state: LetterState;
   letterData?: string;
+  /**
+   * The vendor no longer knows the letter. For one it had not printed yet
+   * that means someone removed it there; a printed one has merely aged out.
+   */
+  gone?: true;
 }
 
 export class LetterProviderError extends Error {
@@ -106,6 +117,18 @@ export interface LetterProvider {
   dispatchLetter(props: DispatchLetterProps): Promise<void>;
 
   cancelLetter(providerLetterID: string): Promise<void>;
+
+  /**
+   * Removes a letter the vendor holds without having printed it, so another
+   * one can take its place. Throws when the vendor does not let it go.
+   */
+  deleteLetter(providerLetterID: string): Promise<void>;
+
+  /**
+   * Whether the vendor prints what it is handed without a person confirming
+   * each letter there.
+   */
+  sendsAutomatically(): Promise<boolean>;
 
   getLetterFile(providerLetterID: string): Promise<Buffer>;
 
