@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/vitest';
 
 import { createTheme, ThemeProvider } from '@mui/material';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import {
   InvoicesDocument,
   MemberPlanListDocument,
@@ -9,6 +9,7 @@ import {
   ReactivateSubscriptionDocument,
   RevertSubscriptionUpgradeDocument,
   SubscriptionDocument,
+  UpdateSubscriptionDocument,
 } from '@wepublish/editor/api';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import type { Mock } from 'vitest';
@@ -55,8 +56,11 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
+const enabledFeatures = new Set<string>();
+
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
+  useFeature: (feature: string) => enabledFeatures.has(feature),
   // The permission wrappers would otherwise need an authenticated session.
   createCheckedPermissionComponent: () => (component: unknown) => component,
   PermissionControl: ({ children }: { children: React.ReactNode }) => children,
@@ -78,6 +82,27 @@ const memberPlan = {
   availablePaymentMethods: [],
 };
 
+const lifelongPlan = {
+  ...memberPlan,
+  id: 'plan-lifelong',
+  name: 'Lifelong',
+  slug: 'lifelong',
+  periodicityPricing: [{ periodicity: 'lifetime', amountMin: 0 }],
+  defaultPaymentPeriodicity: null,
+};
+
+const monthlyOrYearlyPlan = {
+  ...memberPlan,
+  id: 'plan-monthly-or-yearly',
+  name: 'Monthly or yearly',
+  slug: 'monthly-or-yearly',
+  periodicityPricing: [
+    { periodicity: 'yearly', amountMin: 12000 },
+    { periodicity: 'monthly', amountMin: 1100 },
+  ],
+  defaultPaymentPeriodicity: 'monthly',
+};
+
 const paymentMethod = {
   id: 'payment-method-1',
   name: 'Credit Card',
@@ -89,8 +114,11 @@ const paymentMethod = {
 const subscription = (
   deactivation: unknown,
   canRevertUpgrade = false,
-  pendingPaymentMethodChange: unknown = null
+  pendingPaymentMethodChange: unknown = null,
+  extra: Record<string, unknown> = {}
 ) => ({
+  importedAt: null,
+  legacy: false,
   canRevertUpgrade,
   pendingPaymentMethodChange,
   id: 'subscription-1',
@@ -116,12 +144,15 @@ const subscription = (
   currency: 'CHF',
   goodie: null,
   periods: [],
+  firstPrintIssueFrom: null,
+  ...extra,
 });
 
 const mockQueries = (
   deactivation: unknown,
   canRevertUpgrade = false,
-  pendingPaymentMethodChange: unknown = null
+  pendingPaymentMethodChange: unknown = null,
+  extra: Record<string, unknown> = {}
 ) => {
   // The results have to be referentially stable, the view reacts to them in effects.
   const refetch = vi.fn();
@@ -135,7 +166,8 @@ const mockQueries = (
           subscription: subscription(
             deactivation,
             canRevertUpgrade,
-            pendingPaymentMethodChange
+            pendingPaymentMethodChange,
+            extra
           ),
         },
       },
@@ -149,7 +181,11 @@ const mockQueries = (
       {
         loading: false,
         refetch,
-        data: { memberPlans: { nodes: [memberPlan] } },
+        data: {
+          memberPlans: {
+            nodes: [memberPlan, lifelongPlan, monthlyOrYearlyPlan],
+          },
+        },
       },
     ],
     [
@@ -183,13 +219,92 @@ const renderEditView = () =>
     </ThemeProvider>
   );
 
+const renderCreateView = () =>
+  render(
+    <ThemeProvider theme={theme}>
+      <MemoryRouter initialEntries={['/subscriptions/create']}>
+        <Routes>
+          <Route
+            path="/subscriptions/create"
+            element={<SubscriptionEditView />}
+          />
+        </Routes>
+      </MemoryRouter>
+    </ThemeProvider>
+  );
+
+const periodicityPicker = () =>
+  screen.getByRole('combobox', {
+    name: /^memberPlanList.paymentPeriodicities/,
+  });
+
+const choosePlan = (name: string) => {
+  fireEvent.mouseDown(
+    screen.getByRole('combobox', {
+      name: /^userSubscriptionEdit.selectMemberPlan/,
+    })
+  );
+  fireEvent.click(screen.getByRole('option', { name }));
+};
+
+const offeredPeriodicities = () => {
+  fireEvent.mouseDown(periodicityPicker());
+
+  return within(screen.getByRole('listbox'))
+    .getAllByRole('option')
+    .map(option => option.textContent);
+};
+
 beforeEach(() => {
+  enabledFeatures.clear();
   mockedUseQuery.mockReset();
   mutationFor(ReactivateSubscriptionDocument).mockClear();
   mutationFor(RevertSubscriptionUpgradeDocument).mockClear();
 });
 
 describe('SubscriptionEditView', () => {
+  describe('the first printed issue the reader chose («Abo-Start»)', () => {
+    const firstIssueField = () =>
+      screen.queryByRole('textbox', {
+        name: 'userSubscriptionEdit.firstPrintIssueFrom',
+      });
+
+    it('shows and saves it where the print export is on', async () => {
+      enabledFeatures.add('print-export');
+      mockQueries(null, false, null, {
+        firstPrintIssueFrom: '2026-11-14T00:00:00.000Z',
+      });
+      renderEditView();
+
+      await screen.findByRole('checkbox', {
+        name: 'userSubscriptionEdit.autoRenew',
+      });
+      expect(firstIssueField()).toHaveValue('14.11.2026');
+
+      fireEvent.click(screen.getAllByRole('button', { name: 'save' })[0]!);
+
+      await vi.waitFor(() =>
+        expect(mutationFor(UpdateSubscriptionDocument)).toHaveBeenCalledWith(
+          expect.objectContaining({
+            variables: expect.objectContaining({
+              firstPrintIssueFrom: '2026-11-14T00:00:00.000Z',
+            }),
+          })
+        )
+      );
+    });
+
+    it('is not there without the print export', async () => {
+      mockQueries(null);
+      renderEditView();
+
+      await screen.findByRole('checkbox', {
+        name: 'userSubscriptionEdit.autoRenew',
+      });
+      expect(firstIssueField()).toBeNull();
+    });
+  });
+
   it('turns off auto renew when the subscription stops being extendable', async () => {
     mockQueries(null);
     renderEditView();
@@ -226,6 +341,55 @@ describe('SubscriptionEditView', () => {
         'userSubscriptionEdit.paymentMethodChange.pending'
       )
     ).toBeTruthy();
+  });
+
+  describe('imported subscriptions', () => {
+    const importedAt = '2026-11-01T08:00:00.000Z';
+
+    afterEach(() => {
+      enabledFeatures.clear();
+    });
+
+    it('says that a subscription is a legacy one', async () => {
+      enabledFeatures.add('legacy-subscriptions');
+      mockQueries(null, false, null, { importedAt, legacy: true });
+      renderEditView();
+
+      expect(
+        await screen.findByText('userSubscriptionEdit.imported.legacy')
+      ).toBeTruthy();
+    });
+
+    it('says that an imported subscription was since paid for here', async () => {
+      enabledFeatures.add('legacy-subscriptions');
+      mockQueries(null, false, null, { importedAt, legacy: false });
+      renderEditView();
+
+      expect(
+        await screen.findByText('userSubscriptionEdit.imported.paidHere')
+      ).toBeTruthy();
+    });
+
+    it('says nothing about a subscription created here', async () => {
+      enabledFeatures.add('legacy-subscriptions');
+      mockQueries(null);
+      renderEditView();
+
+      await screen.findByText(
+        'userSubscriptionEdit.deactivation.title.activated'
+      );
+      expect(screen.queryByText(/userSubscriptionEdit\.imported/)).toBeNull();
+    });
+
+    it('says nothing while the feature is off', async () => {
+      mockQueries(null, false, null, { importedAt, legacy: true });
+      renderEditView();
+
+      await screen.findByText(
+        'userSubscriptionEdit.deactivation.title.activated'
+      );
+      expect(screen.queryByText(/userSubscriptionEdit\.imported/)).toBeNull();
+    });
   });
 
   it('shows no payment method change when there is none', async () => {
@@ -357,5 +521,76 @@ describe('SubscriptionEditView', () => {
     expect(revert).toHaveBeenCalledWith({
       variables: { id: 'subscription-1' },
     });
+  });
+
+  it('gives a new subscription the only periodicity of the chosen plan', async () => {
+    mockQueries(null);
+    renderCreateView();
+
+    await screen.findByRole('combobox', {
+      name: /^userSubscriptionEdit.selectMemberPlan/,
+    });
+    choosePlan('Lifelong');
+
+    expect(periodicityPicker()).toHaveTextContent(
+      'memberPlanList.paymentPeriodicity.lifetime'
+    );
+    expect(offeredPeriodicities()).toEqual([
+      'memberPlanList.paymentPeriodicity.lifetime',
+    ]);
+  });
+
+  it('gives a new subscription the default periodicity of a plan that offers several', async () => {
+    mockQueries(null);
+    renderCreateView();
+
+    await screen.findByRole('combobox', {
+      name: /^userSubscriptionEdit.selectMemberPlan/,
+    });
+    choosePlan('Monthly or yearly');
+
+    expect(periodicityPicker()).toHaveTextContent(
+      'memberPlanList.paymentPeriodicity.monthly'
+    );
+    expect(offeredPeriodicities()).toEqual([
+      'memberPlanList.paymentPeriodicity.monthly',
+      'memberPlanList.paymentPeriodicity.yearly',
+    ]);
+  });
+
+  it('prices a new subscription for the periodicity the plan gave it', async () => {
+    mockQueries(null);
+    renderCreateView();
+
+    await screen.findByRole('combobox', {
+      name: /^userSubscriptionEdit.selectMemberPlan/,
+    });
+    choosePlan('Monthly or yearly');
+
+    expect(
+      screen.getByRole('textbox', {
+        name: /^userSubscriptionEdit.periodAmount/,
+      })
+    ).toHaveValue('11.00');
+  });
+
+  it('still lists the periodicity of an existing subscription its plan does not offer', async () => {
+    mockQueries(null, false, null, {
+      memberPlan: lifelongPlan,
+      paymentPeriodicity: 'yearly',
+    });
+    renderEditView();
+
+    await screen.findByRole('checkbox', {
+      name: 'userSubscriptionEdit.autoRenew',
+    });
+
+    expect(periodicityPicker()).toHaveTextContent(
+      'memberPlanList.paymentPeriodicity.yearly'
+    );
+    expect(offeredPeriodicities()).toEqual([
+      'memberPlanList.paymentPeriodicity.yearly',
+      'memberPlanList.paymentPeriodicity.lifetime',
+    ]);
   });
 });

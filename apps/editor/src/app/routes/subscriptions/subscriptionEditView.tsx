@@ -51,7 +51,6 @@ import {
   CanGetSubscriptions,
 } from '@wepublish/permissions';
 import {
-  ALL_PAYMENT_PERIODICITIES,
   createCheckedPermissionComponent,
   CurrencyInput,
   DatePicker,
@@ -69,6 +68,7 @@ import {
   toggleRequiredLabel,
   useActionMailQuestion,
   useAuthorisation,
+  useFeature,
   UserSearch,
   UserSubscriptionDeactivatePanel,
 } from '@wepublish/ui/editor';
@@ -87,6 +87,10 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 
 import { ReactivateSubscriptionModal } from './reactivateSubscriptionModal';
+import {
+  periodicityForPlan,
+  selectablePeriodicities,
+} from './subscription-periodicity';
 
 const Button = styled(RButton)`
   margin-top: 8px;
@@ -131,6 +135,25 @@ export interface SubscriptionEditViewProps {
   onSave?(subscription: FullSubscriptionFragment): void;
 }
 
+/** «2026-11-14T00:00:00.000Z» (a database day) → that calendar day, local midnight. */
+const localDayOf = (value: string | null | undefined): Date | null => {
+  if (!value) {
+    return null;
+  }
+
+  const [year, month, day] = value.slice(0, 10).split('-').map(Number);
+
+  return new Date(year!, month! - 1, day!);
+};
+
+/** A picked calendar day → «2026-11-14T00:00:00.000Z», how the API stores days. */
+const dbDayOf = (date: Date | null | undefined): string | null =>
+  date ?
+    `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
+      date.getDate()
+    ).padStart(2, '0')}T00:00:00.000Z`
+  : null;
+
 const EMPTY_SUBSCRIPTION = {
   user: null as FullUserFragment | null,
   memberPlan: undefined as FullMemberPlanFragment | undefined,
@@ -139,6 +162,7 @@ const EMPTY_SUBSCRIPTION = {
   monthlyAmount: 500,
   autoRenew: false,
   startsAt: new Date(),
+  firstPrintIssueFrom: null as Date | null,
   paidUntil: null as Date | null,
   properties: [] as PropertyInput[],
   deactivation: null as DeactivationFragment | null,
@@ -170,6 +194,7 @@ const periodMinAmountOf = (
 
 function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   const { t } = useTranslation();
+  const printExport = useFeature('print-export');
   const formId = useId();
   const labelId = (field: string) => `${formId}-${field}-label`;
   const navigate = useNavigate();
@@ -203,6 +228,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
       monthlyAmount: z.number(),
       autoRenew: z.boolean(),
       startsAt: z.date(),
+      firstPrintIssueFrom: z.date().nullish(),
       paidUntil: z.date().nullish(),
       properties: z.array(z.custom<PropertyInput>()),
       deactivation: z.custom<DeactivationFragment>().nullish(),
@@ -258,6 +284,12 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   const [pendingPaymentMethodChange, setPendingPaymentMethodChange] =
     useState<FullSubscriptionFragment['pendingPaymentMethodChange']>(null);
 
+  const showImported = useFeature('legacy-subscriptions');
+  const [imported, setImported] = useState<{
+    importedAt: string;
+    legacy: boolean;
+  } | null>(null);
+
   const loadSubscription = useCallback(async () => {
     try {
       if (id) {
@@ -271,6 +303,14 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
         setPendingPaymentMethodChange(
           subscription?.pendingPaymentMethodChange ?? null
         );
+        setImported(
+          subscription?.importedAt ?
+            {
+              importedAt: subscription.importedAt,
+              legacy: subscription.legacy,
+            }
+          : null
+        );
 
         if (subscription) {
           return {
@@ -281,6 +321,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
             monthlyAmount: subscription.monthlyAmount,
             autoRenew: subscription.autoRenew,
             startsAt: new Date(subscription.startsAt),
+            firstPrintIssueFrom: localDayOf(subscription.firstPrintIssueFrom),
             paidUntil:
               subscription.paidUntil ? new Date(subscription.paidUntil) : null,
             paymentMethod: subscription.paymentMethod,
@@ -509,6 +550,8 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
           variables: {
             id,
             ...inputBase,
+            // a calendar day, stored like a print issue's ship day
+            firstPrintIssueFrom: dbDayOf(subscription.firstPrintIssueFrom),
             userID: user?.id,
             paymentMethodID: paymentMethod.id,
             memberPlanID: memberPlan.id,
@@ -796,6 +839,17 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
             </Alert>
           )}
 
+          {showImported && imported && (
+            <Alert severity="info">
+              {t(
+                imported.legacy ?
+                  'userSubscriptionEdit.imported.legacy'
+                : 'userSubscriptionEdit.imported.paidHere',
+                { date: new Date(imported.importedAt) }
+              )}
+            </Alert>
+          )}
+
           {pendingPaymentMethodChange && (
             <Alert severity="info">
               {t('userSubscriptionEdit.paymentMethodChange.pending', {
@@ -893,17 +947,26 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                                 return;
                               }
 
+                              // The plan decides the periodicity: a new
+                              // subscription takes its default, an existing
+                              // one keeps its own while the plan offers it.
+                              const planPeriodicity = periodicityForPlan(
+                                chosen,
+                                paymentPeriodicity,
+                                { isNew: !id }
+                              );
                               const planPeriodMin =
                                 chosen.periodicityPricing?.find(
-                                  price =>
-                                    price.periodicity === paymentPeriodicity
+                                  price => price.periodicity === planPeriodicity
                                 )?.amountMin;
 
                               field.onChange(chosen);
+                              setValue('paymentPeriodicity', planPeriodicity);
                               setValue(
                                 'monthlyAmount',
                                 planPeriodMin != null ?
-                                  planPeriodMin / periodicityMonths
+                                  planPeriodMin /
+                                    PAYMENT_PERIODICITY_MONTHS[planPeriodicity]
                                 : getMonthlyEquivalentRange(
                                     chosen.periodicityPricing
                                   ).amountPerMonthMin
@@ -988,7 +1051,10 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                               },
                             }}
                           >
-                            {ALL_PAYMENT_PERIODICITIES.map(pp => (
+                            {selectablePeriodicities(
+                              memberPlan,
+                              paymentPeriodicity
+                            ).map(pp => (
                               <MenuItem
                                 key={pp}
                                 value={pp}
@@ -1152,6 +1218,35 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                       />
                     </div>
                   </TwoUp>
+
+                  {printExport && (
+                    <div>
+                      <FormLabel>
+                        <span id={labelId('firstPrintIssueFrom')}>
+                          {t('userSubscriptionEdit.firstPrintIssueFrom')}
+                        </span>{' '}
+                        <InfoTooltip
+                          text={t(
+                            'userSubscriptionEdit.firstPrintIssueFromInfo'
+                          )}
+                        />
+                      </FormLabel>
+
+                      <Controller
+                        control={control}
+                        name="firstPrintIssueFrom"
+                        render={({ field }) => (
+                          <DatePicker
+                            aria-labelledby={labelId('firstPrintIssueFrom')}
+                            value={field.value ?? null}
+                            disabled={isDisabled || isDeactivated}
+                            onChange={value => field.onChange(value ?? null)}
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </div>
+                  )}
 
                   {isTrialMemberPlan && isTrialSubscription && (
                     <Alert

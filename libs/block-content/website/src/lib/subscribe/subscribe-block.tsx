@@ -37,6 +37,7 @@ export const SubscribeBlock = ({
   showGiftCodeRedemption,
   giftCodeRedemptionPage,
   giftCodeRedemptionLinkText,
+  subscribeExtras,
 }: BuilderSubscribeBlockProps) => {
   const {
     register: [register],
@@ -143,6 +144,7 @@ export const SubscribeBlock = ({
             showGiftCodeRedemption ? giftCodeRedemptionPage?.url : null
           }
           giftCodeRedemptionText={giftCodeRedemptionLinkText}
+          subscribeExtras={subscribeExtras}
           defaults={{
             email: mail as string | undefined,
             firstName: firstName as string | undefined,

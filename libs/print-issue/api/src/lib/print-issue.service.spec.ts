@@ -589,6 +589,86 @@ describe('PrintIssueService', () => {
     });
   });
 
+  describe('numbers that run on («#117»)', () => {
+    const continuous = (prisma: ReturnType<typeof makePrisma>) =>
+      prisma.setting.findUnique.mockImplementation((async ({
+        where,
+      }: {
+        where: { name: string };
+      }) =>
+        where.name === 'printIssueNumbering' ? { value: 'continuous' }
+        : where.name === 'printIssueLabelFormat' ? { value: '#{range}' }
+        : null) as never);
+
+    it('numbers a duplicate after the highest number of any year', async () => {
+      const { service, prisma } = makeService();
+      continuous(prisma);
+      prisma.printIssue.findUnique.mockResolvedValue(
+        issue({ number: 117, year: 2026 }) as never
+      );
+      prisma.printIssue.findMany.mockResolvedValue([
+        { number: 116, numberTo: null },
+        { number: 117, numberTo: null },
+      ] as never);
+
+      await service.duplicate('issue-1');
+
+      expect(prisma.printIssue.findMany).toHaveBeenCalledWith({
+        where: {},
+        select: { number: true, numberTo: true },
+      });
+      expect(
+        prisma.printIssue.create.mock.calls.at(-1)?.[0].data
+      ).toMatchObject(
+        // the year follows the ship day it keeps: 15.01.2027
+        { number: 118, year: 2027 }
+      );
+    });
+
+    it('refuses a number taken in any year, naming both as the medium writes them', async () => {
+      const { service, prisma } = makeService();
+      continuous(prisma);
+      prisma.printIssue.findFirst.mockResolvedValue(
+        issue({ id: 'issue-0', number: 117, year: 2026 }) as never
+      );
+
+      await expect(service.create(input({ number: 117 }))).rejects.toThrow(
+        new ConflictException('#117 overlaps issue #117.')
+      );
+      expect(
+        prisma.printIssue.findFirst.mock.calls[0]?.[0].where
+      ).not.toHaveProperty('year');
+    });
+
+    it('takes the year from the ship day, whatever the input says', async () => {
+      const { service, prisma } = makeService();
+      continuous(prisma);
+
+      await service.create(
+        input({ number: 118, year: 1999, issueDate: '2027-03-01' })
+      );
+
+      expect(
+        prisma.printIssue.create.mock.calls.at(-1)?.[0].data
+      ).toMatchObject({ number: 118, year: 2027 });
+    });
+
+    it('names a taken number as the medium writes it', async () => {
+      const { service, prisma } = makeService();
+      continuous(prisma);
+      prisma.printIssue.create.mockRejectedValue(
+        new Prisma.PrismaClientKnownRequestError('unique', {
+          code: 'P2002',
+          clientVersion: 'test',
+        })
+      );
+
+      await expect(service.create(input({ number: 118 }))).rejects.toThrow(
+        new ConflictException('Issue #118 exists already.')
+      );
+    });
+  });
+
   describe('compute: the mode follows the state', () => {
     it('records the api key next to its creator on everything it does', async () => {
       const { service, prisma } = makeService();

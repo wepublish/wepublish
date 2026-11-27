@@ -30,6 +30,7 @@ import {
   InvoiceDeliveryError,
   InvoiceNotFoundError,
   IssuingInvoiceError,
+  MarkingInvoiceAsSentError,
   ResponseNOK,
   SendingInvoiceError,
   UnknownIntentState,
@@ -124,15 +125,30 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   }
 
   /**
-   * Creates the renewal invoice in Bexio and either has Bexio email it or, for
-   * a reader who gets letters, issues it and hands back its pdf for printing.
-   * The returned intent carries the Bexio invoice id so the payment can be
-   * polled.
+   * Creates the renewal invoice in Bexio and either has Bexio email it or —
+   * for a reader who gets letters, or for every reader when we.publish
+   * delivers the invoices — issues it and hands back its pdf. The returned
+   * intent carries the Bexio invoice id so the payment can be polled.
    */
   override async createRemoteInvoice(
     props: CreateRemoteInvoiceProps
   ): Promise<RemoteInvoiceResult> {
-    return this.bexioCreate(props.invoice.id, true, '', props.channel);
+    return this.bexioCreate(
+      props.invoice.id,
+      true,
+      '',
+      props.channel,
+      !(await this.deliversInvoiceItself())
+    );
+  }
+
+  /**
+   * Bexio emails its invoices unless the medium has we.publish deliver them
+   * (`bexio_invoiceMailByWePublish`). A checkout is emailed by Bexio either
+   * way: it has no invoice-creation mail to carry the pdf.
+   */
+  override async deliversInvoiceItself(): Promise<boolean> {
+    return !(await this.getConfig()).bexio_invoiceMailByWePublish;
   }
 
   /** The pdf of the Bexio invoice behind a payment, for printing it again. */
@@ -147,6 +163,25 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       await this.getBexioGateway(),
       Number(payment.intentID)
     );
+  }
+
+  /**
+   * Sets Bexio's «sent» mark on an invoice we.publish delivered; Bexio sets
+   * it only for the invoices it emails itself.
+   */
+  override async markRemoteInvoiceSent({
+    payment,
+  }: RenderRemoteInvoiceProps): Promise<void> {
+    if (!payment.intentID || !/^\d+$/.test(payment.intentID)) {
+      return;
+    }
+
+    const bexio = await this.getBexioGateway();
+    const marked = await bexio.invoices.markAsSent(Number(payment.intentID));
+
+    if (!marked.success) {
+      throw new MarkingInvoiceAsSentError(marked);
+    }
   }
 
   /**
@@ -303,6 +338,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
    * @param {boolean} isRenewal - Indicates whether the invoice is a renewal or a new invoice.
    * @param {string} successURL - The url the client gets redirected after successful invoice creation
    * @param {MailChannel} channel - Email the invoice (default) or render it for a letter
+   * @param {boolean} renderForWePublish - Render it for we.publish to deliver, whatever the channel
    *
    * @throws {InvoiceNotFoundError} If the invoice or related data cannot be found in the local database.
    * @throws {Error} For any other generic error.
@@ -315,7 +351,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     invoiceId: string,
     isRenewal: boolean,
     successURL = '',
-    channel: MailChannel = MailChannel.mail
+    channel: MailChannel = MailChannel.mail,
+    renderForWePublish = false
   ): Promise<RemoteInvoiceResult> {
     let step = 'loading the invoice';
 
@@ -374,7 +411,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         updatedContact,
         { ...invoice, user },
         isRenewal,
-        channel
+        channel,
+        renderForWePublish
       );
 
       // The email can differ between we.publish and bexio, so the next
@@ -681,7 +719,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       user?: User | null;
     },
     isRenewal: boolean,
-    channel: MailChannel = MailChannel.mail
+    channel: MailChannel = MailChannel.mail,
+    renderForWePublish = false
   ): Promise<{
     invoice: InvoicesStatic.Invoice;
     document?: RemoteInvoiceDocument;
@@ -757,10 +796,10 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     );
 
     try {
-      if (channel === MailChannel.letter) {
+      if (channel === MailChannel.letter || renderForWePublish) {
         return {
           invoice: created,
-          document: await this.renderInvoiceForLetter(
+          document: await this.renderIssuedInvoice(
             bexio,
             created.id,
             markAsOpen
@@ -808,9 +847,9 @@ export class BexioPaymentProvider extends BasePaymentProvider {
 
   /**
    * What emailing does without the email: issue the invoice, as `mark_as_open`
-   * would, and fetch its pdf on Bexio's letterhead for we.publish to print.
+   * would, and fetch its pdf on Bexio's letterhead for we.publish to deliver.
    */
-  private async renderInvoiceForLetter(
+  private async renderIssuedInvoice(
     bexio: Bexio,
     invoiceId: number,
     markAsOpen: boolean

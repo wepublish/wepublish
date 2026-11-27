@@ -11,6 +11,7 @@ import { SuppressionSyncService } from '../mail-send/suppression-sync.service';
 import { EmailQualityService } from '../email-quality/email-quality.service';
 import { DeliverySuggestionService } from '../delivery-mode/delivery-suggestion.service';
 import { BexioContactSyncService } from '@wepublish/payment/api';
+import { LetterLogSyncService } from '@wepublish/letter/api';
 import type { NightStepRecord } from './periodic-job.service';
 
 describe('PeriodicJobExecutor', () => {
@@ -44,6 +45,11 @@ describe('PeriodicJobExecutor', () => {
         ran.push('mail log sync');
       }),
     };
+    const letterLogSync = {
+      syncOpenStates: vi.fn(async (): Promise<unknown> => {
+        ran.push('letter log sync');
+      }),
+    };
     const suppressionSync = {
       syncSuppressions: vi.fn(async (): Promise<unknown> => {
         ran.push('suppression sync');
@@ -70,6 +76,7 @@ describe('PeriodicJobExecutor', () => {
       [BexioContactSyncService, bexioContactSync],
       [MailchimpSyncService, mailchimpSync],
       [MailLogSyncService, mailLogSync],
+      [LetterLogSyncService, letterLogSync],
       [SuppressionSyncService, suppressionSync],
       [EmailQualityService, emailQuality],
       [DeliverySuggestionService, deliverySuggestions],
@@ -100,6 +107,7 @@ describe('PeriodicJobExecutor', () => {
       bexioContactSync,
       mailchimpSync,
       mailLogSync,
+      letterLogSync,
       deliverySuggestions,
       sellableReconciliation,
       recorded: () =>
@@ -117,6 +125,7 @@ describe('PeriodicJobExecutor', () => {
       'bexio contact sync',
       'mailchimp sync',
       'mail log sync',
+      'letter log sync',
       'suppression sync',
       'email quality',
       'delivery suggestions',
@@ -135,6 +144,7 @@ describe('PeriodicJobExecutor', () => {
       'periodic jobs',
       'bexio contact sync',
       'mailchimp sync',
+      'letter log sync',
       'suppression sync',
       'email quality',
       'delivery suggestions',
@@ -170,6 +180,7 @@ describe('PeriodicJobExecutor', () => {
       'bexio contact sync',
       'mailchimp sync',
       'mail log sync',
+      'letter log sync',
       'suppression sync',
       'email quality',
       'delivery suggestions',
@@ -194,6 +205,14 @@ describe('PeriodicJobExecutor', () => {
     await executor.handleCron();
 
     expect(sellableReconciliation.reconcile).not.toHaveBeenCalled();
+  });
+
+  it('asks the letter provider about a whole print run of letters', async () => {
+    const { executor, letterLogSync } = setup('claimed');
+
+    await executor.handleCron();
+
+    expect(letterLogSync.syncOpenStates).toHaveBeenCalledWith(2000);
   });
 
   it('leaves the night to the replica that claimed it', async () => {
@@ -229,6 +248,7 @@ describe('PeriodicJobExecutor', () => {
       'bexio contact sync',
       'mailchimp sync',
       'mail log sync',
+      'letter log sync',
       'suppression sync',
       'email quality',
       'delivery suggestions',
@@ -250,6 +270,7 @@ describe('PeriodicJobExecutor', () => {
       'bexio contact sync',
       'mailchimp sync',
       'mail log sync',
+      'letter log sync',
       'suppression sync',
       'email quality',
       'delivery suggestions',
@@ -288,6 +309,7 @@ describe('PeriodicJobExecutor', () => {
         'bexioContactSync',
         'mailchimpSync',
         'mailLogSync',
+        'letterLogSync',
         'suppressionSync',
         'emailQuality',
         'deliverySuggestions',
@@ -309,7 +331,7 @@ describe('PeriodicJobExecutor', () => {
 
       await executor.handleCron();
 
-      expect(recorded()[6]).toEqual(
+      expect(recorded()[7]).toEqual(
         expect.objectContaining({
           key: 'sellableReconciliation',
           status: 'ok',
@@ -334,13 +356,49 @@ describe('PeriodicJobExecutor', () => {
       );
     });
 
+    it('records the letter states on their own, apart from the mail states', async () => {
+      vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
+      const { executor, mailLogSync, letterLogSync, recorded } =
+        setup('claimed');
+      mailLogSync.syncOpenStates.mockRejectedValue(new Error('provider down'));
+      letterLogSync.syncOpenStates.mockResolvedValue({
+        checked: 40,
+        updated: 7,
+      });
+
+      await executor.handleCron();
+
+      expect(recorded()[3]).toEqual(
+        expect.objectContaining({
+          key: 'letterLogSync',
+          status: 'ok',
+          counts: { checked: 40, updated: 7 },
+        })
+      );
+    });
+
+    it('records the letter states as skipped where no letters are printed', async () => {
+      const { executor, letterLogSync, recorded } = setup('claimed');
+      letterLogSync.syncOpenStates.mockResolvedValue({
+        checked: 0,
+        updated: 0,
+        skipped: true,
+      });
+
+      await executor.handleCron();
+
+      expect(recorded()[3]).toEqual(
+        expect.objectContaining({ key: 'letterLogSync', status: 'skipped' })
+      );
+    });
+
     it('records a step the medium does not use as skipped', async () => {
       const { executor, deliverySuggestions, recorded } = setup('claimed');
       deliverySuggestions.recomputeAll.mockResolvedValue({ skipped: true });
 
       await executor.handleCron();
 
-      expect(recorded()[5]).toEqual(
+      expect(recorded()[6]).toEqual(
         expect.objectContaining({
           key: 'deliverySuggestions',
           status: 'skipped',

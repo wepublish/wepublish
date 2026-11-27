@@ -29,6 +29,8 @@ export const bexioMailFor = (subscriptionId: string) =>
 
 export type BexioInvoice = { id: number; status: string; documentNr: string };
 
+export type BexioPdf = { name: string; mime: string; content: Buffer };
+
 /**
  * Reads the bexio test company the way an accountant would see it, so a
  * journey can check what the provider did there.
@@ -64,6 +66,16 @@ export class BexioTestCompany {
     const invoice = invoices.find(i => i.api_reference === invoiceId);
 
     return invoice && { id: invoice.id, status: bexioStatus(invoice.kb_item_status_id), documentNr: invoice.document_nr };
+  }
+
+  /** The invoice's pdf on letter paper, as the provider downloads it for the reader. */
+  async pdf(id: number): Promise<BexioPdf> {
+    const pdf = await this.call<{ name: string; mime: string; content: string }>(
+      'get',
+      `/2.0/kb_invoice/${id}/pdf?logopaper=1`
+    );
+
+    return { name: pdf.name, mime: pdf.mime, content: Buffer.from(pdf.content, 'base64') };
   }
 
   async cancel(id: number) {

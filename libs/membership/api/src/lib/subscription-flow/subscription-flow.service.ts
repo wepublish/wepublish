@@ -14,14 +14,250 @@ import {
   subscriptionFlowNonUniqueEvents,
   subscriptionFlowRequiredEvents,
 } from './subscription-flow.type';
-import { MailChannel, PrismaClient, SubscriptionEvent } from '@prisma/client';
+import {
+  MailChannel,
+  PaymentPeriodicity,
+  Prisma,
+  PrismaClient,
+  SubscriptionEvent,
+} from '@prisma/client';
+import {
+  DEFAULT_FLOW_EARLIEST_DAY,
+  earliestInvoiceDay,
+  shortestPeriodicity,
+} from '@wepublish/utils/api';
+import { startOfDay, subDays } from 'date-fns';
+import { FeaturesService } from '@wepublish/features/api';
+import {
+  flowLegacyWhere,
+  isForLegacyAndOthers,
+  LEGACY_AND_OTHERS,
+} from '../subscription/legacy-subscription';
 
-const SUBSCRIPTION_EVENT_MAX_DAYS_BEFORE = -25;
 const SUBSCRIPTION_EVENT_MAX_DAYS_AFTER = 90;
+
+/** A flow as far as the subscriptions it applies to go. */
+type FlowConditions = {
+  default?: boolean;
+  /** For the subscriptions of every member plan; then memberPlanId is not set. */
+  allMemberPlans?: boolean;
+  memberPlanId?: string | null;
+  paymentMethods: { id: string }[];
+  periodicities: PaymentPeriodicity[];
+  autoRenewal: boolean[];
+  /** Legacy subscriptions, the others, or both (the default). */
+  legacy?: boolean[];
+};
+
+/** The earliest day an event of a flow may lie on, and what holds it there. */
+export type EarliestDay = {
+  days: number;
+  /** The shortest periodicity a member plan's flow applies to; null for the default flow. */
+  periodicity: PaymentPeriodicity | null;
+};
+
+// Prisma 7 drops an empty OR inside an AND/OR list, so a member plan's flow
+// without an auto-renewal value has to match nobody explicitly.
+const NO_SUBSCRIPTION: Prisma.SubscriptionWhereInput = { id: { in: [] } };
+
+/**
+ * The subscriptions the conditions of a flow match: those of its member plan,
+ * or of every plan for a flow for all plans. Which of them a plan's own flow
+ * takes first is for the caller to leave out.
+ */
+export function subscriptionsOfFlow(
+  flow: FlowConditions
+): Prisma.SubscriptionWhereInput {
+  // A flow for all plans takes any value of a condition it leaves open; a
+  // member plan's flow without a value matches nothing.
+  const narrows = (values: unknown[]) =>
+    !flow.allMemberPlans || values.length > 0;
+  // Nothing to add for a flow for both; never an empty AND either.
+  const legacy = flowLegacyWhere(flow.legacy ?? LEGACY_AND_OTHERS);
+
+  return {
+    ...(legacy.length > 0 && { AND: legacy }),
+    memberPlanID: flow.memberPlanId ?? undefined,
+    ...(narrows(flow.paymentMethods) && {
+      paymentMethodID: {
+        in: flow.paymentMethods.map(paymentMethod => paymentMethod.id),
+      },
+    }),
+    ...(narrows(flow.periodicities) && {
+      paymentPeriodicity: { in: flow.periodicities },
+    }),
+    ...(narrows(flow.autoRenewal) &&
+      (flow.autoRenewal.length ?
+        { OR: flow.autoRenewal.map(autoRenew => ({ autoRenew })) }
+      : NO_SUBSCRIPTION)),
+  };
+}
+
+/** What the list of flows is narrowed by; a count follows it. */
+export type SubscriptionCountFilter = {
+  memberPlanIds?: string[];
+  paymentMethodIds?: string[];
+  periodicities?: PaymentPeriodicity[];
+  autoRenewal?: boolean[];
+};
+
+/** A flow as far as counting its subscriptions goes. */
+type CountableFlow = FlowConditions & {
+  id: string;
+  active?: boolean;
+  intervals?: { daysAwayFromEnding: number | null }[];
+};
 
 @Injectable()
 export class SubscriptionFlowService {
-  constructor(private prismaService: PrismaClient) {}
+  constructor(
+    private prismaService: PrismaClient,
+    private features: FeaturesService
+  ) {}
+
+  /**
+   * How many subscriptions a flow can still send a message to: those still
+   * running, and those ended within the flow's latest day. A subscription
+   * belongs to one flow by its conditions alone, never by time, so it is
+   * counted at most once. An ended one whose flow has nothing left for it is
+   * counted nowhere, even if a later-ending flow, such as the default one,
+   * would still message it were that flow switched off. So the counts of all
+   * flows add up to the subscriptions that can still get a message, not to
+   * every subscription. An inactive flow handles none; ifActive tells what it
+   * would take once switched on.
+   */
+  async countSubscriptions(
+    flow: CountableFlow,
+    filter: SubscriptionCountFilter = {},
+    { ifActive = false }: { ifActive?: boolean } = {}
+  ): Promise<number> {
+    if (flow.active === false && !ifActive) {
+      return 0;
+    }
+
+    const latestDay = Math.max(
+      0,
+      ...(flow.intervals ?? []).map(
+        interval => interval.daysAwayFromEnding ?? 0
+      )
+    );
+
+    // A flow comes after the flows of a plan, and the default flow after
+    // every other: what those take does not reach it.
+    const before =
+      flow.default || flow.allMemberPlans ?
+        await this.prismaService.subscriptionFlow.findMany({
+          where: {
+            active: true,
+            default: false,
+            ...(flow.allMemberPlans && { allMemberPlans: false }),
+            NOT: { id: flow.id },
+          },
+          include: { paymentMethods: true },
+        })
+      : [];
+
+    const narrowed: Prisma.SubscriptionWhereInput[] = [
+      ...(filter.memberPlanIds?.length ?
+        [{ memberPlanID: { in: filter.memberPlanIds } }]
+      : []),
+      ...(filter.paymentMethodIds?.length ?
+        [{ paymentMethodID: { in: filter.paymentMethodIds } }]
+      : []),
+      ...(filter.periodicities?.length ?
+        [{ paymentPeriodicity: { in: filter.periodicities } }]
+      : []),
+      // A boolean has no `in` filter: one alternative per value instead.
+      ...(filter.autoRenewal?.length ?
+        [{ OR: filter.autoRenewal.map(autoRenew => ({ autoRenew })) }]
+      : []),
+    ];
+
+    return this.prismaService.subscription.count({
+      where: {
+        AND: [
+          {
+            OR: [
+              { deactivation: null },
+              {
+                paidUntil: {
+                  gte: subDays(startOfDay(new Date()), latestDay),
+                },
+              },
+            ],
+          },
+          ...(flow.default ? [] : [subscriptionsOfFlow(flow)]),
+          ...(before.length ?
+            [{ NOT: { OR: before.map(subscriptionsOfFlow) } }]
+          : []),
+          ...narrowed,
+        ],
+      },
+    });
+  }
+
+  /** How many subscriptions a flow handles, or would once switched on. */
+  async handledCount(subscriptionFlowId: string) {
+    const flow = await this.prismaService.subscriptionFlow.findUnique({
+      where: { id: subscriptionFlowId },
+      include: { paymentMethods: true, intervals: true },
+    });
+
+    if (!flow) {
+      throw new NotFoundException(
+        `The subscription flow '${subscriptionFlowId}' could not be found.`
+      );
+    }
+
+    return this.countSubscriptions(flow, {}, { ifActive: true });
+  }
+
+  /**
+   * Switches a flow on or off. Off, its subscriptions fall to the next flow;
+   * the default flow is the last one and stays on. On, it must not share
+   * subscriptions with another active flow.
+   */
+  async setFlowActive(subscriptionFlowId: string, active: boolean) {
+    const flow = await this.prismaService.subscriptionFlow.findUnique({
+      where: { id: subscriptionFlowId },
+      include: { paymentMethods: true },
+    });
+
+    if (!flow) {
+      throw new NotFoundException(
+        `The subscription flow '${subscriptionFlowId}' could not be found.`
+      );
+    }
+
+    if (flow.default && !active) {
+      throw new BadRequestException(
+        'The default flow cannot be switched off: every subscription falls back to it.'
+      );
+    }
+
+    if (
+      active &&
+      (await this.filterHasOverlap(flow, {
+        id: flow.id,
+        paymentMethodIds: flow.paymentMethods.map(
+          paymentMethod => paymentMethod.id
+        ),
+        periodicities: flow.periodicities,
+        autoRenewal: flow.autoRenewal,
+      }))
+    ) {
+      throw new BadRequestException(
+        "You can't switch this flow on because there is a filter overlap with an active flow!"
+      );
+    }
+
+    await this.prismaService.subscriptionFlow.update({
+      where: { id: subscriptionFlowId },
+      data: { active },
+    });
+
+    return this.getFlows(false);
+  }
 
   async getFlows(defaultFlowOnly: boolean, memberPlanId?: string) {
     let where = {};
@@ -84,18 +320,66 @@ export class SubscriptionFlowService {
     return flows;
   }
 
-  async createFlow(flow: SubscriptionFlowModelCreateInput) {
-    if (
-      !flow.periodicities.length ||
-      !flow.autoRenewal.length ||
-      !flow.paymentMethodIds.length
-    ) {
-      throw new BadRequestException(
-        'Its not allowed to create subscription flow with no periodicities OR autoRenewal OR paymentMethods'
+  /**
+   * The earliest day an event of this flow may lie on. An invoice is only
+   * created once the current period has begun, so the shortest periodicity a
+   * flow applies to sets it. The default flow is the fallback of every
+   * subscription, so its day is fixed at what suits the shortest of them:
+   * nothing a member plan comes to offer can make it wrong.
+   */
+  async earliestDay(flow: FlowConditions): Promise<EarliestDay> {
+    if (flow.default) {
+      return { days: DEFAULT_FLOW_EARLIEST_DAY, periodicity: null };
+    }
+
+    return this.earliestDayOf(flow.periodicities);
+  }
+
+  private earliestDayOf(periodicities: PaymentPeriodicity[]): EarliestDay {
+    return {
+      days: earliestInvoiceDay(periodicities),
+      periodicity: shortestPeriodicity(periodicities) ?? null,
+    };
+  }
+
+  /**
+   * Whether a day is one this flow's events may lie on. A day that is too
+   * early could not be kept for the shortest subscriptions of the flow.
+   */
+  private async assertDayInRange(subscriptionFlowId: string, day: number) {
+    const flow = await this.prismaService.subscriptionFlow.findUnique({
+      where: { id: subscriptionFlowId },
+      include: { paymentMethods: true },
+    });
+
+    if (!flow) {
+      throw new NotFoundException(
+        `The subscription flow '${subscriptionFlowId}' could not be found.`
       );
     }
 
-    if (await this.filterHasOverlap(flow.memberPlanId, flow)) {
+    const earliest = await this.earliestDay(flow);
+
+    if (day < earliest.days || day > SUBSCRIPTION_EVENT_MAX_DAYS_AFTER) {
+      throw new BadRequestException(
+        `daysAwayFromEnding is not in allowed range of ${earliest.days} to ${SUBSCRIPTION_EVENT_MAX_DAYS_AFTER}: ${day}. ${describeEarliestDay(earliest, flow.default)}`
+      );
+    }
+  }
+
+  async createFlow(flow: SubscriptionFlowModelCreateInput) {
+    this.assertConditions(!!flow.allMemberPlans, flow);
+
+    // Either of one member plan or of all of them, never both or neither.
+    if (!!flow.memberPlanId === !!flow.allMemberPlans) {
+      throw new BadRequestException(
+        'A subscription flow is either for one member plan (memberPlanId) or for all of them (allMemberPlans).'
+      );
+    }
+
+    await this.assertLegacyAllowed(flow.legacy);
+
+    if (await this.filterHasOverlap(flow, flow)) {
       throw new BadRequestException(
         "You can't create this flow because there is a filter overlap!"
       );
@@ -104,11 +388,15 @@ export class SubscriptionFlowService {
     await this.prismaService.subscriptionFlow.create({
       data: {
         default: false,
-        memberPlan: {
-          connect: {
-            id: flow.memberPlanId,
-          },
-        },
+        allMemberPlans: !!flow.allMemberPlans,
+        memberPlan:
+          flow.memberPlanId ?
+            {
+              connect: {
+                id: flow.memberPlanId,
+              },
+            }
+          : undefined,
         paymentMethods: {
           connect: flow.paymentMethodIds.map(paymentMethodId => ({
             id: paymentMethodId,
@@ -116,6 +404,7 @@ export class SubscriptionFlowService {
         },
         periodicities: flow.periodicities,
         autoRenewal: flow.autoRenewal,
+        legacy: flow.legacy ?? [...LEGACY_AND_OTHERS],
         intervals: {
           create: [
             {
@@ -137,15 +426,7 @@ export class SubscriptionFlowService {
   }
 
   async updateFlow(flow: SubscriptionFlowModelUpdateInput) {
-    if (
-      (flow.periodicities && !flow.periodicities.length) ||
-      (flow.autoRenewal && !flow.autoRenewal.length) ||
-      (flow.paymentMethodIds && !flow.paymentMethodIds.length)
-    ) {
-      throw new BadRequestException(
-        'Its not allowed to update subscription flow with no periodicities OR autoRenewal OR paymentMethods'
-      );
-    }
+    await this.assertLegacyAllowed(flow.legacy);
 
     const originalFlow = await this.prismaService.subscriptionFlow.findUnique({
       where: {
@@ -162,11 +443,41 @@ export class SubscriptionFlowService {
       );
     }
 
-    if (await this.filterHasOverlap(originalFlow.memberPlanId, flow)) {
+    // The conditions the flow has once it is saved.
+    const conditions = {
+      paymentMethodIds:
+        flow.paymentMethodIds ??
+        originalFlow.paymentMethods.map(paymentMethod => paymentMethod.id),
+      periodicities: flow.periodicities ?? originalFlow.periodicities,
+      autoRenewal: flow.autoRenewal ?? originalFlow.autoRenewal,
+    };
+
+    if (originalFlow.allMemberPlans) {
+      this.assertConditions(true, conditions);
+    } else if (
+      (flow.periodicities && !flow.periodicities.length) ||
+      (flow.autoRenewal && !flow.autoRenewal.length) ||
+      (flow.paymentMethodIds && !flow.paymentMethodIds.length)
+    ) {
+      throw new BadRequestException(
+        'Its not allowed to update subscription flow with no periodicities OR autoRenewal OR paymentMethods'
+      );
+    }
+
+    // An inactive flow is held against the others when it is switched on.
+    if (
+      originalFlow.active &&
+      (await this.filterHasOverlap(
+        originalFlow,
+        originalFlow.allMemberPlans ? { ...flow, ...conditions } : flow
+      ))
+    ) {
       throw new BadRequestException(
         "You can't update this flow because there is a filter overlap!"
       );
     }
+
+    await this.assertEventsSuit(originalFlow, flow.periodicities);
 
     await this.prismaService.$transaction([
       this.prismaService.subscriptionFlow.update({
@@ -192,6 +503,7 @@ export class SubscriptionFlowService {
             : undefined,
           periodicities: flow.periodicities,
           autoRenewal: flow.autoRenewal,
+          legacy: flow.legacy,
         },
       }),
     ]);
@@ -412,12 +724,122 @@ export class SubscriptionFlowService {
     return this.getFlows(false);
   }
 
+  /**
+   * A flow that is to apply to a shorter periodicity must not have events
+   * that are too early for it: move them first.
+   */
+  private async assertEventsSuit(
+    flow: { id: string; periodicities: PaymentPeriodicity[] },
+    periodicities: PaymentPeriodicity[] | undefined
+  ) {
+    if (!periodicities) {
+      return;
+    }
+
+    const earliest = this.earliestDayOf(periodicities);
+
+    if (earliest.days <= earliestInvoiceDay(flow.periodicities)) {
+      return;
+    }
+
+    const tooEarly = (
+      await this.prismaService.subscriptionInterval.findMany({
+        where: { subscriptionFlowId: flow.id },
+      })
+    ).filter(
+      ({ daysAwayFromEnding }) =>
+        daysAwayFromEnding !== null && daysAwayFromEnding < earliest.days
+    );
+
+    if (tooEarly.length) {
+      throw new BadRequestException(
+        `These events are too early for the new conditions: ${tooEarly
+          .map(
+            ({ event, daysAwayFromEnding }) =>
+              `${event} (${daysAwayFromEnding})`
+          )
+          .join(', ')}. ${describeEarliestDay(earliest)} Move the events first.`
+      );
+    }
+  }
+
+  /**
+   * Whether another flow would take some of the same subscriptions. Only
+   * flows of the same kind compete: those of the same member plan, or those
+   * for all plans. Between the kinds the order decides: a plan's own flow
+   * comes before one for all plans.
+   */
+  /**
+   * A member plan's flow needs every condition. A flow for all plans may
+   * leave conditions open, which then take any value, but not all three: it
+   * would take every subscription, like a second default flow.
+   */
+  private assertConditions(
+    allMemberPlans: boolean,
+    flow: {
+      paymentMethodIds: string[];
+      periodicities: PaymentPeriodicity[];
+      autoRenewal: boolean[];
+    }
+  ) {
+    const given = [
+      flow.paymentMethodIds,
+      flow.periodicities,
+      flow.autoRenewal,
+    ].filter(values => values.length).length;
+
+    if (allMemberPlans ? given === 0 : given < 3) {
+      throw new BadRequestException(
+        allMemberPlans ?
+          'A subscription flow for all member plans needs at least one of periodicities, autoRenewal or paymentMethods.'
+        : 'Its not allowed to create subscription flow with no periodicities OR autoRenewal OR paymentMethods'
+      );
+    }
+  }
+
+  /**
+   * A flow has to be for somebody, and telling legacy subscriptions apart is
+   * only possible where the editor shows it.
+   */
+  private async assertLegacyAllowed(legacy: boolean[] | undefined) {
+    if (!legacy) {
+      return;
+    }
+
+    if (!legacy.length) {
+      throw new BadRequestException(
+        'A subscription flow has to be for legacy subscriptions, the others, or both'
+      );
+    }
+
+    if (
+      !isForLegacyAndOthers(legacy) &&
+      !(await this.features.isEnabled('legacy-subscriptions'))
+    ) {
+      throw new BadRequestException(
+        'Flows for legacy subscriptions need the legacy-subscriptions feature'
+      );
+    }
+  }
+
   private async filterHasOverlap(
-    memberPlanId: string | null,
+    of: { memberPlanId?: string | null; allMemberPlans?: boolean | null },
     newFlow: Partial<SubscriptionFlowModelUpdateInput>
   ) {
-    const whereClause =
-      memberPlanId ? { memberPlan: { id: memberPlanId } } : {};
+    // In a flow for all plans an open condition takes any value, so it
+    // shares every value with the other flow.
+    const shares = <T>(a: Set<T>, b: Set<T>) =>
+      (!!of.allMemberPlans && (a.size === 0 || b.size === 0)) ||
+      [...a].some(value => b.has(value));
+
+    // Only active flows take subscriptions.
+    const whereClause = {
+      active: true,
+      ...(of.allMemberPlans ? { allMemberPlans: true }
+      : of.memberPlanId ?
+        { memberPlan: { id: of.memberPlanId }, allMemberPlans: false }
+      : {}),
+    };
     const allFlows = await this.prismaService.subscriptionFlow.findMany({
       where: whereClause,
       select: {
@@ -429,8 +851,11 @@ export class SubscriptionFlowService {
         },
         periodicities: true,
         autoRenewal: true,
+        legacy: true,
       },
     });
+
+    const own = allFlows.find(flow => flow.id === newFlow.id);
 
     for (const flow of allFlows) {
       // skip itself
@@ -447,16 +872,19 @@ export class SubscriptionFlowService {
       const existingAr = new Set(flow.autoRenewal);
       const newAr = new Set(newFlow.autoRenewal);
 
-      // find filter values that are the same as the existing filter values
-      const pmIntersection = new Set([...newPM].filter(x => existingPM.has(x)));
-      const peIntersection = new Set([...newPe].filter(x => existingPe.has(x)));
-      const arIntersection = new Set([...newAr].filter(x => existingAr.has(x)));
+      // An update that leaves legacy alone keeps what the flow has; only a new
+      // flow falls back to being for both.
+      const newLegacy = new Set(
+        newFlow.legacy ?? own?.legacy ?? LEGACY_AND_OTHERS
+      );
 
-      // if any of the filter intersection are not empty, means that the filter combination exists already.
+      // Sharing values in every condition means some subscription would
+      // fall into both flows.
       if (
-        pmIntersection.size !== 0 &&
-        peIntersection.size !== 0 &&
-        arIntersection.size !== 0
+        shares(newPM, existingPM) &&
+        shares(newPe, existingPe) &&
+        shares(newAr, existingAr) &&
+        shares(newLegacy, new Set(flow.legacy))
       ) {
         return true;
       }
@@ -511,13 +939,10 @@ export class SubscriptionFlowService {
     }
 
     // Limit daysAwayFromEnding
-    if (
-      !!interval.daysAwayFromEnding &&
-      (interval.daysAwayFromEnding < SUBSCRIPTION_EVENT_MAX_DAYS_BEFORE ||
-        interval.daysAwayFromEnding > SUBSCRIPTION_EVENT_MAX_DAYS_AFTER)
-    ) {
-      throw new BadRequestException(
-        `daysAwayFromEnding is not in allowed range of ${SUBSCRIPTION_EVENT_MAX_DAYS_BEFORE} to ${SUBSCRIPTION_EVENT_MAX_DAYS_AFTER}: ${interval.daysAwayFromEnding}`
+    if (interval.daysAwayFromEnding) {
+      await this.assertDayInRange(
+        interval.subscriptionFlowId,
+        interval.daysAwayFromEnding
       );
     }
 
@@ -538,4 +963,17 @@ export class SubscriptionFlowService {
       }
     }
   }
+}
+
+function describeEarliestDay(
+  { days, periodicity }: EarliestDay,
+  isDefault = false
+) {
+  if (periodicity) {
+    return `The earliest day is ${days}, as the flow applies to ${periodicity} subscriptions.`;
+  }
+
+  return isDefault ?
+      `The earliest day is ${days}: the default flow applies to every subscription without a flow of its own.`
+    : `The earliest day is ${days}, as the flow applies to subscriptions of any periodicity.`;
 }

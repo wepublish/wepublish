@@ -13,7 +13,9 @@ import {
   resetTranslations,
 } from '@wepublish/mocks/website';
 import {
+  FirstPrintIssueChoice,
   PaymentPeriodicity,
+  PrintIssueStartDocument,
   SubscribePeriodicityDisplay,
 } from '@wepublish/website/api';
 import { t } from 'i18next';
@@ -22,6 +24,7 @@ import { zwoelfTenant } from '../zwoelf-tenant';
 import {
   ZWOELF_SHOP_URL,
   ZwoelfSubscribeBlock,
+  zwoelfSubscribeExtras,
 } from './zwoelf-subscribe-block';
 
 const yearlyAndBiennial = mockAvailablePaymentMethod({
@@ -72,7 +75,42 @@ const fankurve = mockMemberPlan({
 
 const loaded = <T,>(data: T) => ({ data, loading: false, error: undefined });
 
-const renderBlock = (query: Record<string, string> = {}) => {
+const issue = (
+  id: string,
+  label: string,
+  title: string | null,
+  day: string
+) => ({
+  __typename: 'PublicPrintIssue' as const,
+  id,
+  label,
+  title,
+  issueDate: day,
+});
+
+const printIssueStart = (
+  start: {
+    current: ReturnType<typeof issue>;
+    upcoming: ReturnType<typeof issue> | null;
+  } | null = {
+    current: issue('issue-117', '#117', 'Fankurve', '2026-11-13'),
+    upcoming: issue('issue-118', '#118', null, '2026-12-11'),
+  }
+) => ({
+  request: { query: PrintIssueStartDocument },
+  result: {
+    data: {
+      printIssueStart: start && { __typename: 'PrintIssueStart', ...start },
+    },
+  },
+});
+
+const renderBlock = (
+  query: Record<string, string> = {},
+  // nothing to choose unless a test says otherwise
+  mocks: ReturnType<typeof printIssueStart>[] = [printIssueStart(null)],
+  plans = [basic, fankurve]
+) => {
   const subscribeBlock = createSubscribeBlockContext({
     challenge: loaded({ __typename: 'Query', challenge: mockChallenge() }),
     userInvoices: loaded({ __typename: 'Query', userInvoices: [] }),
@@ -82,12 +120,12 @@ const renderBlock = (query: Record<string, string> = {}) => {
   renderWithProviders(
     <ZwoelfSubscribeBlock
       {...mockSubscribeBlock({
-        memberPlans: [basic, fankurve],
+        memberPlans: plans,
         periodicityDisplay: SubscribePeriodicityDisplay.Toggle,
         showGoodies: true,
       })}
     />,
-    { tenant: zwoelfTenant, subscribeBlock, router: { query } }
+    { tenant: zwoelfTenant, subscribeBlock, router: { query }, mocks }
   );
 
   return { user: userEvent.setup() };
@@ -99,6 +137,126 @@ const planHeading = () => screen.queryByRole('heading', { name: 'Abo wählen' })
 describe('ZwoelfSubscribeBlock', () => {
   beforeAll(() => applyTenantTranslations(zwoelfTenant));
   afterAll(() => resetTranslations());
+
+  describe('Abo-Start: the first printed issue', () => {
+    const aboStart = () =>
+      screen.queryByRole('combobox', { name: 'Abo-Start' });
+
+    it('asks for it on the first step, starting on «Ausgabe wählen»', async () => {
+      renderBlock({}, [printIssueStart()]);
+
+      const select = await screen.findByRole('combobox', { name: 'Abo-Start' });
+
+      expect(select).toHaveValue('');
+      expect(
+        Array.from((select as HTMLSelectElement).options).map(o => o.text)
+      ).toEqual([
+        'Ausgabe wählen',
+        'Aktuelle Ausgabe #117 · Fankurve',
+        'Kommende Ausgabe #118 · erscheint am 11.12.2026',
+      ]);
+    });
+
+    it('stays on the first step until it is chosen, then names it in the summary', async () => {
+      const { user } = renderBlock({}, [printIssueStart()]);
+      const select = await screen.findByRole('combobox', { name: 'Abo-Start' });
+
+      await user.click(screen.getByRole('button', { name: 'Weiter' }));
+
+      expect(
+        await screen.findByText(
+          'Bitte wähle, mit welcher Ausgabe dein Abo beginnt.'
+        )
+      ).toBeInTheDocument();
+      expect(emailField()).not.toBeInTheDocument();
+
+      await user.selectOptions(select, 'current');
+      await user.click(screen.getByRole('button', { name: 'Weiter' }));
+
+      await waitFor(() => expect(emailField()).toBeInTheDocument());
+      expect(screen.getByText(/Gewählt:/)).toHaveTextContent('Abo-Start: #117');
+      expect(aboStart()).not.toBeInTheDocument();
+    });
+
+    it('offers the next issue without a number while it is not created yet', async () => {
+      renderBlock({}, [
+        printIssueStart({
+          current: issue('issue-117', '#117', null, '2026-11-13'),
+          upcoming: null,
+        }),
+      ]);
+
+      const select = await screen.findByRole('combobox', { name: 'Abo-Start' });
+
+      expect(
+        Array.from((select as HTMLSelectElement).options).map(o => o.text)
+      ).toEqual([
+        'Ausgabe wählen',
+        'Aktuelle Ausgabe #117',
+        'Kommende Ausgabe',
+      ]);
+    });
+
+    it('is not asked for where nothing is printed or nothing shipped yet', async () => {
+      const digital = {
+        ...basic,
+        periodicityPricing: basic.periodicityPricing.map(price => ({
+          ...price,
+          printIssues: 0,
+        })),
+      };
+      const { user } = renderBlock({}, [printIssueStart()], [digital]);
+
+      await user.click(screen.getByRole('button', { name: 'Weiter' }));
+      await waitFor(() => expect(emailField()).toBeInTheDocument());
+
+      renderBlock({}, [printIssueStart(null)]);
+      await waitFor(() =>
+        expect(screen.getAllByRole('button', { name: 'Weiter' })).toHaveLength(
+          1
+        )
+      );
+      expect(aboStart()).not.toBeInTheDocument();
+    });
+
+    it('asks for it on the second step when a link skipped the first', async () => {
+      renderBlock({ memberPlanBySlug: 'fankurve', periodicity: 'yearly' }, [
+        printIssueStart(),
+      ]);
+
+      await waitFor(() => expect(emailField()).toBeInTheDocument());
+      expect(
+        await screen.findByRole('combobox', { name: 'Abo-Start' })
+      ).toHaveValue('');
+    });
+  });
+
+  describe('zwoelfSubscribeExtras', () => {
+    const start = {
+      current: issue('issue-117', '#117', null, '2026-11-13'),
+      upcoming: null,
+    };
+
+    it('sends the chosen issue with the subscription', () => {
+      expect(
+        zwoelfSubscribeExtras({ applies: true, choice: 'upcoming', start })
+      ).toEqual({
+        firstPrintIssue: {
+          currentIssueId: 'issue-117',
+          choice: FirstPrintIssueChoice.Upcoming,
+        },
+      });
+    });
+
+    it('stops the submit while it applies but is not chosen, and adds nothing otherwise', () => {
+      expect(zwoelfSubscribeExtras({ applies: true, choice: '', start })).toBe(
+        false
+      );
+      expect(
+        zwoelfSubscribeExtras({ applies: false, choice: '', start })
+      ).toEqual({});
+    });
+  });
 
   it('asks who the subscription is for, the duration and the plan before any personal data', () => {
     renderBlock();

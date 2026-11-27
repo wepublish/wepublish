@@ -21,6 +21,7 @@ const createFlows = (
     default: true,
     memberPlanId: null,
     autoRenewal: [],
+    legacy: [true, false],
     periodicities: [],
     paymentMethods: [],
     intervals: [
@@ -167,6 +168,8 @@ describe('RenewalSuccessMailService', () => {
     expect(sent.optionalData.items).toHaveLength(1);
     expect(sent.optionalData.subscriptionPeriods).toHaveLength(1);
     expect(sent.optionalData.invoice.id).toBe(INVOICE_ID);
+    expect(sent.subscriptionId).toBe('sub-1');
+    expect(sent.invoiceId).toBe(INVOICE_ID);
     expect(sent.optionalData.invoice.subscription).toBeUndefined();
     expect(sent.optionalData.invoice.items).toBeUndefined();
     expect(sent.optionalData.invoice.subscriptionPeriods).toBeUndefined();

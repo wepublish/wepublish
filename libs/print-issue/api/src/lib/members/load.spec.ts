@@ -31,6 +31,7 @@ const row = (overrides: Record<string, unknown> = {}) => ({
   startsAt: new Date('2024-01-01T00:00:00.000Z'),
   paidUntil: new Date('2026-12-31T00:00:00.000Z'),
   autoRenew: true,
+  firstPrintIssueFrom: null,
   deactivation: null,
   memberPlan: plan(),
   properties: [],
@@ -182,6 +183,7 @@ describe('loadMembers', () => {
         { periodId: 'per-2026', countsAs: 2 },
         { periodId: null, countsAs: 1 },
       ],
+      firstIssueFrom: null,
     });
     expect(subscriptions[1]).toMatchObject({
       paidUntil: null,
@@ -191,6 +193,21 @@ describe('loadMembers', () => {
       openInvoiceIds: [],
       deliveries: [],
     });
+  });
+
+  it('reads the first issue the reader chose as a calendar day', async () => {
+    prisma.subscription.findMany.mockResolvedValue([
+      row({ firstPrintIssueFrom: new Date('2026-10-14T00:00:00.000Z') }),
+    ]);
+
+    const { subscriptions } = await load();
+
+    expect(subscriptions[0]!.firstIssueFrom).toBe('2026-10-14');
+    expect(prisma.subscription.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        select: expect.objectContaining({ firstPrintIssueFrom: true }),
+      })
+    );
   });
 
   it('reads private properties, the periods with their invoice state, the open invoices and the copies handed over', async () => {

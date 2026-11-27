@@ -150,6 +150,41 @@ describe('PrintIssueDrawer', () => {
     );
   });
 
+  it('asks for no year where numbers run on, and shows the label as the medium writes it', async () => {
+    renderWithRouter(
+      <PrintIssueDrawer
+        open
+        issue={null}
+        next={{ number: 118, year: thisYear }}
+        numbering={{ counting: 'continuous', format: '#{range}' }}
+        onClose={vi.fn()}
+      />
+    );
+
+    expect(
+      screen.queryByLabelText('printIssues.fields.year')
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByText(/printIssues\.drawer\.labelPreview/)
+    ).toHaveTextContent('#118');
+
+    fireEvent.change(screen.getByLabelText('printIssues.fields.issueDate'), {
+      target: { value: '2028-02-10' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'save' }));
+
+    // the year is the ship day's
+    await waitFor(() =>
+      expect(mutations['CreatePrintIssue']).toHaveBeenCalledWith(
+        expect.objectContaining({
+          variables: {
+            input: expect.objectContaining({ number: 118, year: 2028 }),
+          },
+        })
+      )
+    );
+  });
+
   it('edits an existing issue and saves only once something changed, keeping its options', async () => {
     const onClose = vi.fn();
     renderWithRouter(

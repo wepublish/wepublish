@@ -23,7 +23,8 @@ export default defineConfig({
   ...(nextDev() && { timeout: 120_000 }),
   fullyParallel: true,
   forbidOnly: isCI,
-  retries: isCI ? 1 : 0,
+  // A retry of the load test would renew another 1500 subscriptions.
+  retries: isCI && !process.env.E2E_LOAD_READERS ? 1 : 0,
   outputDir: 'test-results/artifacts',
   reporter: [
     [isCI ? 'github' : 'list'],

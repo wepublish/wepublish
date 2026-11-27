@@ -116,10 +116,27 @@ describe('readIssueOrder', () => {
       expect(readIssueOrder(text, KINDS)).toEqual({
         kind: KINDS[2],
         copies: null,
-        issue: '6.26',
+        issue: { from: 6, to: 6, year: 2026 },
       });
     }
   );
+
+  it.each(['Einzelausgabe #117', 'Einzelausgabe 117', 'Einzelausgabe # 117'])(
+    "reads the issue in the medium's template (%s)",
+    text => {
+      expect(readIssueOrder(text, KINDS, '#{range}')).toEqual({
+        kind: KINDS[2],
+        copies: null,
+        issue: { from: 117, to: 117, year: null },
+      });
+    }
+  );
+
+  it('reads a template with words and spaces after the kind', () => {
+    expect(
+      readIssueOrder('Einzelausgabe Nr. 6/2026', KINDS, 'Nr. {range}/{yyyy}')
+    ).toMatchObject({ issue: { from: 6, to: 6, year: 2026 } });
+  });
 
   it.each(['Einzelausgabe 26', 'Einzelausgabe 6', 'Einzelausgabe 2026'])(
     'marks a single-copy line without a valid issue (%s)',

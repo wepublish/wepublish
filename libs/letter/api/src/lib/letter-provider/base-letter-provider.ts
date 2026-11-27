@@ -48,8 +48,13 @@ export abstract class BaseLetterProvider implements LetterProvider {
   abstract sendLetter(props: SendLetterProps): Promise<SendLetterResult>;
   abstract dispatchLetter(props: DispatchLetterProps): Promise<void>;
   abstract cancelLetter(providerLetterID: string): Promise<void>;
+  abstract deleteLetter(providerLetterID: string): Promise<void>;
   abstract getLetterFile(providerLetterID: string): Promise<Buffer>;
   abstract getName(): Promise<string>;
+
+  async sendsAutomatically(): Promise<boolean> {
+    return !!(await this.getConfig())?.autoSend;
+  }
 
   async getMessageStates(
     _providerLetterIDs: string[]
