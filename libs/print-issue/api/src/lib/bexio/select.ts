@@ -9,7 +9,11 @@ import {
 } from './parse';
 import { addMonths } from '../rules/dates';
 import { owedWindowMonths, type RuleIssue } from '../rules/entitlement';
-import { sameIssue } from '../rules/issue';
+import {
+  DEFAULT_ISSUE_NUMBERING,
+  type IssueNumberingConfig,
+} from '@wepublish/utils';
+import { issueLabel, type IssueNumbering, namesIssue } from '../rules/issue';
 
 export type BexioInvoice = {
   id: number;
@@ -71,7 +75,10 @@ export type SelectStats = {
 };
 
 type Options = {
-  issue: string;
+  /** the issue's numbers: what single-copy orders must name */
+  issue: IssueNumbering;
+  /** how the medium numbers and writes its issues; default «6.26» per year */
+  numbering?: IssueNumberingConfig;
   /** the issue's ship day, YYYY-MM-DD */
   shipDay: string;
   kinds: BexioKind[];
@@ -107,6 +114,7 @@ export async function selectBexioOrders(
   invoices: BexioInvoice[],
   {
     issue,
+    numbering = DEFAULT_ISSUE_NUMBERING,
     shipDay,
     kinds,
     links,
@@ -260,7 +268,7 @@ export async function selectBexioOrders(
     let quantified = false;
 
     for (const position of positions) {
-      const order = readIssueOrder(position.text, kinds);
+      const order = readIssueOrder(position.text, kinds, numbering.format);
 
       if (!order) {
         if (position.quantity !== null) {
@@ -272,7 +280,7 @@ export async function selectBexioOrders(
 
       if (!order.issue) {
         stats.noValidPeriod++;
-      } else if (!sameIssue(order.issue, issue)) {
+      } else if (!namesIssue(order.issue, issue, numbering.counting)) {
         stats.otherPeriod++;
       } else if (!wanted(order.kind)) {
         stats.excludedKind++;
@@ -289,7 +297,15 @@ export async function selectBexioOrders(
             kind: order.kind,
             copies,
             period: null,
-            issue: order.issue,
+            // as ordered: «3.27» for the double issue «3/4.27»
+            issue: issueLabel(
+              {
+                number: order.issue.from,
+                numberTo: order.issue.to,
+                year: order.issue.year ?? issue.year,
+              },
+              numbering
+            ),
           });
         }
       }

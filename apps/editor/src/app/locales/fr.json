@@ -2938,6 +2938,19 @@
     "settingList": {
       "printIssues": "Numéros imprimés",
       "printIssuesPerYear": "Numéros par an (imprimé)",
+      "printIssueNumbering": "Numérotation des numéros",
+      "printIssueNumberingChoice": {
+        "perYear": "Par an : la numérotation recommence à 1 chaque année (6.26)",
+        "continuous": "Continue : les numéros se suivent d’une année à l’autre (#117)"
+      },
+      "printIssueLabelFormat": "Écriture du numéro",
+      "printIssueLabelFormatPreview": "Aperçu",
+      "printIssueLabelFormatError": {
+        "unknownPlaceholder": "Espace réservé inconnu : utilisez {range}, {number}, {yy} et {yyyy}.",
+        "noNumber": "L’écriture a besoin du numéro : {range} ou {number}.",
+        "noYear": "Avec une numérotation par an, l’écriture a besoin de l’année : {yy} ou {yyyy}.",
+        "tooLong": "40 caractères au plus."
+      },
       "issues": "numéros",
       "allowGuestCommentRating": "Autoriser les évaluations anonymes des commentaires",
       "comments": "Commentaires",
@@ -3006,6 +3019,8 @@
       "showPendingWhenNotPublished": "Afficher un article ou une page en attente, même s’ils ne sont pas encore publiés.",
       "info": {
         "printIssuesPerYear": "Combien de numéros imprimés vaut un abonnement annuel. Les lecteur·trice·s dont la période payée se termine restent dans les exports jusqu’à avoir reçu ce nombre. 0 désactive la règle jusqu’à ce que l’import ait saisi les numéros précédents de l’année.",
+        "printIssueNumbering": "Par an, la numérotation recommence chaque année ; un numéro s’appelle alors p. ex. 6.26. En continu, les numéros se suivent d’une année à l’autre (p. ex. #117) ; l’année d’un numéro découle de sa date de parution.",
+        "printIssueLabelFormat": "Comment un numéro s’écrit dans la liste, les noms de fichiers et bexio. Espaces réservés : {range} = le numéro, «3/4» pour un numéro double ; {number} = le premier numéro seulement ; {yy} = année à deux chiffres ; {yyyy} = année à quatre chiffres. Les commandes de numéros isolés dans bexio doivent nommer le numéro ainsi (p. ex. «Einzelheft #117»).",
         "allowCommentEditing": "Les lecteur·trice·s peuvent encore modifier le texte de leurs propres commentaires après les avoir publiés.",
         "commentCharLimit": "Nombre maximal de caractères qu’un commentaire peut contenir. Les commentaires plus longs ne peuvent pas être envoyés.",
         "subscriptionExtendWindowDays": "Combien de jours avant l’échéance d’un abonnement les lecteur·trice·s voient «Renouveler maintenant» dans leur profil. 30 = comme avant ; 365 = à tout moment, tant qu’aucune facture n’est ouverte.",
@@ -5740,7 +5755,8 @@
       "issueDateRequired": "Veuillez indiquer la date de parution.",
       "drawer": {
         "createTitle": "Nouveau numéro",
-        "editTitle": "Numéro {{label}}"
+        "editTitle": "Numéro {{label}}",
+        "labelPreview": "Écriture"
       },
       "fields": {
         "issue": "Numéro",
