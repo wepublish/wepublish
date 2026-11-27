@@ -2757,7 +2757,7 @@
         "customMails": "Abo-Mails",
         "invoiceStates": "Status offener Rechnungen",
         "invoiceCreation": "Rechnungen erstellen",
-        "invoiceLetters": "Rechnungsbriefe",
+        "invoiceLetters": "Noch zuzustellende Rechnungen",
         "paymentMethodChanges": "Zahlungsart-Wechsel",
         "charging": "Rechnungen belasten",
         "deactivationUnpaid": "Abos mit offener Rechnung beenden",

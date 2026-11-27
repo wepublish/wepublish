@@ -2758,7 +2758,7 @@
         "customMails": "Subscription mails",
         "invoiceStates": "State of open invoices",
         "invoiceCreation": "Create invoices",
-        "invoiceLetters": "Invoice letters",
+        "invoiceLetters": "Invoices still to deliver",
         "paymentMethodChanges": "Payment method changes",
         "charging": "Charge invoices",
         "deactivationUnpaid": "End subscriptions with unpaid invoices",

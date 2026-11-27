@@ -2757,7 +2757,7 @@
         "customMails": "Mails d'abonnement",
         "invoiceStates": "État des factures ouvertes",
         "invoiceCreation": "Créer les factures",
-        "invoiceLetters": "Lettres de facture",
+        "invoiceLetters": "Factures encore à remettre",
         "paymentMethodChanges": "Changements de moyen de paiement",
         "charging": "Débiter les factures",
         "deactivationUnpaid": "Terminer les abonnements impayés",
