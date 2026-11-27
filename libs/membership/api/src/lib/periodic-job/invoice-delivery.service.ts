@@ -56,13 +56,15 @@ export type MailTrigger = Pick<
 
 /**
  * Whether the invoice-creation mail goes out now. `removed`: the provider
- * could not create the invoice and it is gone for the next attempt.
- * `deferred`: the invoice pdf is needed — the reader gets paper, or we.publish
- * delivers the invoice instead of the provider — but there is none yet, so
- * the night sweep sends it once there is.
+ * could not create the invoice (`error` says why) and it is gone for the next
+ * attempt. `deferred`: the invoice pdf is needed — the reader gets paper, or
+ * we.publish delivers the invoice instead of the provider — but there is none
+ * yet, so the night sweep sends it once there is.
  */
 export type RemoteInvoiceOutcome =
-  { send: DeliverySide } | { skip: 'removed' | 'deferred' };
+  | { send: DeliverySide }
+  | { skip: 'removed'; error: string }
+  | { skip: 'deferred' };
 
 const asAttachment = (document: RemoteInvoiceDocument): MailAttachment => ({
   filename: document.name,
@@ -124,7 +126,7 @@ export class InvoiceDeliveryService {
     if ('skip' in outcome) {
       if (outcome.skip === 'removed') {
         throw new ServiceUnavailableException(
-          `The payment provider could not create the invoice for subscription ${subscription.id}; nothing was invoiced, try again`
+          `The payment provider could not create the invoice for subscription ${subscription.id}; nothing was invoiced, try again: ${outcome.error}`
         );
       }
 
@@ -201,12 +203,14 @@ export class InvoiceDeliveryService {
     } catch (error) {
       // Nothing exists at the provider. Cancelling the invoice would keep its
       // future period, which stops the nightly job from invoicing again.
+      const reason = describeError(error);
+
       this.logger.error(
-        `The payment provider could not create invoice ${invoice.id} for subscription ${subscription.id}; the invoice is removed for the next attempt: ${describeError(error)}`
+        `The payment provider could not create invoice ${invoice.id} for subscription ${subscription.id}; the invoice is removed for the next attempt: ${reason}`
       );
       await this.deleteInvoice(invoice.id);
 
-      return { skip: 'removed' };
+      return { skip: 'removed', error: reason };
     }
 
     if (!remote) {
