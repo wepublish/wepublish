@@ -86,12 +86,19 @@ export class UserSubscriptionService {
       return null;
     }
 
-    const issue = await this.prisma.printIssue.findUnique({
-      where: { id: choice.currentIssueId },
-      select: { issueDate: true },
+    // The current issue is the latest shipped by today, as the choice offered
+    // it (`PrintIssueStartService`). The one before still counts, for a page
+    // loaded just before a new issue shipped; an older id would reach back
+    // into the supplements of issues long gone out.
+    const latestShipped = await this.prisma.printIssue.findMany({
+      where: { issueDate: { lte: new Date(startOfTodayAsDbDate()) } },
+      orderBy: [{ issueDate: 'desc' }, { number: 'desc' }],
+      select: { id: true, issueDate: true },
+      take: 2,
     });
+    const issue = latestShipped.find(({ id }) => id === choice.currentIssueId);
 
-    if (!issue || issue.issueDate.getTime() > startOfTodayAsDbDate()) {
+    if (!issue) {
       return null;
     }
 
