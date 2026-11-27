@@ -2410,7 +2410,8 @@
       "userConsents": "User consents",
       "userConsentCreate": "New user consent",
       "userConsentEdit": "Edit user consent",
-      "automaticEmails": "Automatic emails",
+      "automaticEmails": "Automated messages",
+      "communicationFlow": "Edit flow",
       "mailTemplates": "Message templates",
       "mailTemplateCreate": "New message template",
       "mailTemplateEdit": "Edit message template",
@@ -3016,10 +3017,40 @@
     },
     "automaticMails": {
       "title": "Automated messages",
-      "intro": "Here you decide which message template goes out automatically for which event. Pick a template per event – or leave it on “Do not send an email” if nothing should go out. The ⓘ icon explains every event.",
       "example": "Example: {{example}}"
     },
     "subscriptionFlow": {
+      "overview": {
+        "back": "All flows & automated messages",
+        "title": "Messages for subscription flows",
+        "intro": "A flow decides which message goes out automatically for which subscription event. The default flow applies to all subscriptions. A member plan can have flows of its own for some of its subscriptions: such a flow replaces the default flow for the affected subscriptions completely.",
+        "flow": "Flow for member plan",
+        "defaultFlow": "All → default flow",
+        "appliesTo": "Applies to",
+        "defaultApplies": "All subscriptions without a flow of their own",
+        "subscriptions": "Affected subscriptions",
+        "events": "Messages",
+        "eventsValue": "{{sending}} of {{total}} events",
+        "letterEvents": "Of these by letter",
+        "memberPlan": "Member plan",
+        "createIntro": "Choose the member plan and the subscriptions the new flow applies to. Which messages it sends is set on its page afterwards.",
+        "deleteTitle": "Delete the flow of “{{memberPlan}}”?",
+        "renewal": {
+          "true": "with automatic renewal",
+          "false": "without automatic renewal"
+        },
+        "noMemberPlan": "No member plan",
+        "warnings": {
+          "noMemberPlan": "The member plan of this flow was deleted. As long as this flow exists, no automated message is sent – delete it.",
+          "matchesNothing": "Applies to no subscription: a payment method, periodicity or renewal is missing.",
+          "notOffered": "No longer offered by the member plan: {{values}}. This flow only applies to already existing subscriptions."
+        }
+      },
+      "flow": "Flow",
+      "planFlowDescription": "This flow completely replaces the default flow for the subscriptions of its member plan that match the filter criteria defined below.",
+      "planFlowDescriptionFor": "This flow completely replaces the default flow for the subscriptions of the member plan “{{memberPlan}}” that match the filter criteria defined below.",
+      "noFallback": "Events without a template send nothing – the default flow does not step in.",
+      "notFound": "This flow does not exist (any more).",
       "subscribe": "Subscription started",
       "renewal_success": "Renewal successful",
       "renewal_failed": "Renewal failed",
@@ -3030,7 +3061,6 @@
       "custom": "Custom event",
       "settings": "Subscription flow settings",
       "edit": "Edit subscription flow",
-      "settingsDescription": "These settings apply to this subscription plan only and override the automatic emails.",
       "addNew": "Create new flow",
       "dayWithNumber": "day {{day}}",
       "days": "days",
@@ -3060,8 +3090,7 @@
       "addMail": "Add email",
       "deleteMail": "Remove email",
       "defaultFlow": "Default flow",
-      "defaultFlowDescription": "Applies to every subscription no other flow matches. Changes here also apply under «Automated messages».",
-      "flowNumber": "Flow {{number}}",
+      "defaultFlowDescription": "Applies to every subscription no member plan flow matches.",
       "newFlow": "New flow",
       "newDayTitle": "New day in the timeline",
       "newDayHint": "Negative number = before the subscription ends, positive number = after.",
@@ -3130,11 +3159,16 @@
       }
     },
     "systemMails": {
-      "title": "Account & login",
+      "title": "Messages for account & login events",
       "sectionDescription": "Emails around the user account. They are triggered by something the person does – no matter whether they have a subscription.",
       "sectionExample": "Someone registers → the welcome email goes out right away.",
-      "sendTest": "Send test to me",
+      "sendTest": "Send test email to me",
       "testSent": "Test email sent to you",
+      "columns": {
+        "event": "Event type",
+        "userAction": "User action",
+        "template": "Message template"
+      },
       "events": {
         "account_creation": "Registration",
         "login_link": "Login link",
@@ -3144,27 +3178,27 @@
       },
       "eventInfo": {
         "account_creation": {
-          "short": "A new account was created.",
+          "userAction": "Signs up, or gets an account when buying a subscription",
           "description": "Goes out as soon as a person registers or gets an account while buying a subscription.",
           "example": "“Welcome – your account is ready.”"
         },
         "login_link": {
-          "short": "Log in without a password.",
+          "userAction": "Requests a login link",
           "description": "Goes out when a person wants to log in via a link instead of typing a password. The email has to contain the login link.",
           "example": "“Log in with a single click.”"
         },
         "password_reset": {
-          "short": "Password forgotten.",
-          "description": "Goes out when a person clicks “Forgot password”. The email has to contain the link for setting a new password.",
+          "userAction": "An admin or author clicks “Forgot password” on the editor login",
+          "description": "Goes out when someone clicks “Forgot password” on the editor login – it exists only there, not on the website. So it concerns admins, authors and other editor users. The email must contain the link for setting a new password.",
           "example": "“Set a new password here.”"
         },
         "email_change": {
-          "short": "Confirm the new address.",
+          "userAction": "Changes their email address",
           "description": "Goes to the new address when someone changes their email address. The change only takes effect after the confirmation.",
           "example": "“Please confirm your new email address.”"
         },
         "test_mail": {
-          "short": "For your own tests only.",
+          "userAction": "None – for your own tests only",
           "description": "Never sent to readers automatically. Use this template to try out the mail delivery yourself.",
           "example": "“Test mail – if you can read this, sending works.”"
         }

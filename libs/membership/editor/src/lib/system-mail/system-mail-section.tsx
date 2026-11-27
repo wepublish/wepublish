@@ -4,27 +4,30 @@ import {
   MailChannel,
   MailTemplateDocument,
   SystemMailsDocument,
+  SystemMailsQuery,
   TestSystemMailDocument,
   UpdateSystemMailDocument,
   UserEvent,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
+  DataTable,
+  DataTableColumn,
   PermissionControl,
   useAuthorisation,
 } from '@wepublish/ui/editor';
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdManageAccounts, MdUnsubscribe } from 'react-icons/md';
+import { MdUnsubscribe } from 'react-icons/md';
 import { RiTestTubeLine } from 'react-icons/ri';
 import {
   DEFAULT_MUTATION_OPTIONS,
   MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE,
 } from '../common';
-import { EventList, EventRow, MailBlock } from '../mail-settings-layout';
+import { InfoTooltip } from '../mail-settings-layout';
 import { formatTemplateLabel } from '../mail-template/mail-placeholders';
 import { templatesForChannel } from '../mail-template/template-versions';
-import { Button, MenuItem, TextField } from '@mui/material';
+import { Button, MenuItem, TextField, Typography } from '@mui/material';
 import {
   CanGetSystemMails,
   CanTestSystemMails,
@@ -38,24 +41,44 @@ import {
 const ACCOUNT_EVENT_ORDER: UserEvent[] = [
   UserEvent.AccountCreation,
   UserEvent.LoginLink,
-  UserEvent.PasswordReset,
   UserEvent.EmailChange,
+  // Only people working in the editor can ask for it.
+  UserEvent.PasswordReset,
   UserEvent.TestMail,
 ];
 
-const Controls = styled('div')`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-
-  > .rs-picker {
-    flex: 1 1 200px;
-    min-width: 0;
-  }
+const Section = styled.section`
+  margin-top: ${({ theme }) => theme.spacing(4)};
 `;
+
+const Heading = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+  margin-bottom: ${({ theme }) => theme.spacing(2)};
+`;
+
+// At most three lines, then cut off; the title holds the whole text.
+const UserAction = styled.span`
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  white-space: normal;
+`;
+
+const EventName = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+  font-weight: 600;
+`;
+
+type SystemMail = SystemMailsQuery['systemMails'][number];
 
 function SystemMailSection() {
   const { t } = useTranslation();
+  const headingId = useId();
 
   const { data: systemMails } = useQuery(SystemMailsDocument);
   const { data: mailTemplates } = useQuery(MailTemplateDocument);
@@ -136,88 +159,135 @@ function SystemMailSection() {
     return null;
   }
 
-  return (
-    <MailBlock
-      title={t('systemMails.title')}
-      icon={<MdManageAccounts size={20} />}
-      description={t('systemMails.sectionDescription')}
-      example={t('systemMails.sectionExample')}
-    >
-      <EventList>
-        {events.map(systemMail => {
-          const eventKey = systemMail.event.toLowerCase();
-          const mailTemplateId = assignedTemplateId(
-            systemMail.event,
-            systemMail.mailTemplate?.id
-          );
+  const columns: DataTableColumn<SystemMail>[] = [
+    {
+      id: 'event',
+      label: t('systemMails.columns.event'),
+      width: 190,
+      render: systemMail => {
+        const eventKey = systemMail.event.toLowerCase();
 
-          return (
-            <EventRow
-              key={systemMail.event}
-              title={t(`systemMails.events.${eventKey}`)}
-              hint={t(`systemMails.eventInfo.${eventKey}.short`)}
+        return (
+          <EventName>
+            {t(`systemMails.events.${eventKey}`)}
+
+            <InfoTooltip
               description={t(`systemMails.eventInfo.${eventKey}.description`)}
               example={t(`systemMails.eventInfo.${eventKey}.example`)}
+            />
+          </EventName>
+        );
+      },
+    },
+    {
+      id: 'userAction',
+      label: t('systemMails.columns.userAction'),
+      // The column that gives way when the window gets narrow: the template
+      // select and the test button keep their width, this text wraps.
+      width: 200,
+      render: systemMail => {
+        const userAction = t(
+          `systemMails.eventInfo.${systemMail.event.toLowerCase()}.userAction`
+        );
+
+        return <UserAction title={userAction}>{userAction}</UserAction>;
+      },
+    },
+    {
+      id: 'template',
+      label: t('systemMails.columns.template'),
+      width: 320,
+      render: systemMail => (
+        <TextField
+          select
+          size="small"
+          disabled={!canUpdateSystemMails}
+          value={systemMail.mailTemplate?.id ?? ''}
+          onChange={event =>
+            assignTemplate(systemMail.event, event.target.value || null)
+          }
+          slotProps={{
+            select: {
+              displayEmpty: true,
+              SelectDisplayProps: {
+                'aria-label': t(
+                  `systemMails.events.${systemMail.event.toLowerCase()}`
+                ),
+              } as object,
+            },
+          }}
+          fullWidth
+        >
+          <MenuItem value="">
+            <MdUnsubscribe
+              size={16}
+              style={{ marginRight: '5px' }}
+            />
+            {t('mailTemplateSelect.noMailSentSelectNow')}
+          </MenuItem>
+
+          {templateOptions.map(option => (
+            <MenuItem
+              key={option.value}
+              value={option.value}
             >
-              <Controls>
-                <TextField
-                  select
-                  disabled={!canUpdateSystemMails}
-                  value={systemMail.mailTemplate?.id ?? ''}
-                  onChange={event =>
-                    assignTemplate(systemMail.event, event.target.value || null)
-                  }
-                  slotProps={{
-                    select: {
-                      displayEmpty: true,
-                      SelectDisplayProps: {
-                        'aria-label': t(`systemMails.events.${eventKey}`),
-                      } as object,
-                    },
-                  }}
-                  fullWidth
-                >
-                  <MenuItem value="">
-                    <MdUnsubscribe
-                      size={16}
-                      style={{ marginRight: '5px' }}
-                    />
-                    {t('mailTemplateSelect.noMailSentSelectNow')}
-                  </MenuItem>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+      ),
+    },
+    {
+      id: 'action',
+      label: t('action'),
+      width: 220,
+      fixed: true,
+      render: systemMail => (
+        <PermissionControl
+          showRejectionMessage={false}
+          qualifyingPermissions={[CanTestSystemMails.id]}
+        >
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<RiTestTubeLine />}
+            disabled={
+              !assignedTemplateId(systemMail.event, systemMail.mailTemplate?.id)
+            }
+            onClick={() =>
+              testSystemMail({ variables: { event: systemMail.event } })
+            }
+          >
+            {t('systemMails.sendTest')}
+          </Button>
+        </PermissionControl>
+      ),
+    },
+  ];
 
-                  {templateOptions.map(option => (
-                    <MenuItem
-                      key={option.value}
-                      value={option.value}
-                    >
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
+  return (
+    <Section aria-labelledby={headingId}>
+      <Heading>
+        <Typography
+          id={headingId}
+          variant="h5"
+          component="h2"
+        >
+          {t('systemMails.title')}
+        </Typography>
 
-                <PermissionControl
-                  showRejectionMessage={false}
-                  qualifyingPermissions={[CanTestSystemMails.id]}
-                >
-                  <Button
-                    variant="outlined"
-                    startIcon={<RiTestTubeLine />}
-                    disabled={!mailTemplateId}
-                    onClick={() =>
-                      testSystemMail({
-                        variables: { event: systemMail.event },
-                      })
-                    }
-                  >
-                    {t('systemMails.sendTest')}
-                  </Button>
-                </PermissionControl>
-              </Controls>
-            </EventRow>
-          );
-        })}
-      </EventList>
-    </MailBlock>
+        <InfoTooltip
+          description={t('systemMails.sectionDescription')}
+          example={t('systemMails.sectionExample')}
+        />
+      </Heading>
+
+      <DataTable
+        data={events}
+        getRowId={systemMail => systemMail.event}
+        columns={columns}
+      />
+    </Section>
   );
 }
 
