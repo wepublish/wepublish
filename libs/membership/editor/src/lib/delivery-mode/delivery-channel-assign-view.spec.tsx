@@ -9,12 +9,14 @@ import {
 } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
+import { INITIAL_AUDIENCE_STATE } from '../mail-send/audience/audience-state';
 import { DeliveryChannelAssignView } from './delivery-channel-assign-view';
 
 const queries = vi.fn();
 const mutate = vi.fn();
 const mutationOptions = vi.fn();
 const filterProps = vi.fn();
+const savedFilterProps = vi.fn();
 const letterChannel = vi.fn(() => ({
   paperLetters: true,
   letterAvailable: true,
@@ -56,6 +58,27 @@ vi.mock('../mail-send/audience/audience-filter', () => ({
     return (
       <button onClick={() => props.onChange({ emailSegments: ['dead'] })}>
         narrow
+      </button>
+    );
+  },
+}));
+
+// The saved filters are covered on their own; here a button stands in for
+// loading one.
+vi.mock('../mail-send/audience/saved-audience-filters', () => ({
+  SavedAudienceFilters: (props: any) => {
+    savedFilterProps(props);
+
+    return (
+      <button
+        onClick={() =>
+          props.onLoad({
+            ...INITIAL_AUDIENCE_STATE,
+            base: 'noActiveSubscription',
+          })
+        }
+      >
+        load saved filter
       </button>
     );
   },
@@ -239,6 +262,33 @@ describe('DeliveryChannelAssignView', () => {
     expect(filterProps.mock.calls[0][0].state).toEqual(
       expect.objectContaining({ emailSegments: ['placeholder'] })
     );
+  });
+
+  it('offers the saved filters beside the filter and loads one into it', () => {
+    renderView();
+
+    // What "save" would keep is the filter as it stands.
+    expect(savedFilterProps.mock.calls.at(-1)?.[0].audience).toEqual(
+      expect.objectContaining({ base: 'allUsers' })
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'load saved filter' }));
+
+    expect(filterProps.mock.calls.at(-1)?.[0].state.base).toBe(
+      'noActiveSubscription'
+    );
+    expect(previewCalls().at(-1).variables.audience.base).toBe(
+      'noActiveSubscription'
+    );
+  });
+
+  it('shows the saved filters on the audience step only', () => {
+    renderView();
+    next();
+
+    expect(
+      screen.queryByRole('button', { name: 'load saved filter' })
+    ).toBeNull();
   });
 
   it('offers every channel of the medium, then previews the pick fresh', () => {
