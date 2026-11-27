@@ -62,6 +62,17 @@ fragment TinyUser on SensitiveDataUser {
     memberPlanName
     status
   }
+  emailQuality {
+    level
+    since
+  }
+  printIssuesOwed
+  printIssueProgress {
+    subscriptionId
+    received
+    entitled
+    relevant
+  }
 }
 
 query TinyUserList(
@@ -223,4 +234,8 @@ mutation DeleteUser($id: String!) {
   deleteUser(id: $id) {
     ...FullUser
   }
+}
+
+query UserEmailSegments {
+  userEmailSegments
 }

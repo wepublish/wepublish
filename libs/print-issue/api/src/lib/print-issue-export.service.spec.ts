@@ -170,6 +170,26 @@ describe('PrintIssueExportService', () => {
     });
   });
 
+  it('counts the way the medium set, per period for anything it does not know', async () => {
+    const countingFor = async (value: unknown) => {
+      prisma.setting.findUnique.mockImplementation(
+        async ({ where }: { where: { name: string } }) =>
+          where.name === 'printIssuesPerYear' ? { value: 6 }
+          : where.name === 'printIssueCounting' ? { value }
+          : null
+      );
+      vi.mocked(runExport).mockClear();
+      await service.compute(issue, { options });
+
+      return vi.mocked(runExport).mock.calls[0]![0].quota?.counting;
+    };
+
+    await expect(countingFor('perCopy')).resolves.toBe('perCopy');
+    await expect(countingFor('perPeriod')).resolves.toBe('perPeriod');
+    await expect(countingFor('nonsense')).resolves.toBe('perPeriod');
+    await expect(countingFor(null)).resolves.toBe('perPeriod');
+  });
+
   it('switches the owed-copies rule off while the setting is 0 or missing', async () => {
     prisma.setting.findUnique.mockResolvedValue(null);
 
@@ -272,6 +292,9 @@ describe('PrintIssueExportService', () => {
     expect(runExport).toHaveBeenCalledWith(
       {
         issue: '1.27',
+        // the numbers decide bexio; no numbering stored: «6.26» per year
+        numbers: { number: 1, numberTo: null, year: 2027 },
+        numbering: { counting: 'perYear', format: '{range}.{yy}' },
         countsAs: 1,
         date: '2027-01-15',
         memberPlanIds: ['p1'],
@@ -284,6 +307,8 @@ describe('PrintIssueExportService', () => {
             { issueDate: '2026-08-23', countsAs: 2 },
             { issueDate: '2026-04-10', countsAs: 1 },
           ],
+          // no counting setting stored: per period, as before
+          counting: 'perPeriod',
         },
         excludeSubscriptionIds: undefined,
         excludeBexioRecipients: undefined,
@@ -294,6 +319,30 @@ describe('PrintIssueExportService', () => {
       },
       expect.objectContaining({ bexio: null })
     );
+  });
+
+  it("labels the issue the medium's way and names the file after it", async () => {
+    prisma.setting.findUnique.mockImplementation(
+      async ({ where }: { where: { name: string } }) =>
+        where.name === 'printIssueNumbering' ? { value: 'continuous' }
+        : where.name === 'printIssueLabelFormat' ? { value: '#{range}' }
+        : null
+    );
+
+    const result = await service.compute(
+      { ...issue, number: 117, year: 2026 },
+      { options }
+    );
+
+    expect(runExport).toHaveBeenCalledWith(
+      expect.objectContaining({
+        issue: '#117',
+        numbers: { number: 117, numberTo: null, year: 2026 },
+        numbering: { counting: 'continuous', format: '#{range}' },
+      }),
+      expect.anything()
+    );
+    expect(result.filename).toBe('druckliste-117-2027-01-15.csv');
   });
 
   it('hands a double issue to the run as one issue with its label and what it counts as', async () => {

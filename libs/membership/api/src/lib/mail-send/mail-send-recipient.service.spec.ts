@@ -801,6 +801,31 @@ describe('audience filtering (semantics)', () => {
       expect(await included(chf, audience)).toBe(true);
       expect(await included(eur, audience)).toBe(false);
     });
+    it('splits on legacy: imported and not paid for here yet', async () => {
+      const ended = { deactivation: { date: days(-30) } };
+      const legacy = subscription({
+        ...ended,
+        importedAt: days(-60),
+        legacyEndedAt: null,
+      });
+      const paidHere = subscription({
+        ...ended,
+        importedAt: days(-60),
+        legacyEndedAt: days(-40),
+      });
+      const native = subscription({
+        ...ended,
+        importedAt: null,
+        legacyEndedAt: null,
+      });
+
+      expect(await included(legacy, { isLegacy: true })).toBe(true);
+      expect(await included(paidHere, { isLegacy: true })).toBe(false);
+      expect(await included(native, { isLegacy: true })).toBe(false);
+      expect(await included(legacy, { isLegacy: false })).toBe(false);
+      expect(await included(paidHere, { isLegacy: false })).toBe(true);
+      expect(await included(native, { isLegacy: false })).toBe(true);
+    });
   });
 
   describe('hasSubscription', () => {
@@ -1048,6 +1073,25 @@ describe('audience filtering (semantics)', () => {
           isCanceled: false,
         })
       ).toBe(true);
+    });
+
+    it('legacy splits on imported and not paid for here yet', async () => {
+      const legacy = subscription({
+        importedAt: days(-60),
+        legacyEndedAt: null,
+      });
+      const paidHere = subscription({
+        importedAt: days(-60),
+        legacyEndedAt: days(-40),
+      });
+      const native = subscription({ importedAt: null, legacyEndedAt: null });
+
+      expect(await included(legacy, { isLegacy: true })).toBe(true);
+      expect(await included(paidHere, { isLegacy: true })).toBe(false);
+      expect(await included(native, { isLegacy: true })).toBe(false);
+      expect(await included(legacy, { isLegacy: false })).toBe(false);
+      expect(await included(paidHere, { isLegacy: false })).toBe(true);
+      expect(await included(native, { isLegacy: false })).toBe(true);
     });
 
     it('has replaced subscription splits on replacesSubscriptionID', async () => {

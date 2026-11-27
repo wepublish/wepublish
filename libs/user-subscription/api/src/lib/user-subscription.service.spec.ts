@@ -24,6 +24,7 @@ describe('UserSubscriptionService', () => {
     subscription: { findUnique: Mock; update: Mock };
     settingPaymentProvider: { findMany: Mock };
     invoice: { findMany: Mock };
+    printIssue: { findMany: Mock };
   };
 
   let memberContextMock: {
@@ -76,6 +77,7 @@ describe('UserSubscriptionService', () => {
       subscription: { findUnique: vi.fn(), update: vi.fn() },
       settingPaymentProvider: { findMany: vi.fn().mockResolvedValue([]) },
       invoice: { findMany: vi.fn().mockResolvedValue([]) },
+      printIssue: { findMany: vi.fn().mockResolvedValue([]) },
     };
 
     memberContextMock = {
@@ -285,6 +287,71 @@ describe('UserSubscriptionService', () => {
             userId: 'userId',
           })
         );
+      });
+    });
+
+    describe('the first printed issue the reader chose («Abo-Start»)', () => {
+      // today is 1.1.2025; #117 shipped on 13.12.2024, #116 on 15.11.2024
+      const current = {
+        id: 'issue-117',
+        issueDate: new Date('2024-12-13T00:00:00.000Z'),
+      };
+      const previous = {
+        id: 'issue-116',
+        issueDate: new Date('2024-11-15T00:00:00.000Z'),
+      };
+      const storedFrom = () =>
+        memberContextMock.createSubscription.mock.calls.at(-1)?.[0]
+          .firstPrintIssueFrom;
+      const chose = (currentIssueId: string, choice = 'current') =>
+        service.createSubscription('userId', {
+          ...baseArgs,
+          firstPrintIssue: { currentIssueId, choice },
+        } as any);
+
+      beforeEach(() => {
+        prismaMock.printIssue.findMany.mockReset();
+        prismaMock.printIssue.findMany.mockResolvedValue([current, previous]);
+      });
+
+      it('starts with the shipped issue, or with the next one: the day after it', async () => {
+        await chose('issue-117');
+        expect(prismaMock.printIssue.findMany).toHaveBeenCalledWith({
+          where: { issueDate: { lte: new Date('2025-01-01T00:00:00.000Z') } },
+          orderBy: [{ issueDate: 'desc' }, { number: 'desc' }],
+          select: { id: true, issueDate: true },
+          take: 2,
+        });
+        expect(storedFrom()).toEqual(new Date('2024-12-13T00:00:00.000Z'));
+
+        await service.createSubscriptionWithConfirmation('userId', {
+          ...baseArgs,
+          firstPrintIssue: { currentIssueId: 'issue-117', choice: 'upcoming' },
+        });
+        expect(storedFrom()).toEqual(new Date('2024-12-14T00:00:00.000Z'));
+      });
+
+      // The page was loaded before the newest issue shipped.
+      it('still takes the issue before the current one', async () => {
+        await chose('issue-116');
+
+        expect(storedFrom()).toEqual(new Date('2024-11-15T00:00:00.000Z'));
+      });
+
+      // An older id would reach back into supplements of issues long out.
+      it('stores no choice for an older issue, an unknown one, one not shipped yet, or none at all', async () => {
+        await chose('issue-110');
+        expect(storedFrom()).toBeNull();
+
+        await chose('nope');
+        expect(storedFrom()).toBeNull();
+
+        // not shipped by today, so not among the latest shipped ones
+        await chose('issue-118');
+        expect(storedFrom()).toBeNull();
+
+        await service.createSubscription('userId', baseArgs);
+        expect(storedFrom()).toBeNull();
       });
     });
 

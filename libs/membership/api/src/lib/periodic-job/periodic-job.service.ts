@@ -48,6 +48,7 @@ import { Action } from '../subscription-event-dictionary/subscription-event-dict
 import { SubscriptionService } from './subscription.service';
 import { PeriodicJobRunObject } from './periodic-job.type';
 import {
+  earliestInvoiceDay,
   addErrorContext,
   describeError,
   getMaxTake,
@@ -57,6 +58,7 @@ import {
   type HeldLock,
   type LockResult,
 } from '@wepublish/dragonfly/api';
+import { isLegacySubscription } from '../subscription/legacy-subscription';
 
 const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
 
@@ -597,6 +599,7 @@ export class PeriodicJobService {
         paymentMethodId: subscriptionsWithEvent.paymentMethodID,
         periodicity: subscriptionsWithEvent.paymentPeriodicity,
         autorenwal: subscriptionsWithEvent.autoRenew,
+        legacy: isLegacySubscription(subscriptionsWithEvent),
         daysAwayFromEnding,
       });
 
@@ -633,6 +636,7 @@ export class PeriodicJobService {
         paymentMethodId: subscriptionToCreateInvoice.paymentMethodID,
         periodicity: subscriptionToCreateInvoice.paymentPeriodicity,
         autorenwal: subscriptionToCreateInvoice.autoRenew,
+        legacy: isLegacySubscription(subscriptionToCreateInvoice),
         events: [
           SubscriptionEvent.INVOICE_CREATION,
           SubscriptionEvent.DEACTIVATION_UNPAID,
@@ -655,10 +659,20 @@ export class PeriodicJobService {
       throw new NotFoundException('No invoice deactivation event found!');
     }
 
+    // A flow may create invoices earlier than this subscription's period is
+    // long: the invoice then waits for the earliest day its periodicity allows.
+    const creationDay =
+      creationEvent.daysAwayFromEnding === null ?
+        undefined
+      : Math.max(
+          creationEvent.daysAwayFromEnding,
+          earliestInvoiceDay([subscriptionToCreateInvoice.paymentPeriodicity])
+        );
+
     if (
       subscriptionToCreateInvoice.paidUntil &&
       add(startOfDay(subscriptionToCreateInvoice.paidUntil), {
-        days: creationEvent.daysAwayFromEnding ?? undefined,
+        days: creationDay,
       }) > periodicJobRunObject.date
     ) {
       return false;
@@ -746,6 +760,7 @@ export class PeriodicJobService {
         paymentMethodId: subscription.paymentMethodID,
         periodicity: subscription.paymentPeriodicity,
         autorenwal: subscription.autoRenew,
+        legacy: isLegacySubscription(subscription),
         events: [SubscriptionEvent.INVOICE_CREATION],
       })
     ).find(action => action.type === SubscriptionEvent.INVOICE_CREATION);
@@ -849,6 +864,7 @@ export class PeriodicJobService {
         paymentMethodId: invoiceToCharge.subscription.paymentMethodID,
         periodicity: invoiceToCharge.subscription.paymentPeriodicity,
         autorenwal: invoiceToCharge.subscription.autoRenew,
+        legacy: isLegacySubscription(invoiceToCharge.subscription),
         events: [
           SubscriptionEvent.RENEWAL_SUCCESS,
           SubscriptionEvent.RENEWAL_FAILED,
@@ -931,6 +947,7 @@ export class PeriodicJobService {
         paymentMethodId: unpaidInvoice.subscription.paymentMethodID,
         periodicity: unpaidInvoice.subscription.paymentPeriodicity,
         autorenwal: unpaidInvoice.subscription.autoRenew,
+        legacy: isLegacySubscription(unpaidInvoice.subscription),
         events: [SubscriptionEvent.DEACTIVATION_UNPAID],
       });
 

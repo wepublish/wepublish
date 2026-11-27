@@ -274,6 +274,42 @@ describe('SubscriptionService', () => {
     });
   });
 
+  describe('updateSubscription — Abo-Start', () => {
+    it('lets an editor set or clear the first printed issue', async () => {
+      const prisma = {
+        subscription: {
+          findUnique: vi.fn(async () => ({
+            id: 's1',
+            deactivation: null,
+            paymentMethod: { paymentProviderID: 'p' },
+          })),
+          update: vi.fn(async ({ data }: any) => ({ id: 's1', ...data })),
+        },
+        memberPlan: { findUnique: vi.fn(async () => ({ currency: 'CHF' })) },
+      };
+      const memberContext = {
+        handleSubscriptionChange: vi.fn(
+          async ({ subscription }: any) => subscription
+        ),
+      };
+      const service = makeService(prisma, memberContext);
+      const from = new Date('2026-11-14T00:00:00.000Z');
+
+      await service.updateSubscription({
+        id: 's1',
+        memberPlanID: 'plan-1',
+        properties: [],
+        firstPrintIssueFrom: from,
+      });
+
+      expect(prisma.subscription.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ firstPrintIssueFrom: from }),
+        })
+      );
+    });
+  });
+
   describe('reactivateSubscription', () => {
     it('removes the deactivation of a deactivated subscription', async () => {
       const deactivated = {

@@ -211,7 +211,10 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   browser (`template-table.ts`) over `MailTemplateList`; its extra row fields
   (`letterLayoutName`, `letterAppendixName`, `memberPlans`,
   `attachmentNames`) are batched and
-  stay out of `TinyMailTemplate`, which every picker loads.
+  stay out of `TinyMailTemplate`, which every picker loads. Flow events and
+  system mails pick their template in a drawer with the same table
+  (`MailTemplateField` → `SelectMailTemplatePanel`, columns and filters shared
+  through `template-columns.tsx`), pre-filtered by `purposeOfEvent`.
 - `SubscriptionInterval.sendAsLetter`: only events switched on in the flow
   editor («Auch per Brief») print; user-flow mails (login, password, email
   change) never do. The three senders (periodic job, legacy `member-context`,
@@ -295,6 +298,18 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   Built in `mail-send-recipient.service.ts` as `mailSent: { some | none }`
   on the user (`none` for «not sent», never `NOT`, so people without any mail
   stay in), ANDed with the email segments through `buildUserLevelWhere`.
+- **Legacy subscriptions** (feature `legacy-subscriptions`): `importSubscription`
+  stamps `Subscription.importedAt`; the first invoice paid here stamps
+  `legacyEndedAt` (`LegacySubscriptionService`, an `InvoicePaidNotifier`
+  listener that runs after the renewal mail). Legacy = imported and not ended;
+  the one rule lives in `subscription/legacy-subscription.ts` — use it, never
+  the importers' `fm_*`/`wc_*`/`nw_*` properties. Filterable as
+  `SubscriptionFilter.legacy` and `MailAudienceInput.isLegacy`; a flow says whom
+  it is for in `SubscriptionFlow.legacy` (`[true]`, `[false]` or both), matched
+  in three places (`subscription-event-dictionary.ts` twice,
+  `subscription-flow.resolver.ts`). The columns are always written; the feature
+  only gates the editor and narrowing a flow. A legacy-only flow needs every
+  event itself: the default flow replaces a whole flow, never a single event.
 
 - Gotenberg (self-hosted, the default; `gotenberg` service in docker-compose)
 - Cloudflare Browser Rendering

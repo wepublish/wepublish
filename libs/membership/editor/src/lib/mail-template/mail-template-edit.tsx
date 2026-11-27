@@ -71,6 +71,7 @@ import { MailColorPicker } from './color-picker';
 import { LetterAppendixPicker } from './letter-appendix-picker';
 import { MailAttachmentPicker } from './mail-attachment-picker';
 import { LetterPreview } from './letter-preview';
+import { PreviewDialogTitle } from './preview-dialog-title';
 import { useLetterChannel } from './use-letter-channel';
 import { MailPreview } from './mail-preview';
 import { MAIL_PLACEHOLDER_CONTEXTS } from './mail-placeholders';
@@ -1530,9 +1531,9 @@ function MailTemplateEdit() {
         onClose={() => setPreviewOpen(false)}
         maxWidth="lg"
       >
-        <DialogTitle>
+        <PreviewDialogTitle onClose={() => setPreviewOpen(false)}>
           {t('mailTemplates.subject')}: {previewSubject || '—'}
-        </DialogTitle>
+        </PreviewDialogTitle>
         <DialogContent style={{ height: '85vh' }}>
           <MailPreview html={previewHtml ?? ''} />
         </DialogContent>
@@ -1605,8 +1606,10 @@ function MailTemplateEdit() {
         open={!!letterPdf}
         onClose={() => setLetterPdf(null)}
       >
-        <DialogTitle>{t('mailTemplates.edit.letterPreviewTitle')}</DialogTitle>
-        <DialogContent style={{ height: '85vh' }}>
+        <PreviewDialogTitle onClose={() => setLetterPdf(null)}>
+          {t('mailTemplates.edit.letterPreviewTitle')}
+        </PreviewDialogTitle>
+        <DialogContent style={{ flex: 1, minHeight: 0 }}>
           {letterPdf && <LetterPreview pdf={letterPdf} />}
         </DialogContent>
       </Dialog>

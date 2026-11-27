@@ -1292,6 +1292,10 @@ model Subscription {
   monthlyAmount      Float
   autoRenew          Boolean
   startsAt           DateTime                  @db.Timestamptz(3)
+  /// The first printed issue is the first one shipped on or after this Zurich
+  /// day («Abo-Start»): the ship day of the issue the reader chose, or the day
+  /// after it for the next one. Null: no choice, every issue from startsAt.
+  firstPrintIssueFrom DateTime?                @db.Date
   paidUntil          DateTime?                 @db.Timestamptz(3)
   periods            SubscriptionPeriod[]
   properties         Json                      @default("[]")
@@ -1299,6 +1303,10 @@ model Subscription {
   extendable         Boolean                   @default(true)
   currency           Currency
   confirmed          Boolean                   @default(true)
+  /// When importSubscription brought it in from another system; null when it was created here.
+  importedAt         DateTime?                 @db.Timestamptz(3)
+  /// When the first payment was registered here. Legacy = importedAt set and this null.
+  legacyEndedAt      DateTime?                 @db.Timestamptz(3)
 
   paymentMethodID String
   paymentMethod   PaymentMethod @relation(fields: [paymentMethodID], references: [id])
@@ -1750,10 +1758,16 @@ model SubscriptionFlow {
 
   memberPlan   MemberPlan? @relation(fields: [memberPlanId], references: [id])
   memberPlanId String?
+  /// A flow for the matching subscriptions of every member plan. Comes after a plan's own flows and before the default flow. Has no memberPlan.
+  allMemberPlans Boolean @default(false)
+  /// An inactive flow is skipped: its subscriptions fall to the next flow. The default flow is always active.
+  active Boolean @default(true)
 
   paymentMethods PaymentMethod[]
   periodicities  PaymentPeriodicity[]
   autoRenewal    Boolean[]
+  /// Whom the flow is for: legacy subscriptions (true), all the others (false), or both.
+  legacy         Boolean[]            @default([true, false])
 
   intervals SubscriptionInterval[]
 

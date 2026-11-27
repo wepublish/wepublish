@@ -1,7 +1,9 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import { differenceInMinutes } from 'date-fns';
 import {
@@ -36,6 +38,18 @@ import {
 } from '@wepublish/mail/api';
 import * as crypto from 'crypto';
 import { HibpService } from './hibp.service';
+import {
+  EMAIL_SEGMENTS_IN_ORDER,
+  emailSegmentWhere,
+  MailEmailSegment,
+  placeholderEmailPatterns,
+} from './email-segment';
+import {
+  emailQualitySinceSlices,
+  emailQualitySlices,
+  findAcrossSlices,
+} from './email-quality-order';
+import { USER_LIST_ORDER, type UserListOrder } from './user-list-order';
 
 const COMMENT_AUTHOR_FIELDS = [
   'name',
@@ -52,7 +66,10 @@ export class UserService {
     private hibpService: HibpService,
     private mailchimpContactService: MailchimpContactService,
     private sessionCache: SessionCacheInvalidator,
-    private publicContentCache: PublicContentCacheInvalidator
+    private publicContentCache: PublicContentCacheInvalidator,
+    @Optional()
+    @Inject(USER_LIST_ORDER)
+    private listOrders: UserListOrder[] = []
   ) {}
 
   @PrimeDataLoader(UserDataloaderService)
@@ -81,40 +98,74 @@ export class UserService {
     skip = 0,
     take = 10,
   }: UserListArgs) {
-    const where = createUserFilter(filter ?? {});
-    const orderBy = createUserOrder(sort, order);
+    const placeholderPatterns =
+      filter?.emailSegments?.length ?
+        await placeholderEmailPatterns(this.prisma)
+      : [];
+    const where = createUserFilter(filter ?? {}, placeholderPatterns);
+    const include = { address: true, paymentProviderCustomers: true };
+    const listOrder = (this.listOrders ?? []).find(o => o.sort === sort);
+    const orderedIds = await listOrder?.orderedIds(
+      where,
+      order === SortOrder.Ascending ? 'asc' : 'desc'
+    );
 
-    const [totalCount, users] = await Promise.all([
-      this.prisma.user.count({
-        where,
-      }),
-      this.prisma.user.findMany({
-        where,
-        skip,
-        take: getMaxTake(take) + 1,
-        orderBy,
-        cursor: cursorId ? { id: cursorId } : undefined,
-        include: { address: true, paymentProviderCustomers: true },
-      }),
-    ]);
+    if (orderedIds) {
+      // sorted by another module: page through its id list in memory
+      const pageIds = orderedIds.slice(skip, skip + getMaxTake(take) + 1);
+      const found = await this.prisma.user.findMany({
+        where: { id: { in: pageIds } },
+        include,
+      });
+      const byId = new Map(found.map(user => [user.id, user]));
+      const users = pageIds.flatMap(id => byId.get(id) ?? []);
 
-    const nodes = users.slice(0, getMaxTake(take));
-    const firstUser = nodes[0];
-    const lastUser = nodes[nodes.length - 1];
+      return toUserPage(users, orderedIds.length, skip, take);
+    }
 
-    const hasPreviousPage = Boolean(skip);
-    const hasNextPage = users.length > nodes.length;
+    const slices =
+      cursorId ? null
+      : sort === UserSort.EmailQuality ? emailQualitySlices(order)
+      : sort === UserSort.EmailQualitySince ? emailQualitySinceSlices(order)
+      : null;
 
-    return {
-      nodes,
-      totalCount,
-      pageInfo: {
-        hasPreviousPage,
-        hasNextPage,
-        startCursor: firstUser?.id,
-        endCursor: lastUser?.id,
-      },
-    };
+    const [totalCount, users] =
+      slices ?
+        await findAcrossSlices(
+          where,
+          slices,
+          { skip, take: getMaxTake(take) + 1 },
+          where => this.prisma.user.count({ where }),
+          args => this.prisma.user.findMany({ ...args, include })
+        ).then(({ totalCount, nodes }) => [totalCount, nodes] as const)
+      : await Promise.all([
+          this.prisma.user.count({
+            where,
+          }),
+          this.prisma.user.findMany({
+            where,
+            skip,
+            take: getMaxTake(take) + 1,
+            orderBy: createUserOrder(sort, order),
+            cursor: cursorId ? { id: cursorId } : undefined,
+            include,
+          }),
+        ]);
+
+    return toUserPage(users, totalCount, skip, take);
+  }
+
+  /**
+   * The email segments worth filtering by. Without a configured placeholder
+   * pattern nobody is a placeholder, so that segment is not offered.
+   */
+  async getEmailSegments(): Promise<MailEmailSegment[]> {
+    const hasPatterns =
+      (await placeholderEmailPatterns(this.prisma)).length > 0;
+
+    return EMAIL_SEGMENTS_IN_ORDER.filter(
+      segment => hasPatterns || segment !== MailEmailSegment.placeholder
+    );
   }
 
   async updateUserPassword(
@@ -450,6 +501,28 @@ export class UserService {
   }
 }
 
+const toUserPage = <T extends { id: string }>(
+  users: T[],
+  totalCount: number,
+  skip: number,
+  take: number
+) => {
+  const nodes = users.slice(0, getMaxTake(take));
+  const firstUser = nodes[0];
+  const lastUser = nodes[nodes.length - 1];
+
+  return {
+    nodes,
+    totalCount,
+    pageInfo: {
+      hasPreviousPage: Boolean(skip),
+      hasNextPage: users.length > nodes.length,
+      startCursor: firstUser?.id,
+      endCursor: lastUser?.id,
+    },
+  };
+};
+
 export const createUserOrder = (
   field: UserSort,
   sortOrder: SortOrder
@@ -475,10 +548,31 @@ export const createUserOrder = (
         firstName: graphQLSortOrderToPrisma(sortOrder),
       };
 
+    case UserSort.PrintIssuesOwed:
+      // only another module sorts this way (USER_LIST_ORDER); without one, by creation date
+      return {
+        createdAt: graphQLSortOrderToPrisma(sortOrder),
+      };
+
     case UserSort.SubscriptionCount:
       // many users share the same count, tie-break on id for stable paging
       return [
         { subscriptions: { _count: graphQLSortOrderToPrisma(sortOrder) } },
+        { id: graphQLSortOrderToPrisma(sortOrder) },
+      ];
+
+    // Only reached when paging by cursor; skip-based paging orders these by
+    // slices so that people without a level do not bunch up at one end (see
+    // email-quality-order.ts).
+    case UserSort.EmailQuality:
+      return [
+        { emailQuality: { level: graphQLSortOrderToPrisma(sortOrder) } },
+        { id: graphQLSortOrderToPrisma(sortOrder) },
+      ];
+
+    case UserSort.EmailQualitySince:
+      return [
+        { emailQuality: { since: graphQLSortOrderToPrisma(sortOrder) } },
         { id: graphQLSortOrderToPrisma(sortOrder) },
       ];
   }
@@ -712,13 +806,15 @@ const createTextFilter = (
 };
 
 export const createUserFilter = (
-  filter: Partial<UserFilter>
+  filter: Partial<UserFilter>,
+  placeholderPatterns: readonly string[] = []
 ): Prisma.UserWhereInput => {
   return {
     AND: [
       createNameFilter(filter),
       createTextFilter(filter),
       createUserRoleFilter(filter),
+      emailSegmentWhere(filter.emailSegments ?? [], placeholderPatterns),
     ],
   };
 };

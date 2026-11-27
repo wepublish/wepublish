@@ -1,3 +1,4 @@
+import { dbDateToYmd } from '../rules/dates';
 import type { PrismaClient } from '@prisma/client';
 import type { Members, Property, Subscription, User } from './types';
 
@@ -8,7 +9,7 @@ const iso = (date: Date | null | undefined) =>
   date ? date.toISOString() : null;
 
 /** The plan with its printed issues per periodicity; unset periodicities are left out. */
-const memberPlanOf = ({
+export const memberPlanOf = ({
   periodicityPricing,
   ...plan
 }: {
@@ -52,6 +53,7 @@ export async function loadMembers(prisma: PrismaClient): Promise<Members> {
       startsAt: true,
       paidUntil: true,
       autoRenew: true,
+      firstPrintIssueFrom: true,
       properties: true,
       userID: true,
       deactivation: { select: { date: true, reason: true } },
@@ -118,6 +120,9 @@ export async function loadMembers(prisma: PrismaClient): Promise<Members> {
       periodId: delivery.periodId,
       countsAs: delivery.issue.countsAs,
     })),
+    // «Abo-Start»: a calendar day, like an issue's ship day
+    firstIssueFrom:
+      row.firstPrintIssueFrom ? dbDateToYmd(row.firstPrintIssueFrom) : null,
   }));
 
   const userIds = [...new Set(rows.map(row => row.userID))];

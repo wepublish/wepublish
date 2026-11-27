@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider } from '@mui/material';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { UserSubscriptionFragment } from '@wepublish/editor/api';
 import { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
@@ -146,5 +146,129 @@ describe('UserSubscriptionsList', () => {
 
     expect(region.tabIndex).toBe(0);
     expect(region.contains(screen.getByRole('table'))).toBe(true);
+  });
+});
+
+describe('UserSubscriptionsList print issues', () => {
+  const period = (id: string, startsAt: string, endsAt: string) => ({
+    id,
+    createdAt: startsAt,
+    startsAt,
+    endsAt,
+    amount: 12000,
+    invoiceID: `invoice-${id}`,
+    isPaid: true,
+  });
+
+  const withProgress = (
+    progress: Partial<
+      NonNullable<UserSubscriptionFragment['printIssueProgress']>
+    > | null
+  ) =>
+    subscription('sub', 'Basic', {
+      periods: [
+        period('p2026', '2026-01-01T00:00:00.000Z', '2026-12-31T00:00:00.000Z'),
+        period('p2025', '2025-01-01T00:00:00.000Z', '2025-12-31T00:00:00.000Z'),
+      ],
+      printIssueProgress: progress && {
+        periodId: 'p2026',
+        received: 7,
+        entitled: 12,
+        owed: 5,
+        relevant: true,
+        issues: [
+          {
+            label: '#116',
+            issueDate: '2026-10-09',
+            batch: 0,
+            deliveredAt: '2026-10-05T09:00:00.000Z',
+            countsAs: 1,
+          },
+          {
+            label: '#117',
+            issueDate: '2026-11-13',
+            batch: 1,
+            deliveredAt: '2026-11-20T09:00:00.000Z',
+            countsAs: 2,
+          },
+        ],
+        ...progress,
+      },
+    } as Partial<UserSubscriptionFragment>);
+
+  const renderList = (sub: UserSubscriptionFragment) =>
+    renderWithTheme(
+      <MemoryRouter>
+        <UserSubscriptionsList
+          subscriptions={[sub]}
+          userId="user-1"
+        />
+      </MemoryRouter>
+    );
+
+  const expand = () =>
+    fireEvent.click(
+      screen.getByRole('button', { name: 'userSubscriptionList.periodRange' })
+    );
+
+  it('shows how many issues the subscription received of those promised', () => {
+    renderList(withProgress({}));
+
+    expect(
+      screen.getByText('userSubscriptionList.printIssuesReceived 7 12')
+    ).toBeInTheDocument();
+  });
+
+  it('writes ∞ for a lifetime subscription', () => {
+    renderList(withProgress({ entitled: null, owed: 0 }));
+
+    expect(
+      screen.getByText('userSubscriptionList.printIssuesReceived 7 ∞')
+    ).toBeInTheDocument();
+  });
+
+  it('lists the received issues under their period', () => {
+    renderList(withProgress({}));
+    expand();
+
+    const rows = screen.getAllByRole('row').map(row => row.textContent ?? '');
+    const at = (text: string) => rows.findIndex(row => row.includes(text));
+
+    expect(
+      screen.getByText(
+        'userSubscriptionList.printIssue #116 9.10.2026 userSubscriptionList.printList 5.10.2026'
+      )
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'userSubscriptionList.printIssue #117 13.11.2026 userSubscriptionList.printSupplement 1 20.11.2026',
+        { exact: false }
+      )
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('userSubscriptionList.printIssueCountsAs 2')
+    ).toBeInTheDocument();
+    // right below the 2026 period, before the 2025 one
+    expect(at('#116')).toBeGreaterThan(at('1.1.2026 – 31.12.2026'));
+    expect(at('#116')).toBeLessThan(at('1.1.2025 – 31.12.2025'));
+  });
+
+  it('shows nothing for a subscription that no longer counts', () => {
+    renderList(withProgress({ relevant: false }));
+    expand();
+
+    expect(
+      screen.queryByText(/userSubscriptionList.printIssuesReceived/)
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/#116/)).not.toBeInTheDocument();
+  });
+
+  it('shows nothing without progress', () => {
+    renderList(withProgress(null));
+    expand();
+
+    expect(
+      screen.queryByText(/userSubscriptionList.printIssue/)
+    ).not.toBeInTheDocument();
   });
 });

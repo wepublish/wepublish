@@ -24,6 +24,8 @@ import {
 } from './options';
 import { PrintIssueExportService } from './print-issue-export.service';
 import { dbDateToYmd, isYmd, todayZurich, ymdToDbDate } from './rules/dates';
+import type { IssueNumberingConfig } from '@wepublish/utils';
+import { readIssueNumbering } from './numbering-setting';
 import { issueFileLabel, issueLabel, issueNumbers } from './rules/issue';
 
 export type PrintIssueInput = {
@@ -151,8 +153,13 @@ const MIN_YEAR = 2000;
 const MAX_YEAR = 2100;
 
 const fileBase = (
-  issue: Pick<PrintIssue, 'number' | 'numberTo' | 'year' | 'issueDate'>
-) => `druckliste-${issueFileLabel(issue)}-${dbDateToYmd(issue.issueDate)}`;
+  issue: Pick<PrintIssue, 'number' | 'numberTo' | 'year' | 'issueDate'>,
+  numbering: IssueNumberingConfig
+) =>
+  `druckliste-${issueFileLabel(issue, numbering)}-${dbDateToYmd(issue.issueDate)}`;
+
+/** «2027-01-15» → 2027 */
+const yearOf = (ymd: string) => Number(ymd.slice(0, 4));
 
 const chunked = <T>(items: T[], size: number): T[][] => {
   const chunks: T[][] = [];
@@ -221,11 +228,17 @@ export class PrintIssueService {
     }
   }
 
+  /** How the medium numbers and writes its issues. */
+  numbering(): Promise<IssueNumberingConfig> {
+    return readIssueNumbering(this.prisma);
+  }
+
   async create(input: PrintIssueInput): Promise<PrintIssueWithDeliveries> {
-    const data = this.data(input);
+    const numbering = await this.numbering();
+    const data = this.data(input, numbering);
     const options = optionsFrom(input.options, await this.defaults());
 
-    await this.refuseOverlap(data);
+    await this.refuseOverlap(data, numbering);
 
     try {
       return await this.prisma.printIssue.create({
@@ -233,7 +246,7 @@ export class PrintIssueService {
         include: INCLUDE,
       });
     } catch (error) {
-      throw this.conflictOf(error, input);
+      throw this.conflictOf(error, data, numbering);
     }
   }
 
@@ -242,7 +255,8 @@ export class PrintIssueService {
     input: PrintIssueInput
   ): Promise<PrintIssueWithDeliveries> {
     const existing = await this.findById(id);
-    const data = this.data(input);
+    const numbering = await this.numbering();
+    const data = this.data(input, numbering);
     const current = optionsFrom(existing.options);
     const options = optionsFrom(input.options, current);
     // the label and what the issue counts as go into the list as well
@@ -254,7 +268,7 @@ export class PrintIssueService {
       data.countsAs !== existing.countsAs ||
       !sameOptions(options, current);
 
-    await this.refuseOverlap(data, id);
+    await this.refuseOverlap(data, numbering, id);
 
     try {
       return await this.prisma.printIssue.update({
@@ -271,7 +285,7 @@ export class PrintIssueService {
         include: INCLUDE,
       });
     } catch (error) {
-      throw this.conflictOf(error, input);
+      throw this.conflictOf(error, data, numbering);
     }
   }
 
@@ -290,25 +304,30 @@ export class PrintIssueService {
   }
 
   /**
-   * The next issue of the same year with the same options. It keeps the
-   * ship day of the original until it is edited: a ship day is required.
+   * The next issue with the same options: the next number of the same year,
+   * or of all issues where numbers run on. It keeps the ship day of the
+   * original until it is edited: a ship day is required.
    */
   async duplicate(id: string): Promise<PrintIssueWithDeliveries> {
     const source = await this.findById(id);
+    const numbering = await this.numbering();
+    const continuous = numbering.counting === 'continuous';
     // a double issue ends with its last number: after 3/4 comes 5
     const issues = await this.prisma.printIssue.findMany({
-      where: { year: source.year },
+      where: continuous ? {} : { year: source.year },
       select: { number: true, numberTo: true },
     });
     const number =
       Math.max(0, ...issues.map(issue => issue.numberTo ?? issue.number)) + 1;
+    const year =
+      continuous ? yearOf(dbDateToYmd(source.issueDate)) : source.year;
 
     try {
       return await this.prisma.printIssue.create({
         data: {
           number,
           numberTo: null,
-          year: source.year,
+          year,
           countsAs: 1,
           issueDate: source.issueDate,
           status: PrintIssueStatus.open,
@@ -318,7 +337,7 @@ export class PrintIssueService {
         include: INCLUDE,
       });
     } catch (error) {
-      throw this.conflictOf(error, { number, year: source.year });
+      throw this.conflictOf(error, { number, year }, numbering);
     }
   }
 
@@ -518,7 +537,7 @@ export class PrintIssueService {
 
     if (later) {
       throw new BadRequestException(
-        `Issue ${issueLabel(later)} has a list computed while this delivery counted; take back or delete that list first.`
+        `Issue ${issueLabel(later, await this.numbering())} has a list computed while this delivery counted; take back or delete that list first.`
       );
     }
 
@@ -629,7 +648,7 @@ export class PrintIssueService {
       );
     }
 
-    let filename = `${fileBase(issue)}-gesamt.csv`;
+    let filename = `${fileBase(issue, await this.numbering())}-gesamt.csv`;
 
     if (deliveryId) {
       const delivery = issue.deliveries.find(entry => entry.id === deliveryId);
@@ -737,7 +756,7 @@ export class PrintIssueService {
             : marker,
         },
       })),
-      filename: `${fileBase(issue)}-nachlieferung-${batch}.csv`,
+      filename: `${fileBase(issue, await this.numbering())}-nachlieferung-${batch}.csv`,
     };
   }
 
@@ -971,24 +990,26 @@ export class PrintIssueService {
     };
   }
 
-  private data(input: PrintIssueInput) {
+  private data(input: PrintIssueInput, numbering: IssueNumberingConfig) {
     if (!Number.isInteger(input.number) || input.number < 1) {
       throw new BadRequestException('The issue number must be 1 or more.');
-    }
-
-    if (
-      !Number.isInteger(input.year) ||
-      input.year < MIN_YEAR ||
-      input.year > MAX_YEAR
-    ) {
-      throw new BadRequestException(
-        `The year must lie between ${MIN_YEAR} and ${MAX_YEAR}.`
-      );
     }
 
     if (!isYmd(input.issueDate)) {
       throw new BadRequestException(
         'The ship day must be a calendar day (YYYY-MM-DD).'
+      );
+    }
+
+    // where numbers run on, the year is only the ship day's
+    const year =
+      numbering.counting === 'continuous' ?
+        yearOf(input.issueDate)
+      : input.year;
+
+    if (!Number.isInteger(year) || year < MIN_YEAR || year > MAX_YEAR) {
+      throw new BadRequestException(
+        `The year must lie between ${MIN_YEAR} and ${MAX_YEAR}.`
       );
     }
 
@@ -1015,7 +1036,7 @@ export class PrintIssueService {
     return {
       number: input.number,
       numberTo,
-      year: input.year,
+      year,
       countsAs,
       title: input.title?.trim() || null,
       issueDate: ymdToDbDate(input.issueDate),
@@ -1027,16 +1048,20 @@ export class PrintIssueService {
     };
   }
 
-  /** No two issues of a year share a number: «4.27» and «3/4.27» cannot both exist. */
+  /**
+   * No two issues share a number: «4.27» and «3/4.27» cannot both exist in a
+   * year, and where numbers run on «#117» exists once over all years.
+   */
   private async refuseOverlap(
     issue: { number: number; numberTo: number | null; year: number },
+    numbering: IssueNumberingConfig,
     exceptId?: string
   ): Promise<void> {
     const from = issue.number;
     const to = issue.numberTo ?? issue.number;
     const other = await this.prisma.printIssue.findFirst({
       where: {
-        year: issue.year,
+        ...(numbering.counting === 'continuous' ? {} : { year: issue.year }),
         ...(exceptId ? { id: { not: exceptId } } : {}),
         number: { lte: to },
         OR: [
@@ -1049,21 +1074,22 @@ export class PrintIssueService {
 
     if (other) {
       throw new ConflictException(
-        `${issueLabel(issue)} overlaps issue ${issueLabel(other)}.`
+        `${issueLabel(issue, numbering)} overlaps issue ${issueLabel(other, numbering)}.`
       );
     }
   }
 
   private conflictOf(
     error: unknown,
-    issue: { number: number; year: number }
+    issue: { number: number; numberTo?: number | null; year: number },
+    numbering: IssueNumberingConfig
   ): unknown {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === 'P2002'
     ) {
       return new ConflictException(
-        `Issue ${issueLabel(issue)} exists already.`
+        `Issue ${issueLabel(issue, numbering)} exists already.`
       );
     }
 

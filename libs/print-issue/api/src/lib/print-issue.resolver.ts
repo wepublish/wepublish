@@ -20,12 +20,16 @@ import {
   PrintIssueFileModel,
   PrintIssueInputModel,
   PrintIssueModel,
+  PrintIssueNumbering,
   PrintIssueRun,
   toFileModel,
   toPrintIssueModel,
   toRunModel,
 } from './print-issue.model';
-import { PrintIssueService } from './print-issue.service';
+import {
+  PrintIssueService,
+  type PrintIssueWithDeliveries,
+} from './print-issue.service';
 
 /**
  * The print export is Neue Wege's for now: the whole resolver ships dark.
@@ -39,12 +43,31 @@ export class PrintIssueResolver {
     private bexioSource: BexioPrintSourceService
   ) {}
 
+  /** One issue labelled the medium's way. */
+  private async toModel(issue: PrintIssueWithDeliveries) {
+    return toPrintIssueModel(issue, await this.issues.numbering());
+  }
+
+  @Permissions(CanGetPrintIssues)
+  @Query(() => PrintIssueNumbering, {
+    description:
+      'How the medium numbers its print issues: restarting every year or running on, and the label template.',
+  })
+  printIssueNumbering() {
+    return this.issues.numbering();
+  }
+
   @Permissions(CanGetPrintIssues)
   @Query(() => [PrintIssueModel], {
     description: 'All print issues, the newest first.',
   })
   async printIssues() {
-    return (await this.issues.list()).map(toPrintIssueModel);
+    const [issues, numbering] = await Promise.all([
+      this.issues.list(),
+      this.issues.numbering(),
+    ]);
+
+    return issues.map(issue => toPrintIssueModel(issue, numbering));
   }
 
   @Permissions(CanGetPrintIssues)
@@ -52,7 +75,7 @@ export class PrintIssueResolver {
     description: 'One print issue with its deliveries.',
   })
   async printIssue(@Args('id') id: string) {
-    return toPrintIssueModel(await this.issues.findById(id));
+    return this.toModel(await this.issues.findById(id));
   }
 
   @Permissions(CanGetPrintIssues, CanGetSubscriptions, CanGetUsers)
@@ -117,7 +140,7 @@ export class PrintIssueResolver {
   @Permissions(CanCreatePrintIssue)
   @Mutation(() => PrintIssueModel, { description: 'Create a print issue.' })
   async createPrintIssue(@Args('input') input: PrintIssueInputModel) {
-    return toPrintIssueModel(await this.issues.create(input));
+    return this.toModel(await this.issues.create(input));
   }
 
   @Permissions(CanCreatePrintIssue)
@@ -129,7 +152,7 @@ export class PrintIssueResolver {
     @Args('id') id: string,
     @Args('input') input: PrintIssueInputModel
   ) {
-    return toPrintIssueModel(await this.issues.update(id, input));
+    return this.toModel(await this.issues.update(id, input));
   }
 
   @Permissions(CanCreatePrintIssue)
@@ -138,7 +161,7 @@ export class PrintIssueResolver {
       'Create the next issue of the same year with the same options. It keeps the ship day of the original until it is edited.',
   })
   async duplicatePrintIssue(@Args('id') id: string) {
-    return toPrintIssueModel(await this.issues.duplicate(id));
+    return this.toModel(await this.issues.duplicate(id));
   }
 
   @Permissions(CanDeletePrintIssue)
@@ -147,7 +170,7 @@ export class PrintIssueResolver {
       'Delete a print issue none of whose lists was handed to the printshop.',
   })
   async deletePrintIssue(@Args('id') id: string) {
-    return toPrintIssueModel(await this.issues.delete(id));
+    return this.toModel(await this.issues.delete(id));
   }
 
   @Permissions(CanCreatePrintIssue, CanGetSubscriptions, CanGetUsers)
@@ -160,7 +183,7 @@ export class PrintIssueResolver {
     @Args('computedAt') computedAt: Date,
     @CurrentUser() session: AuthSession
   ) {
-    return toPrintIssueModel(
+    return this.toModel(
       await this.issues.exportRun(id, actorOf(session), computedAt)
     );
   }
@@ -174,7 +197,7 @@ export class PrintIssueResolver {
     @Args('id') id: string,
     @CurrentUser() session: AuthSession
   ) {
-    return toPrintIssueModel(await this.issues.deliver(id, actorOf(session)));
+    return this.toModel(await this.issues.deliver(id, actorOf(session)));
   }
 
   @Permissions(CanFinalizePrintIssue)
@@ -183,7 +206,7 @@ export class PrintIssueResolver {
       '«Lieferung zurücknehmen»: the delivery is a draft again and its copies count for no quota until it is handed over anew. Only the newest list of the newest issue with lists, on an open issue.',
   })
   async undeliverPrintIssueDelivery(@Args('id') id: string) {
-    return toPrintIssueModel(await this.issues.undeliver(id));
+    return this.toModel(await this.issues.undeliver(id));
   }
 
   @Permissions(CanDeletePrintIssue)
@@ -191,7 +214,7 @@ export class PrintIssueResolver {
     description: 'Delete a delivery that was not handed to the printshop yet.',
   })
   async deletePrintIssueDelivery(@Args('id') id: string) {
-    return toPrintIssueModel(await this.issues.deleteDelivery(id));
+    return this.toModel(await this.issues.deleteDelivery(id));
   }
 
   @Permissions(CanFinalizePrintIssue)
@@ -203,7 +226,7 @@ export class PrintIssueResolver {
     @Args('id') id: string,
     @CurrentUser() session: AuthSession
   ) {
-    return toPrintIssueModel(await this.issues.close(id, actorOf(session)));
+    return this.toModel(await this.issues.close(id, actorOf(session)));
   }
 
   @Permissions(CanFinalizePrintIssue)
@@ -212,6 +235,6 @@ export class PrintIssueResolver {
       'Reopen a closed issue so that more Nachlieferungen can follow.',
   })
   async reopenPrintIssue(@Args('id') id: string) {
-    return toPrintIssueModel(await this.issues.reopen(id));
+    return this.toModel(await this.issues.reopen(id));
   }
 }

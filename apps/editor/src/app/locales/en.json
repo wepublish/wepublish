@@ -1183,7 +1183,7 @@
       "noNameErrorMessage": "Please enter a name",
       "noPasswordErrorMessage": "Please enter a password",
       "noPaymentMethodErrorMessage": "Please enter a payment method",
-      "noPaymentPeriodicityErrorMessage": "Please enter a payment periodicity",
+      "noPaymentPeriodicityErrorMessage": "Please enter a payment interval",
       "noPaymentProviderErrorMessage": "Please enter a payment provider",
       "noTokenErrorMessage": "Please enter a token",
       "noUrlErrorMessage": "Please enter a URL",
@@ -1629,7 +1629,7 @@
         "letterAppendix": "Additional pages",
         "letterAppendixNone": "None",
         "memberPlans": "Member plans",
-        "memberPlansHint": "Member plans whose communication flow sends this template. The default flow belongs to no member plan and is not listed here.",
+        "memberPlansHint": "Member plans whose communication flow sends this template. The default flow and flows for all member plans belong to no member plan and are not listed here.",
         "noMatch": "No template matches the filters.",
         "statuses": {
           "ok": "In use",
@@ -1683,9 +1683,9 @@
         "sampleDataFallback": "Sample data (none selected)",
         "testRecipient": "Test recipient",
         "testRecipientPlaceholder": "Your account email",
-        "preview": "Preview",
+        "preview": "Email preview",
         "sendTest": "Send test",
-        "previewLetter": "Preview",
+        "previewLetter": "Letter preview",
         "letterAppendix": "Additional pages (PDF)",
         "letterAppendixNone": "None",
         "letterAppendixHelp": "The pages are added at the end of the letter. Choose from the PDF files uploaded under \"Documents\".",
@@ -1841,8 +1841,8 @@
         "optional_subscription_periodAmount": "Amount per period",
         "optional_subscription_periodMonths": "Months per period",
         "optional_subscription_currency": "Currency",
-        "optional_subscription_paymentPeriodicity": "Payment periodicity (code)",
-        "optional_subscription_paymentPeriodicity_display": "Payment periodicity",
+        "optional_subscription_paymentPeriodicity": "Payment interval (code)",
+        "optional_subscription_paymentPeriodicity_display": "Payment interval",
         "optional_subscription_autoRenew": "Auto renewal",
         "optional_subscription_startsAt": "Starts at",
         "optional_subscription_paidUntil": "Paid until",
@@ -1980,6 +1980,17 @@
       "empty": "No message templates yet."
     },
     "mailTemplateSelect": {
+      "chooser": {
+        "title": "Choose a template: {{event}}",
+        "select": "Choose this template",
+        "selectCurrent": "Choose this template (already chosen)",
+        "none": "Send no message",
+        "create": "Create new template",
+        "columns": {
+          "template": "Template",
+          "purpose": "Purpose"
+        }
+      },
       "channels": "Delivery channels",
       "noLetterVersion": "This template has no letter version. Add one in the template so people on the letter channel get this message printed; until then they get the email.",
       "sendAsLetterHint": "The email always goes out. With letter ticked, people on the letter channel get this message printed instead of by email.",
@@ -1998,7 +2009,7 @@
       "createMemberPlanHeader": "Create Subscription Plan",
       "description": "Description",
       "shortDescription": "Short description",
-      "editPaymentSetting": "Edit payment methods & periodicities",
+      "editPaymentSetting": "Edit payment methods & terms",
       "forceAutoRenewal": "Force Auto Renewal",
       "loadingTitle": "Loading",
       "name": "Name",
@@ -2032,7 +2043,7 @@
       "editFlowShort": "Edit flow",
       "name": "Name",
       "paymentMethods": "Possible Payment Methods",
-      "paymentPeriodicities": "Payment Periodicities",
+      "paymentPeriodicities": "Payment intervals",
       "paymentPeriodicity": {
         "biannual": "Biannual",
         "monthly": "Monthly",
@@ -2410,7 +2421,8 @@
       "userConsents": "User consents",
       "userConsentCreate": "New user consent",
       "userConsentEdit": "Edit user consent",
-      "automaticEmails": "Automatic emails",
+      "automaticEmails": "Automated messages",
+      "communicationFlow": "Edit flow",
       "mailTemplates": "Message templates",
       "mailTemplateCreate": "New message template",
       "mailTemplateEdit": "Edit message template",
@@ -2927,6 +2939,24 @@
     "settingList": {
       "printIssues": "Print issues",
       "printIssuesPerYear": "Issues per year (print)",
+      "printIssueNumbering": "Issue numbering",
+      "printIssueNumberingChoice": {
+        "perYear": "Per year: numbers start at 1 every year (6.26)",
+        "continuous": "Continuous: numbers run on across years (#117)"
+      },
+      "printIssueLabelFormat": "How an issue is written",
+      "printIssueLabelFormatPreview": "Preview",
+      "printIssueLabelFormatError": {
+        "unknownPlaceholder": "Unknown placeholder: use {range}, {number}, {yy} and {yyyy}.",
+        "noNumber": "The template needs the number: {range} or {number}.",
+        "noYear": "With numbers per year, the template needs the year: {yy} or {yyyy}.",
+        "tooLong": "40 characters at most."
+      },
+      "printIssueCounting": "How printed issues are counted",
+      "printIssueCountingChoice": {
+        "perPeriod": "Per period: every issue while it runs, missing ones follow after the end",
+        "perCopy": "Per copy: stops once the period received its number, even while the subscription runs; missing ones follow"
+      },
       "issues": "issues",
       "activeSubscriptionsApiPublic": "Make the active subscriptions API accessible by the public",
       "allowCommentEditing": "Allow comment editing",
@@ -2994,7 +3024,10 @@
       "emailQualityMinMailsForUnresponsive": "… delivered mails",
       "emailQualityEvidenceWarnAfterDays": "Warn without delivery reports after … days",
       "info": {
-        "printIssuesPerYear": "How many printed issues a yearly subscription is worth. Readers whose paid period ends stay in the print exports until they received that many. 0 switches the rule off until the import has brought in the earlier issues of the year.",
+        "printIssuesPerYear": "How many printed issues a yearly subscription is worth. Readers whose paid period ends stay in the print exports until they received that many. 0 switches the rule off until the import has brought in the earlier issues of the year. Whether a running period may get more is up to the counting below.",
+        "printIssueNumbering": "Per year, numbering starts again every year, so an issue is called e.g. 6.26. Continuous numbers run on across years (e.g. #117); an issue’s year follows from its ship day.",
+        "printIssueLabelFormat": "How an issue is written in the list, in file names and in bexio. Placeholders: {range} = the number, «3/4» for a double issue; {number} = the first number only; {yy} = two-digit year; {yyyy} = four-digit year. Single-copy orders in bexio must name the issue this way (e.g. «Einzelheft #117»).",
+        "printIssueCounting": "Per period, a subscription gets every issue published during its paid period, even more than promised. Per copy, every delivered copy counts: once the running period has its number, the subscription gets no further issue until its next period (skipped as «Quota received»). Either way, missing copies follow after the period ends. Applies to bexio subscriptions too, and only while «Issues per year» is above 0.",
         "allowCommentEditing": "Readers can still change the text of their own comments after posting them.",
         "commentCharLimit": "Maximum number of characters a comment may contain. Longer comments cannot be submitted.",
         "subscriptionExtendWindowDays": "How many days before a subscription ends readers see \"Renew now\" in their profile. 30 = as before; 365 = any time, as long as no invoice is open.",
@@ -3016,10 +3049,72 @@
     },
     "automaticMails": {
       "title": "Automated messages",
-      "intro": "Here you decide which message template goes out automatically for which event. Pick a template per event – or leave it on “Do not send an email” if nothing should go out. The ⓘ icon explains every event.",
       "example": "Example: {{example}}"
     },
     "subscriptionFlow": {
+      "overview": {
+        "back": "All flows & automated messages",
+        "title": "Messages for subscription flows",
+        "intro": "A flow decides which message goes out automatically for which subscription event. The default flow applies to all subscriptions. A member plan can have flows of its own for some of its subscriptions, and a flow can be for some subscriptions of all member plans: such a flow replaces the default flow for the affected subscriptions completely. If several flows are defined, they are applied in this order: 1. flows for a specific member plan → 2. flows for all member plans → 3. the default flow. In the table of flows, this is the direction “from the bottom up”. As soon as a flow matches a subscription, that flow is applied and the matching stops. Flows “further up” in the list are therefore never applied to that subscription.",
+        "flow": "Flow for member plan",
+        "defaultFlow": "All → default flow",
+        "appliesTo": "Applies to",
+        "defaultApplies": "All subscriptions without a flow of their own",
+        "subscriptions": "Affected subscriptions",
+        "events": "Messages",
+        "eventsValue": "{{sending}} of {{total}} events",
+        "letterEvents": "Of these by letter",
+        "memberPlan": "Member plan",
+        "createIntro": "Choose the member plan – or “All member plans” – and the subscriptions the new flow applies to. Which messages it sends is set on its page afterwards.",
+        "deleteTitle": "Delete the flow of “{{memberPlan}}”?",
+        "renewal": {
+          "true": "with automatic renewal",
+          "false": "without automatic renewal"
+        },
+        "noMemberPlan": "No member plan",
+        "allMemberPlans": "All member plans",
+        "subscriptionsSum": "Affected subscriptions ({{sum}})",
+        "subscriptionsHint": "Running subscriptions, and ended ones while their flow still sends them a message. Switching a flow on or off can therefore change the sum: an ended subscription may move from a flow with later messages to one without.",
+        "active": "Active",
+        "switchOff": "Switch flow off",
+        "switchOn": "Switch flow on",
+        "deactivateTitle": "Switch flow off?",
+        "activateTitle": "Switch flow on?",
+        "deactivateQuestion": "The {{count}} subscriptions handled by this flow will then be handled by other flows.",
+        "activateQuestion": "This flow will then take over {{count}} subscriptions from other flows.",
+        "tabs": {
+          "flows": "Subscription flows ({{count}})",
+          "account": "Account & login"
+        },
+        "group": {
+          "default": "Default",
+          "allMemberPlans": "For all member plans",
+          "memberPlan": "Member plan “{{memberPlan}}”"
+        },
+        "any": {
+          "paymentMethods": "any payment method",
+          "periodicities": "any term",
+          "renewal": "with or without auto renewal"
+        },
+        "warnings": {
+          "noMemberPlan": "The member plan of this flow was deleted. As long as this flow exists, no automated message is sent – delete it.",
+          "matchesNothing": "Applies to no subscription: a payment method, term or renewal is missing.",
+          "notOffered": "No longer offered by the member plan: {{values}}. This flow only applies to already existing subscriptions."
+        }
+      },
+      "earliestDay": {
+        "anyTerm": "{{days}} days before the subscription ends at the earliest: this flow applies to subscriptions of any term, including the shortest. Narrow it to longer terms so it can start earlier.",
+        "byConditions": "{{days}} days before the subscription ends at the earliest: this flow applies to subscriptions with the term “{{periodicity}}”. An even earlier invoice date would exceed the length of the subscription term.",
+        "defaultFlow": "{{days}} days before the subscription ends at the earliest: the default flow applies to every subscription without a flow of its own, including those with the shortest term. A flow for longer terms only can start earlier."
+      },
+      "flow": "Flow",
+      "planFlowDescription": "This flow completely replaces the default flow for the subscriptions of its member plan that match the filter criteria defined below.",
+      "allPlansFlowDescription": "This flow completely replaces the default flow for the subscriptions of all member plans that match the filter criteria defined below. Where a member plan has a flow of its own for such subscriptions, that one comes first.",
+      "inactiveNotice": "This flow is switched off. Its subscriptions get the messages of the next matching flow.",
+      "openConditionsHint": "An empty field does not narrow: the flow then applies to any value. At least one field must be filled in.",
+      "planFlowDescriptionFor": "This flow completely replaces the default flow for the subscriptions of the member plan “{{memberPlan}}” that match the filter criteria defined below.",
+      "noFallback": "Events without a template send nothing – the default flow does not step in.",
+      "notFound": "This flow does not exist (any more).",
       "subscribe": "Subscription started",
       "renewal_success": "Renewal successful",
       "renewal_failed": "Renewal failed",
@@ -3030,15 +3125,21 @@
       "custom": "Custom event",
       "settings": "Subscription flow settings",
       "edit": "Edit subscription flow",
-      "settingsDescription": "These settings apply to this subscription plan only and override the automatic emails.",
       "addNew": "Create new flow",
       "dayWithNumber": "day {{day}}",
       "days": "days",
       "savedChange": "Change successfully saved",
       "add": "Add",
       "paymentMethod": "Payment method",
-      "periodicity": "Periodicity",
+      "periodicity": "Term",
       "autoRenewal": "Auto renewal?",
+      "legacy": "Legacy subscriptions",
+      "legacyHint": "Legacy: imported and not paid for here yet. A flow for legacy subscriptions only needs every mail set up itself; the default flow does not fill in missing ones.",
+      "legacyFilter": {
+        "all": "All subscriptions",
+        "only": "Legacy subscriptions only",
+        "none": "Without legacy subscriptions"
+      },
       "booleanFilter": {
         "true": "Yes",
         "false": "No"
@@ -3047,7 +3148,7 @@
       "deletePermanently": "Delete permanently",
       "dropHere": "Drop here",
       "filters": "Filters",
-      "filtersDescription": "Defines which subscriptions this flow applies to: subscription plan, payment method, periodicity and auto renewal.",
+      "filtersDescription": "Defines which subscriptions this flow applies to: subscription plan, payment method, term and auto renewal.",
       "filtersExample": "Yearly subscriptions paid by credit card only.",
       "subscriptionEvents": "Subscription events",
       "subscriptionEventsDescription": "Emails that go out immediately when something happens to a subscription. They are not tied to a date.",
@@ -3060,8 +3161,7 @@
       "addMail": "Add email",
       "deleteMail": "Remove email",
       "defaultFlow": "Default flow",
-      "defaultFlowDescription": "Applies to every subscription no other flow matches. Changes here also apply under «Automated messages».",
-      "flowNumber": "Flow {{number}}",
+      "defaultFlowDescription": "Applies to every subscription no other flow matches.",
       "newFlow": "New flow",
       "newDayTitle": "New day in the timeline",
       "newDayHint": "Negative number = before the subscription ends, positive number = after.",
@@ -3130,11 +3230,16 @@
       }
     },
     "systemMails": {
-      "title": "Account & login",
+      "title": "Messages for account & login events",
       "sectionDescription": "Emails around the user account. They are triggered by something the person does – no matter whether they have a subscription.",
       "sectionExample": "Someone registers → the welcome email goes out right away.",
-      "sendTest": "Send test to me",
+      "sendTest": "Send test email to me",
       "testSent": "Test email sent to you",
+      "columns": {
+        "event": "Event type",
+        "userAction": "User action",
+        "template": "Message template"
+      },
       "events": {
         "account_creation": "Registration",
         "login_link": "Login link",
@@ -3144,27 +3249,27 @@
       },
       "eventInfo": {
         "account_creation": {
-          "short": "A new account was created.",
+          "userAction": "Signs up, or gets an account when buying a subscription",
           "description": "Goes out as soon as a person registers or gets an account while buying a subscription.",
           "example": "“Welcome – your account is ready.”"
         },
         "login_link": {
-          "short": "Log in without a password.",
+          "userAction": "Requests a login link",
           "description": "Goes out when a person wants to log in via a link instead of typing a password. The email has to contain the login link.",
           "example": "“Log in with a single click.”"
         },
         "password_reset": {
-          "short": "Password forgotten.",
-          "description": "Goes out when a person clicks “Forgot password”. The email has to contain the link for setting a new password.",
+          "userAction": "An admin or author clicks “Forgot password” on the editor login",
+          "description": "Goes out when someone clicks “Forgot password” on the editor login – it exists only there, not on the website. So it concerns admins, authors and other editor users. The email must contain the link for setting a new password.",
           "example": "“Set a new password here.”"
         },
         "email_change": {
-          "short": "Confirm the new address.",
+          "userAction": "Changes their email address",
           "description": "Goes to the new address when someone changes their email address. The change only takes effect after the confirmation.",
           "example": "“Please confirm your new email address.”"
         },
         "test_mail": {
-          "short": "For your own tests only.",
+          "userAction": "None – for your own tests only",
           "description": "Never sent to readers automatically. Use this template to try out the mail delivery yourself.",
           "example": "“Test mail – if you can read this, sending works.”"
         }
@@ -3286,6 +3391,17 @@
         "amountOfSubscriptions": "{{amount}} subscriptions",
         "createdAt": "Created",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "emailQuality": "Email status",
+        "emailQualitySince": "Email status since",
+        "emailQualitySinceDate": "{{emailQualitySinceDate, PP}}",
+        "emailSegments": {
+          "active": "Active",
+          "unknown": "Unknown",
+          "unresponsive": "Unresponsive",
+          "dead": "Undeliverable",
+          "placeholder": "Placeholder",
+          "deadHint": "Bounce, invalid address, spam complaint or unsubscribed at the mail provider"
+        },
         "firstName": "First Name",
         "subscriptionStatus": {
           "Active": "Active",
@@ -3295,6 +3411,8 @@
           "Expired": "Expired"
         },
         "subscriptionWithStatus": "{{name}} – {{status}}",
+        "subscriptionWithStatusAndIssues": "{{name}} – {{status}} ({{received}} / {{entitled}} issues)",
+        "printIssuesOwed": "Issues owed",
         "modifiedAt": "Last modified",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
@@ -3372,6 +3490,10 @@
         },
         "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}"
       },
+      "imported": {
+        "legacy": "Legacy subscription: imported on {{date, PP}} and not paid for here yet.",
+        "paidHere": "Imported on {{date, PP}}; has since been paid for here."
+      },
       "revertUpgrade": {
         "title": "Undo upgrade",
         "modalTitle": "Undo the upgrade?",
@@ -3401,9 +3523,17 @@
       "startsAt": "Subscription Start",
       "uniqueSubscription": "Unique Subscription",
       "uniqueSubscriptionHelpText": "A user can only purchase one subscription per unique subscription plan. Manual renewal by the user is not possible. Automatic renewal is possible.",
-      "paidUntilInfo": "Set automatically as soon as an invoice is paid. The subscription is paid up to this date."
+      "paidUntilInfo": "Set automatically as soon as an invoice is paid. The subscription is paid up to this date.",
+      "firstPrintIssueFrom": "First printed issue from",
+      "firstPrintIssueFromInfo": "«Abo-Start»: the first printed issue is the first one shipped on or after this day. Set when subscribing on the website (current issue: its ship day; upcoming: the day after). Empty: every issue from the subscription start."
     },
     "userSubscriptionList": {
+      "printIssuesReceived": "{{received}} / {{entitled}} issues",
+      "printIssue": "{{label}} · {{date}} · {{batch}}, handed over {{deliveredAt}}",
+      "printList": "Print list",
+      "printSupplement": "Supplement {{number}}",
+      "printIssueCountsAs": "counts {{count}}×",
+      "printIssues": "Print issues received",
       "periodRange": "Period",
       "table": {
         "active": "Active",
@@ -3448,7 +3578,7 @@
       "noAutoRenew": "Subscription expires, no automatic renewal",
       "noDeactivation": "No deactivation.",
       "paidUntil": "Paid until {{date}}",
-      "paymentPeriodicity": "Payment periodicity: {{paymentPeriodicity}}",
+      "paymentPeriodicity": "Payment interval: {{paymentPeriodicity}}",
       "periodAmount": "Amount: {{amount}} {{currency}}",
       "periodCreatedAt": "Created at {{date}}",
       "periodEndsAt": "until {{date}}",
@@ -3612,7 +3742,10 @@
       "renewalTitle": "Term and renewal"
     },
     "subscriptionListFilter": {
-      "extendable": "Extendable"
+      "extendable": "Extendable",
+      "legacy": "Legacy subscription",
+      "legacyHint": "Imported and not paid for here yet",
+      "legacyAll": "All"
     },
     "resources": {
       "teaserType": {
@@ -4795,8 +4928,8 @@
           "description": "Audience and filters"
         },
         "content": {
-          "title": "Content & delivery channel",
-          "description": "Template, email or letter"
+          "title": "Delivery channel & content",
+          "description": "Email or letter, template"
         },
         "send": {
           "title": "Send",
@@ -4872,7 +5005,6 @@
         "cancelled": "Canceled"
       },
       "missingPlaceholders": "Heads up: these placeholders won't be filled for these recipients: {{placeholders}}",
-      "createTemplate": "New template",
       "attachments_one": "Every mail carries {{count}} attachment as PDF: {{names}}",
       "attachments_other": "Every mail carries {{count}} attachments as PDF: {{names}}",
       "editTemplate": "Edit template",
@@ -4937,6 +5069,8 @@
       "isCanceledHint": "Also includes cancellations that only take effect later.",
       "hasReplacedSubscription": "Replaced another subscription (e.g. upgrade)",
       "hasReplacedSubscriptionHint": "Also includes downgrades and plan switches; manual or imported changes are not detected.",
+      "isLegacy": "Legacy subscription",
+      "isLegacyHint": "Imported from the previous system and not paid for here yet. The first payment registered here ends it.",
       "startsAt": "Subscription start",
       "endsAt": "Subscription end",
       "from": "From",
@@ -4947,11 +5081,11 @@
         "label": "Delivery channel",
         "mail": "Email",
         "letter": "Letter",
-        "noVersion": {
-          "mail": "This template has no email version.",
-          "letter": "This template has no letter version."
-        },
-        "withoutAddress": "{{count}} of the recipients have no usable postal address and will be skipped."
+        "withoutAddress": "{{count}} of the recipients have no usable postal address and will be skipped.",
+        "templateDropped": {
+          "mail": "“{{template}}” has no email version and was therefore deselected. Choose a template for email.",
+          "letter": "“{{template}}” has no letter version and was therefore deselected. Choose a template for letter."
+        }
       },
       "print": {
         "addressPosition": {
@@ -5024,7 +5158,11 @@
         "matchAll": "all conditions",
         "more": "{{count}} more filters"
       },
-      "deliveryChannelHandOff": "Switch this user group’s delivery channel for good …"
+      "deliveryChannelHandOff": "Switch this user group’s delivery channel for good …",
+      "templateFor": {
+        "mail": "Manual message by email",
+        "letter": "Manual message by letter"
+      }
     },
     "mailLog": {
       "title": "Sent messages",
@@ -5644,7 +5782,8 @@
       "issueDateRequired": "Please enter the ship day.",
       "drawer": {
         "createTitle": "New issue",
-        "editTitle": "Issue {{label}}"
+        "editTitle": "Issue {{label}}",
+        "labelPreview": "Written as"
       },
       "fields": {
         "issue": "Issue",
@@ -5846,7 +5985,8 @@
           "deactivated": "Deactivated",
           "lapsed": "Lapsed",
           "exhausted": "Quota received",
-          "noPrintIssues": "No printed issues (0 on the plan)"
+          "noPrintIssues": "No printed issues (0 on the plan)",
+          "beforeFirstIssue": "Subscription starts later (chosen first issue)"
         },
         "bexio": {
           "title": "bexio",
@@ -5863,7 +6003,8 @@
           "skippedOpen": "Unpaid, left out",
           "noValidPeriod": "Without a valid period or issue",
           "excludedKind": "Delivery type not selected",
-          "quantityMismatch": "Quantity ≠ links"
+          "quantityMismatch": "Quantity ≠ links",
+          "exhausted": "Quota received (running period)"
         }
       },
       "rowsTable": {

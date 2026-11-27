@@ -20,6 +20,7 @@ const operationName = (document: unknown) =>
 const mutations: Record<string, ReturnType<typeof vi.fn>> = {};
 const mutation = (name: string) => (mutations[name] ??= vi.fn());
 const loadTemplate = vi.fn();
+const clientQuery = vi.fn();
 const letterChannel = { paperLetters: false, letterAvailable: false };
 
 vi.mock('@apollo/client/react', async importOriginal => ({
@@ -35,7 +36,7 @@ vi.mock('@apollo/client/react', async importOriginal => ({
     mutation(operationName(document)),
     { loading: false },
   ]),
-  useApolloClient: vi.fn(() => ({})),
+  useApolloClient: vi.fn(() => ({ query: clientQuery })),
 }));
 
 vi.mock('./use-letter-channel', () => ({
@@ -926,5 +927,68 @@ describe('MailTemplateEdit', () => {
       ]);
       expect(input).not.toHaveProperty('htmlContent');
     });
+  });
+});
+
+describe('MailTemplateEdit previews', () => {
+  beforeEach(() => {
+    letterChannel.paperLetters = true;
+    letterChannel.letterAvailable = true;
+    URL.createObjectURL = vi.fn(() => 'blob:letter');
+    URL.revokeObjectURL = vi.fn();
+    loadTemplate.mockResolvedValue({
+      data: {
+        mailTemplate: savedTemplate([MailChannel.Mail, MailChannel.Letter]),
+      },
+    });
+    clientQuery.mockResolvedValue({
+      data: {
+        mailTemplatePreview: { subject: 'Hallo', html: '<p>Hallo</p>' },
+        mailTemplateLetterPreview: { pdf: btoa('%PDF') },
+      },
+    });
+  });
+
+  it('closes the email preview from the top of the dialog', async () => {
+    renderPage('/mailtemplates/edit/tpl-1');
+    await waitFor(() => expect(subjectField()).toHaveValue('Subject mail'));
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'mailTemplates.edit.preview' })
+    );
+    const dialog = await screen.findByRole('dialog');
+    const close = within(dialog).getAllByRole('button', {
+      name: 'mailTemplates.editor.close',
+    });
+
+    // One close button, in the title at the top, not under the preview.
+    expect(close).toHaveLength(1);
+    expect(close[0].closest('h2')).not.toBeNull();
+
+    fireEvent.click(close[0]);
+
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+  });
+
+  it('closes the letter preview from the top of the dialog', async () => {
+    renderPage('/mailtemplates/edit/tpl-1');
+    await waitFor(() => expect(subjectField()).toHaveValue('Subject mail'));
+
+    fireEvent.click(versionTab(MailChannel.Letter));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'mailTemplates.edit.previewLetter' })
+    );
+    const dialog = await screen.findByRole('dialog');
+    const close = within(dialog).getAllByRole('button', {
+      name: 'mailTemplates.editor.close',
+    });
+
+    // One close button, in the title at the top, not under the preview.
+    expect(close).toHaveLength(1);
+    expect(close[0].closest('h2')).not.toBeNull();
+
+    fireEvent.click(close[0]);
+
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
   });
 });

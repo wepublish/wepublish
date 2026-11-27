@@ -89,6 +89,8 @@ export const mockPeriodicityPrice = (
   amountMin: 500,
   amountTarget: 700,
   amountMax: 1000,
+  // empty: the medium's issues per year, pro rata
+  printIssues: null,
   ...definedOnly(overrides),
 });
 

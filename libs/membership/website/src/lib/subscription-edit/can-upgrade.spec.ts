@@ -34,6 +34,7 @@ const plan = (
         amountMin: monthlyMin,
         amountTarget: null,
         amountMax: null,
+        printIssues: null,
       },
     ],
     ...overrides,
