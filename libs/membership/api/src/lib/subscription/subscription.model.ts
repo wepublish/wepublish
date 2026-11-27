@@ -214,6 +214,29 @@ export class UpdatePublicSubscriptionInput extends PartialType(
 }
 
 @ArgsType()
+export class CorrectSubscriptionPeriodArgs {
+  @Field()
+  subscriptionId!: string;
+
+  @Field({
+    description:
+      'The period to correct. It has to be the latest one of the subscription.',
+  })
+  periodId!: string;
+
+  @Field(() => PaymentPeriodicity, {
+    description:
+      'The periodicity the period was really sold with. The subscription gets it too.',
+  })
+  paymentPeriodicity!: PaymentPeriodicity;
+
+  @Field({
+    description: 'The last day the period really covers.',
+  })
+  endsAt!: Date;
+}
+
+@ArgsType()
 export class CancelPublicSubscriptionInput extends PickType(
   SubscriptionDeactivation,
   ['reason'] as const,

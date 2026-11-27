@@ -3704,6 +3704,8 @@ export type Mutation = {
   confirmEmailChange: SensitiveDataUser;
   /** Confirms a notification for the whole instance, recording who confirmed it. Requires authentication. */
   confirmNotification: NotificationConfirmation;
+  /** Data correction: gives the latest, paid period of a running subscription the periodicity and end it should have had (e.g. a trial that runs as a year), and the subscription the same periodicity. The price of the period stays; paidUntil follows when it was that period's end. Creates, cancels and sends nothing; refuses a subscription with an open invoice. */
+  correctSubscriptionPeriod: PublicSubscription;
   /** Creates a new AI provider setting. */
   createAISetting: SettingAiProvider;
   /** Creates a new analytics provider setting. */
@@ -4318,6 +4320,14 @@ export type MutationConfirmEmailChangeArgs = {
 export type MutationConfirmNotificationArgs = {
   itemId: Scalars['String']['input'];
   source: NotificationSource;
+};
+
+
+export type MutationCorrectSubscriptionPeriodArgs = {
+  endsAt: Scalars['DateTime']['input'];
+  paymentPeriodicity: PaymentPeriodicity;
+  periodId: Scalars['String']['input'];
+  subscriptionId: Scalars['String']['input'];
 };
 
 
