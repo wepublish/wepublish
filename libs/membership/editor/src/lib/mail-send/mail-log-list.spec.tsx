@@ -323,6 +323,78 @@ describe('MailLogList', () => {
     ).toBe(true);
   });
 
+  describe('why a mail bounced', () => {
+    const log = (overrides: object) => ({
+      id: 'log-1',
+      sentDate: '2026-11-01T10:00:00.000Z',
+      state: 'bounced',
+      type: 'subscriptionFlow',
+      channel: 'mail',
+      subject: 'Invoice',
+      recipient: { id: 'u1', email: 'jane@example.com' },
+      mailTemplate: { id: 'tpl-1', name: 'Invoice' },
+      error: null,
+      ...overrides,
+    });
+
+    const showsLogs = (...nodes: object[]) =>
+      (useQuery as unknown as Mock).mockReturnValue({
+        data: {
+          mailTemplates: [],
+          mailSendJobs: { nodes: [] },
+          mailLogs: { nodes, totalCount: nodes.length },
+        },
+        loading: false,
+      });
+
+    const explanationOf = (text: string) => {
+      fireEvent.click(screen.getByText(text));
+
+      return screen.getByRole('presentation').textContent;
+    };
+
+    beforeEach(() => {
+      localStorage.clear();
+    });
+
+    it("shows the provider's reason in the error column, without switching anything on", () => {
+      showsLogs(log({ error: 'bad_mailbox: 554 5.7.1 User unknown' }));
+      renderPage();
+
+      const headers = screen
+        .getAllByRole('columnheader')
+        .map(header => header.textContent);
+
+      expect(headers).toContain('mailLog.error');
+      expect(headers).not.toContain('mailLog.bounceReason');
+      expect(
+        screen.getByRole('cell', {
+          name: 'bad_mailbox: 554 5.7.1 User unknown',
+        })
+      ).toBeTruthy();
+    });
+
+    it('explains a mailbox that does not exist', () => {
+      showsLogs(log({ error: 'bad_mailbox: 554 5.7.1 User unknown' }));
+      renderPage();
+
+      expect(explanationOf('bad_mailbox: 554 5.7.1 User unknown')).toContain(
+        'mailLog.errorHelp.mailboxGone.cause'
+      );
+    });
+
+    it('explains a bounce by what the receiving server said, not by the sending setup', () => {
+      showsLogs(
+        log({ state: 'deferred', error: 'general: 451 4.7.1 Try again later' })
+      );
+      renderPage();
+
+      expect(explanationOf('general: 451 4.7.1 Try again later')).toContain(
+        'mailLog.errorHelp.bounce.cause'
+      );
+    });
+  });
+
   describe('what a mail is about', () => {
     const log = (overrides: object) => ({
       id: 'log-1',

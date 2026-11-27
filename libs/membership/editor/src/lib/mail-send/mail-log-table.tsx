@@ -543,7 +543,12 @@ export function MailLogTable() {
             id: 'error',
             label: t('mailLog.error'),
             width: 240,
-            render: log => <MailErrorCell error={log.error} />,
+            render: log => (
+              <MailErrorCell
+                error={log.error}
+                state={log.state}
+              />
+            ),
             exportValue: log => log.error,
           },
         ]}

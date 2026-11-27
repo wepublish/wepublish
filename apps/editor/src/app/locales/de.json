@@ -5289,6 +5289,18 @@
           "cause": "Die verwendete Sendungsvorlage existiert nicht mehr.",
           "fix": "Wähle unter «Mitteilungsvorlagen» eine vorhandene Vorlage aus bzw. lege sie neu an und starte den Versand erneut."
         },
+        "mailboxGone": {
+          "cause": "Der Mailserver der Empfängerin oder des Empfängers hat die Mitteilung zurückgewiesen, weil es das Postfach oder die Domain nicht gibt. Die Adresse gilt damit als unerreichbar.",
+          "fix": "1. Prüfe die E-Mail-Adresse der Person auf Tippfehler und korrigiere sie.\n2. Ist keine gültige Adresse bekannt, stelle die Person auf Brief um: Sie erscheint unter «Zustellkanal für automatische Mitteilungen» als Vorschlag, sofern eine Postadresse hinterlegt ist."
+        },
+        "mailboxFull": {
+          "cause": "Das Postfach der Empfängerin oder des Empfängers ist voll. Die Mitteilung ist nicht angekommen; die Adresse gilt weiterhin als erreichbar.",
+          "fix": "1. Sende die Mitteilung später erneut.\n2. Bleibt das Postfach voll, erreiche die Person auf einem anderen Weg."
+        },
+        "bounce": {
+          "cause": "Der Mailserver der Empfängerin oder des Empfängers hat die Mitteilung nicht angenommen. Seine Antwort steht unten.",
+          "fix": "1. Lies die Originalmeldung: Sie nennt den Grund, z.B. eine vorübergehende Störung, ein gesperrtes Postfach oder Spamverdacht.\n2. Bei einer vorübergehenden Störung sende die Mitteilung später erneut.\n3. Bounct die Adresse wiederholt, kläre sie mit der Person."
+        },
         "generic": {
           "cause": "Der E-Mail-Server hat den Versand mit der unten stehenden Meldung abgelehnt.",
           "fix": "1. Prüfe die Einstellungen unter Einstellungen › Integrationen › E-Mail-Provider.\n2. Sieh im Server-Log nach der vollständigen Fehlermeldung.\n3. Sende eine Test-E-Mail aus der Vorlage, um die Verbindung zu prüfen."

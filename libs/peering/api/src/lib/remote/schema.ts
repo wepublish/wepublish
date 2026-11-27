@@ -2813,7 +2813,7 @@ export type MailLogModel = {
   address?: Maybe<Scalars['String']['output']>;
   channel: MailChannel;
   createdAt: Scalars['DateTime']['output'];
-  /** Why a rejected mail could not be delivered. */
+  /** Why the mail could not be delivered: the error of a rejected one, or what the mail provider said about a bounced or held-back one (its bounce description and the receiving server's answer). */
   error?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   /** The invoice the mail is about, for invoice mails. Null otherwise and for mails sent before this was recorded. */
