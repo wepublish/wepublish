@@ -2958,6 +2958,16 @@ input MailHistoryCondition {
   negate: Boolean
 
   """
+  true: only mails about an invoice that is still open (neither paid nor cancelled). Mails sent before the invoice was recorded in the mail log never match.
+  """
+  onlyOpenInvoice: Boolean
+
+  """
+  Defaults to person. Mails sent before the subscription was recorded in the mail log never match the subscription scope.
+  """
+  scope: MailHistoryScope
+
+  """
   Only mails that ended in one of these states. Empty or absent means any.
   """
   states: [MailLogState!]
@@ -2981,12 +2991,26 @@ enum MailHistoryMatch {
   any
 }
 
+"""
+person: any mail the person got. subscription: only mails about the very subscription the audience selects; on an audience without subscriptions it falls back to person.
+"""
+enum MailHistoryScope {
+  person
+  subscription
+}
+
 input MailLogFilter {
   channel: MailChannel
+
+  """Only mails about this invoice."""
+  invoiceId: String
   mailSendJobId: String
   mailTemplateId: String
   recipientId: String
   state: MailLogState
+
+  """Only mails about this subscription."""
+  subscriptionId: String
   type: MailLogType
 }
 
@@ -2999,6 +3023,11 @@ type MailLogModel {
   """Why a rejected mail could not be delivered."""
   error: String
   id: String!
+
+  """
+  The invoice the mail is about, for invoice mails. Null otherwise and for mails sent before this was recorded.
+  """
+  invoiceId: String
   mailProviderID: String!
   mailSendJobId: String
   mailTemplate: MailLogTemplate!
@@ -3009,6 +3038,11 @@ type MailLogModel {
   sentDate: DateTime!
   state: MailLogState!
   subject: String
+
+  """
+  The subscription the mail is about. Null for mails with no such trigger and for mails sent before this was recorded.
+  """
+  subscriptionId: String
   type: MailLogType
 }
 

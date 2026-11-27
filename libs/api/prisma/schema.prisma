@@ -617,6 +617,7 @@ model Invoice {
   subscription   Subscription? @relation(fields: [subscriptionID], references: [id], onDelete: SetNull)
 
   subscriptionPeriods SubscriptionPeriod[]
+  mailLogs            MailLog[]
 
   userID String?
   user   User?   @relation("InvoiceBuyer", fields: [userID], references: [id], onDelete: SetNull)
@@ -716,9 +717,19 @@ model MailLog {
   mailSendJob   MailSendJob? @relation(fields: [mailSendJobId], references: [id], onDelete: SetNull)
   mailSendJobId String?
 
+  // What the mail was about: the subscription and, for invoice mails, the
+  // invoice. Null for mails with no such trigger (login link, password reset)
+  // and on rows written before the columns existed.
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  subscriptionId String?
+  invoice        Invoice?      @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+  invoiceId      String?
+
   @@index([mailIdentifier])
   @@index([recipientID, sentDate(sort: Desc)])
   @@index([mailSendJobId])
+  @@index([subscriptionId])
+  @@index([invoiceId])
   @@index([mailProviderMessageID])
   @@index([channel])
   @@map("mail.log")
@@ -1328,6 +1339,7 @@ model Subscription {
 
   invoices Invoice[]
 
+  mailLogs           MailLog[]
   mailSendJobEntries MailSendJobRecipient[]
 
   paymentMethodChanges SubscriptionPaymentMethodChange[]

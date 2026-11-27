@@ -20,6 +20,7 @@ import {
   MailEmailSegment,
   MailHistoryCondition,
   MailHistoryMatch,
+  MailHistoryScope,
   MailRecipientBase,
   MailSubscriptionState,
 } from './mail-send.model';
@@ -607,18 +608,75 @@ export class MailSendRecipientService {
     return parts.length === 1 ? parts[0] : { AND: parts };
   }
 
+  /**
+   * Whether the mail history is checked on the subscription the audience
+   * selects instead of on its owner: as soon as one condition asks for it, and
+   * only where the audience has subscriptions to check.
+   */
+  private historyOnSubscription(audience: MailAudienceInput): boolean {
+    return (
+      this.allowsSubscriptionTemplates(audience) &&
+      (audience.mailHistory?.conditions ?? []).some(
+        condition => condition.scope === MailHistoryScope.subscription
+      )
+    );
+  }
+
+  /** The mail history as a filter on the person; null when there is none. */
   private buildMailHistoryWhere(
     audience: MailAudienceInput
   ): Prisma.UserWhereInput | null {
-    const conditions = audience.mailHistory?.conditions ?? [];
-
-    if (!conditions.length) {
+    // Checked on the subscription instead, see `buildSubscriptionHistoryWhere`.
+    if (this.historyOnSubscription(audience)) {
       return null;
     }
 
-    const parts = conditions.map(condition =>
-      this.mailHistoryConditionWhere(condition)
+    return this.combineHistory(
+      audience,
+      (audience.mailHistory?.conditions ?? []).map(condition =>
+        this.personConditionWhere(condition)
+      )
     );
+  }
+
+  /**
+   * The mail history as a filter on the subscription, for an audience with a
+   * condition bound to the subscription. Conditions on the person are kept in
+   * the same filter, through the owner, so "all" and "any" still combine
+   * every condition with every other.
+   */
+  private buildSubscriptionHistoryWhere(
+    audience: MailAudienceInput
+  ): Prisma.SubscriptionWhereInput | null {
+    if (!this.historyOnSubscription(audience)) {
+      return null;
+    }
+
+    return this.combineHistory(
+      audience,
+      (audience.mailHistory?.conditions ?? []).map(
+        (condition): Prisma.SubscriptionWhereInput => {
+          if (condition.scope !== MailHistoryScope.subscription) {
+            return { user: this.personConditionWhere(condition) };
+          }
+
+          const log = this.mailLogWhere(condition);
+
+          return condition.negate ?
+              { mailLogs: { none: log } }
+            : { mailLogs: { some: log } };
+        }
+      )
+    );
+  }
+
+  private combineHistory<T extends object>(
+    audience: MailAudienceInput,
+    parts: T[]
+  ): T | { AND: T[] } | { OR: T[] } | null {
+    if (!parts.length) {
+      return null;
+    }
 
     if (parts.length === 1) {
       return parts[0];
@@ -629,10 +687,10 @@ export class MailSendRecipientService {
       : { AND: parts };
   }
 
-  /** One condition on the person's mail log, as a filter on the person. */
-  private mailHistoryConditionWhere(
+  /** The mails a condition asks about. */
+  private mailLogWhere(
     condition: MailHistoryCondition
-  ): Prisma.UserWhereInput {
+  ): Prisma.MailLogWhereInput {
     const log: Prisma.MailLogWhereInput = {
       mailTemplateId: condition.mailTemplateId,
     };
@@ -648,6 +706,21 @@ export class MailSendRecipientService {
     if (condition.from || condition.to) {
       log.sentDate = this.dateRange(condition.from, condition.to);
     }
+
+    if (condition.onlyOpenInvoice) {
+      // `is` with a filter never matches a mail without an invoice, which is
+      // every mail sent before the invoice was recorded.
+      log.invoice = { is: { paidAt: null, canceledAt: null } };
+    }
+
+    return log;
+  }
+
+  /** One condition on the person's mail log, as a filter on the person. */
+  private personConditionWhere(
+    condition: MailHistoryCondition
+  ): Prisma.UserWhereInput {
+    const log = this.mailLogWhere(condition);
 
     // `none` is a relation filter (NOT EXISTS), not a negated column, so a
     // person with no mail at all is kept. Never `NOT` here.
@@ -798,6 +871,12 @@ export class MailSendRecipientService {
       and.push(legacySubscriptionWhere(audience.isLegacy));
     }
 
+    const history = this.buildSubscriptionHistoryWhere(audience);
+
+    if (history) {
+      and.push(history);
+    }
+
     return { AND: and };
   }
 
@@ -882,6 +961,12 @@ export class MailSendRecipientService {
 
     if (audience.isLegacy != null) {
       and.push(legacySubscriptionWhere(audience.isLegacy));
+    }
+
+    const history = this.buildSubscriptionHistoryWhere(audience);
+
+    if (history) {
+      and.push(history);
     }
 
     return and.length ? { AND: and } : {};

@@ -5130,6 +5130,9 @@
         "channel": "Delivery channel",
         "anyChannel": "Any",
         "sentBetween": "Sent between",
+        "onSubscription": "Only messages about this very subscription",
+        "onlyOpenInvoice": "Only messages about an invoice that is still open",
+        "triggerHint": "The subscription and invoice of a message have only been recorded recently. Older messages never meet this condition.",
         "match": {
           "all": "All conditions must hold",
           "any": "One condition is enough"
@@ -5155,6 +5158,8 @@
         "mailHistory": "Messages",
         "received": "received",
         "notReceived": "not received",
+        "onSubscription": "about this subscription",
+        "onlyOpenInvoice": "invoice still open",
         "between": "{{from}} – {{to}}",
         "from": "from {{from}}",
         "to": "until {{to}}",
@@ -5174,6 +5179,9 @@
       "sentDate": "Date",
       "template": "Template",
       "subject": "Subject",
+      "trigger": "About",
+      "triggerSubscription": "Subscription",
+      "triggerInvoice": "Invoice",
       "state": "State",
       "type": "Triggered by",
       "recipient": "Recipient",

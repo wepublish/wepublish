@@ -45,6 +45,12 @@ export type PaperSide = Pick<
   'letterRecipient' | 'letterAttachment' | 'mailLogId'
 >;
 
+/** The subscription and invoice a flow mail is about, for the mail log. */
+export type MailTrigger = Pick<
+  MailControllerConfig,
+  'subscriptionId' | 'invoiceId'
+>;
+
 /**
  * Whether the invoice-creation mail goes out now. `removed`: the provider
  * could not create the invoice and it is gone for the next attempt.
@@ -119,7 +125,11 @@ export class InvoiceDeliveryService {
       false,
       { subscriptionToCreateInvoice: subscription, invoice },
       startOfDay(new Date()),
-      outcome.send
+      {
+        ...outcome.send,
+        subscriptionId: subscription.id,
+        invoiceId: invoice.id,
+      }
     );
   }
 
@@ -272,7 +282,7 @@ export class InvoiceDeliveryService {
     isRetry: boolean,
     optionalData: Record<string, any>,
     periodicJobRunDate: Date,
-    paper: PaperSide = {}
+    delivery: PaperSide & MailTrigger = {}
   ) {
     if (!action.mailTemplateId || !user) {
       return;
@@ -288,7 +298,7 @@ export class InvoiceDeliveryService {
         periodicJobRunDate,
         mailType: mailLogType.SubscriptionFlow,
         asLetter: action.sendAsLetter,
-        ...paper,
+        ...delivery,
       }).sendMail();
     } catch (error) {
       // A refused address, a print vendor outage or attachments that cannot
