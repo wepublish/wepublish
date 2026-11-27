@@ -13,6 +13,7 @@ import {
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useFeature } from '../../featureContext';
 import { ALL_PAYMENT_PERIODICITIES } from '../../utility';
 import { DatePicker } from '../datePicker';
 import { DateRangeFilter } from '../dateRangeFilter';
@@ -52,6 +53,7 @@ export function SubscriptionListFilter({
   onSetFilter,
 }: SubscriptionListFilterProps) {
   const { t } = useTranslation();
+  const legacyFilter = useFeature('legacy-subscriptions');
   const [user, setUser] = useState<FullUserFragment | undefined | null>(
     undefined
   );
@@ -381,6 +383,32 @@ export function SubscriptionListFilter({
           <MenuItem value="false">{t('no')}</MenuItem>
         </TextField>
       </div>
+
+      {legacyFilter && (
+        <div>
+          <TextField
+            select
+            label={t('subscriptionListFilter.legacy')}
+            helperText={t('subscriptionListFilter.legacyHint')}
+            value={filter.legacy == null ? '' : String(filter.legacy)}
+            onChange={event =>
+              updateFilter({
+                legacy:
+                  event.target.value === '' ?
+                    undefined
+                  : event.target.value === 'true',
+              })
+            }
+            fullWidth
+          >
+            <MenuItem value="">
+              {t('subscriptionListFilter.legacyAll')}
+            </MenuItem>
+            <MenuItem value="true">{t('yes')}</MenuItem>
+            <MenuItem value="false">{t('no')}</MenuItem>
+          </TextField>
+        </div>
+      )}
     </Filters>
   );
 }

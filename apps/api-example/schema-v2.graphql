@@ -73,6 +73,22 @@ type AnonymousSubscriber {
   firstName: String
 }
 
+"""
+Memory and uptime of the API process that answers. Load tests read it while the periodic job runs: a new hostname or a smaller uptime means the pod restarted.
+"""
+type ApiProcessStats {
+  """Memory outside the V8 heap, e.g. the buffers of pdfs and attachments."""
+  externalBytes: Float!
+  heapUsedBytes: Float!
+
+  """The pod's name."""
+  hostname: String!
+
+  """Resident memory, the number the pod's memory limit is about."""
+  rssBytes: Float!
+  uptimeSeconds: Float!
+}
+
 type ApiToken {
   createdAt: DateTime!
 
@@ -1154,6 +1170,12 @@ input CreateExternalAppInput {
   url: String!
 }
 
+input CreateSavedAudienceFilterInput {
+  audience: MailAudienceInput!
+  description: String
+  name: String!
+}
+
 type CreateSubscriptionInfo {
   discountCodeValid: Boolean
   discountPercent: Float
@@ -1889,6 +1911,24 @@ input FacebookVideoBlockInput {
   timing: BlockTimingInput
   userID: String
   videoID: String
+}
+
+"""
+current: the issue shipped last is the first one. upcoming: the next one is.
+"""
+enum FirstPrintIssueChoice {
+  current
+  upcoming
+}
+
+"""
+Which printed issue the subscription starts with («Abo-Start»), as the reader chose it from printIssueStart.
+"""
+input FirstPrintIssueInput {
+  choice: FirstPrintIssueChoice!
+
+  """The id of the current issue the reader was shown."""
+  currentIssueId: String!
 }
 
 type FlexAlignment {
@@ -2815,6 +2855,24 @@ enum LoginStatus {
   UNSUBSCRIBED
 }
 
+type MailAndLetterLogSyncModel {
+  """
+  Mails that were still in an open state and could be looked up at the provider.
+  """
+  checked: Int!
+
+  """
+  Letters that can still change and were looked up at the letter provider.
+  """
+  lettersChecked: Int!
+
+  """Letters whose state the provider reported differently."""
+  lettersUpdated: Int!
+
+  """Mails whose state the provider reported differently."""
+  updated: Int!
+}
+
 input MailAudienceInput {
   autoRenew: Boolean
   base: MailRecipientBase!
@@ -2848,6 +2906,11 @@ input MailAudienceInput {
   endsAtFrom: DateTime
 
   """
+  Subscribers audience only: effective end within a range relative to now. Takes the place of endsAtFrom and endsAtTo when given.
+  """
+  endsAtRolling: MailRollingRange
+
+  """
   Subscribers audience only: only subscriptions whose effective end (cancellation date, else paidUntil) is on or before this date.
   """
   endsAtTo: DateTime
@@ -2861,6 +2924,11 @@ input MailAudienceInput {
   Subscribers audience only: true keeps only subscriptions that have given notice, including cancellations that only take effect in the future; false keeps the rest.
   """
   isCanceled: Boolean
+
+  """
+  Subscribers and win-back audience: true keeps only legacy subscriptions, imported from another system and not paid for here yet; false keeps the rest.
+  """
+  isLegacy: Boolean
 
   """
   Subscribers audience only: true keeps only subscriptions that are currently paid up (started and paidUntil in the future); false keeps the rest. Grace periods are not considered.
@@ -2881,6 +2949,11 @@ input MailAudienceInput {
   Subscribers audience only: only subscriptions that started on or after this date.
   """
   startsAtFrom: DateTime
+
+  """
+  Subscribers audience only: started within a range relative to now. Takes the place of startsAtFrom and startsAtTo when given.
+  """
+  startsAtRolling: MailRollingRange
 
   """
   Subscribers audience only: only subscriptions that started on or before this date.
@@ -2923,9 +2996,29 @@ input MailHistoryCondition {
   mailTemplateId: String!
 
   """
+  How many such mails it takes, at least. Defaults to 1. With negate: keeps people who got fewer.
+  """
+  minCount: Int
+
+  """
   true: keeps people who did NOT receive such a mail, including people with no mail at all.
   """
   negate: Boolean
+
+  """
+  true: only mails about an invoice that is still open (neither paid nor cancelled). Mails sent before the invoice was recorded in the mail log never match.
+  """
+  onlyOpenInvoice: Boolean
+
+  """
+  Sent within a range relative to now. Takes the place of from and to when given.
+  """
+  rolling: MailRollingRange
+
+  """
+  Defaults to person. Mails sent before the subscription was recorded in the mail log never match the subscription scope.
+  """
+  scope: MailHistoryScope
 
   """
   Only mails that ended in one of these states. Empty or absent means any.
@@ -2951,12 +3044,26 @@ enum MailHistoryMatch {
   any
 }
 
+"""
+person: any mail the person got. subscription: only mails about the very subscription the audience selects; on an audience without subscriptions it falls back to person.
+"""
+enum MailHistoryScope {
+  person
+  subscription
+}
+
 input MailLogFilter {
   channel: MailChannel
+
+  """Only mails about this invoice."""
+  invoiceId: String
   mailSendJobId: String
   mailTemplateId: String
   recipientId: String
   state: MailLogState
+
+  """Only mails about this subscription."""
+  subscriptionId: String
   type: MailLogType
 }
 
@@ -2966,9 +3073,16 @@ type MailLogModel {
   channel: MailChannel!
   createdAt: DateTime!
 
-  """Why a rejected mail could not be delivered."""
+  """
+  Why the mail could not be delivered: the error of a rejected one, or what the mail provider said about a bounced or held-back one (its bounce description and the receiving server's answer).
+  """
   error: String
   id: String!
+
+  """
+  The invoice the mail is about, for invoice mails. Null otherwise and for mails sent before this was recorded.
+  """
+  invoiceId: String
   mailProviderID: String!
   mailSendJobId: String
   mailTemplate: MailLogTemplate!
@@ -2979,6 +3093,11 @@ type MailLogModel {
   sentDate: DateTime!
   state: MailLogState!
   subject: String
+
+  """
+  The subscription the mail is about. Null for mails with no such trigger and for mails sent before this was recorded.
+  """
+  subscriptionId: String
   type: MailLogType
 }
 
@@ -2991,6 +3110,7 @@ type MailLogRecipient {
 
 enum MailLogState {
   accepted
+  actionRequired
   bounced
   canceled
   deferred
@@ -2999,16 +3119,6 @@ enum MailLogState {
   rejected
   submitted
   undeliverable
-}
-
-type MailLogSyncModel {
-  """
-  Mails that were still in an open state and could be looked up at the provider.
-  """
-  checked: Int!
-
-  """Mails whose state the provider reported differently."""
-  updated: Int!
 }
 
 type MailLogTemplate {
@@ -3044,6 +3154,20 @@ enum MailRecipientBase {
   endedSubscription
   hasSubscription
   noActiveSubscription
+}
+
+"""
+lastDays: within the last x days. olderThanDays: more than x days ago. nextDays: within the next x days.
+"""
+enum MailRollingKind {
+  lastDays
+  nextDays
+  olderThanDays
+}
+
+input MailRollingRange {
+  days: Int!
+  kind: MailRollingKind!
 }
 
 type MailSegmentCount {
@@ -4041,7 +4165,7 @@ type Mutation {
   confirmDeliverySuggestion(id: String!): Boolean!
 
   """
-  Confirms a pending email change with the token from the confirmation email.
+  Confirms a pending email change with the token from the confirmation email. A session from a login code only becomes a full session when it asked for the confirmation and opens the link itself; the other login-code sessions of the account end.
   """
   confirmEmailChange(token: String!): SensitiveDataUser!
 
@@ -4244,7 +4368,7 @@ type Mutation {
   createPaymentMethod(active: Boolean!, description: String!, gracePeriod: Int!, imageId: String, name: String!, paymentProviderID: String!, slug: Slug!): PaymentMethod!
 
   """Creates a new payment provider setting."""
-  createPaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_contactSync: Boolean, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String!, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], type: PaymentProviderType!, webhookEndpointSecret: String): SettingPaymentProvider!
+  createPaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_contactSync: Boolean, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailByWePublish: Boolean, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_testMailbox: String, bexio_unitId: Float, bexio_userId: Float, id: String!, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], type: PaymentProviderType!, webhookEndpointSecret: String): SettingPaymentProvider!
 
   """Creates a paywall."""
   createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
@@ -4269,6 +4393,9 @@ type Mutation {
 
   """Creates a rating system answer."""
   createRatingSystemAnswer(answer: String, ratingSystemId: String!, type: RatingSystemType!): CommentRatingSystemAnswer!
+
+  """Save a recipient filter under a name."""
+  createSavedAudienceFilter(input: CreateSavedAudienceFilterInput!): SavedAudienceFilterModel!
   createSession(email: String!, password: String!, totpToken: String): SessionWithToken!
   createSessionWithJWT(jwt: String!, totpToken: String): SessionWithToken!
 
@@ -4291,6 +4418,11 @@ type Mutation {
   createSubscription(
     autoRenew: Boolean!
     extendable: Boolean!
+
+    """
+    «Abo-Start»: the first printed issue is the first one shipped on or after this day.
+    """
+    firstPrintIssueFrom: DateTime
     memberPlanID: String!
     monthlyAmount: Float!
     paidUntil: DateTime
@@ -4307,7 +4439,23 @@ type Mutation {
   ): PublicSubscription!
 
   """Create a new subscription flow"""
-  createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
+  createSubscriptionFlow(
+    """
+    Creates the flow for the matching subscriptions of every member plan instead of one.
+    """
+    allMemberPlans: Boolean
+    autoRenewal: [Boolean!]!
+
+    """
+    Whom the flow is for: legacy subscriptions (true), all the others (false), or both, which is the default. Anything but both needs the legacy-subscriptions feature.
+    """
+    legacy: [Boolean!]
+
+    """The member plan the flow is for. Leave out with allMemberPlans."""
+    memberPlanId: String
+    paymentMethodIds: [String!]!
+    periodicities: [PaymentPeriodicity!]!
+  ): [SubscriptionFlowModel!]!
 
   """Create a subscription interval"""
   createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, sendAsLetter: Boolean, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
@@ -4354,12 +4502,12 @@ type Mutation {
   createUserRole(description: String, name: String!, permissionIDs: [String!]!): UserRole!
 
   """Allows authenticated users to create additional subscriptions"""
-  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, discountCode: String, failureURL: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Float!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String): Payment!
+  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, discountCode: String, failureURL: String, firstPrintIssue: FirstPrintIssueInput, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Float!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String): Payment!
 
   """
   Allows guests and authenticated users to create additional subscriptions
   """
-  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, discountCode: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Float!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
+  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, discountCode: String, firstPrintIssue: FirstPrintIssueInput, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Float!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
 
   """
   Lets a We.Publish supporter open the website as the given user for an hour. Needs a We.Publish login with the impersonate-cms role.
@@ -4486,6 +4634,9 @@ type Mutation {
   """Deletes a rating system answer."""
   deleteRatingSystemAnswer(id: String!): CommentRatingSystemAnswer!
 
+  """Delete a saved recipient filter."""
+  deleteSavedAudienceFilter(id: String!): SavedAudienceFilterModel!
+
   """Deletes an existing subscription."""
   deleteSubscription(id: String!): PublicSubscription!
 
@@ -4596,6 +4747,11 @@ type Mutation {
   importSubscription(
     autoRenew: Boolean!
     extendable: Boolean!
+
+    """
+    «Abo-Start»: the first printed issue is the first one shipped on or after this day.
+    """
+    firstPrintIssueFrom: DateTime
     memberPlanID: String!
     monthlyAmount: Float!
     paidUntil: DateTime
@@ -4757,6 +4913,11 @@ type Mutation {
   revokeUserLoginCode(userId: String!): Boolean!
 
   """
+  Runs today's periodic job again now, also when it already ran tonight. For load tests: only on review, development and local instances. Answers once the run has started; it goes on in the background. Refused while a run is going on.
+  """
+  runPeriodicJobNow: PeriodicJob!
+
+  """
   This mutation sends a login link to the email if the user exists. Method will always return email address
   """
   sendJWTLogin(email: String!): String!
@@ -4787,13 +4948,18 @@ type Mutation {
   """
   setPaymentProviderCustomers(customers: [PaymentProviderCustomerInput!]!, paymentProviderId: String!): Int!
 
+  """
+  Switches a flow on or off. The default flow stays on; a flow switched on must not share subscriptions with another active flow.
+  """
+  setSubscriptionFlowActive(active: Boolean!, id: String!): [SubscriptionFlowModel!]!
+
   """Switch a user between mailed and printed subscription mails"""
   setUserDeliveryMode(channel: MailChannel!, reason: String, userId: String!): UserDeliveryPreferenceModel!
 
   """
-  Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development.
+  Ask the mail provider and the letter provider for the current delivery state of mails and letters that are still open. Complements the provider webhooks, which are not reachable in local development.
   """
-  syncMailLogStates(limit: Int): MailLogSyncModel!
+  syncMailLogStates(limit: Int): MailAndLetterLogSyncModel!
 
   """Sends a test email for the given event"""
   testSystemMail(event: UserEvent!): Boolean!
@@ -4996,7 +5162,7 @@ type Mutation {
   updatePaymentMethod(active: Boolean, description: String, gracePeriod: Int, id: String!, imageId: String, name: String, paymentProviderID: String, slug: Slug): PaymentMethod!
 
   """Updates an existing payment provider setting."""
-  updatePaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_contactSync: Boolean, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], webhookEndpointSecret: String): SettingPaymentProvider!
+  updatePaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_contactSync: Boolean, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailByWePublish: Boolean, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_testMailbox: String, bexio_unitId: Float, bexio_userId: Float, id: String, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], webhookEndpointSecret: String): SettingPaymentProvider!
 
   """Updates a paywall."""
   updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
@@ -5022,6 +5188,11 @@ type Mutation {
   updateRatingSystem(answers: [UpdateCommentRatingSystemAnswerInput!], id: String!, name: String): CommentRatingSystem!
 
   """
+  Rename a saved recipient filter, change its description or replace the filter it holds.
+  """
+  updateSavedAudienceFilter(id: String!, input: UpdateSavedAudienceFilterInput!): SavedAudienceFilterModel!
+
+  """
   Marks an SEO checklist item as done or not done and returns all completed items.
   """
   updateSeoChecklistItem(completed: Boolean!, itemId: String!): [SeoChecklistItem!]!
@@ -5030,10 +5201,37 @@ type Mutation {
   updateSetting(name: SettingName!, value: GraphQLSettingValueType): Setting!
 
   """Updates an existing subscription."""
-  updateSubscription(autoRenew: Boolean, extendable: Boolean, id: String!, memberPlanID: String, monthlyAmount: Float, paidUntil: DateTime, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, properties: [PropertyInput!], startsAt: DateTime, userID: String): PublicSubscription!
+  updateSubscription(
+    autoRenew: Boolean
+    extendable: Boolean
+
+    """
+    «Abo-Start»: the first printed issue is the first one shipped on or after this day.
+    """
+    firstPrintIssueFrom: DateTime
+    id: String!
+    memberPlanID: String
+    monthlyAmount: Float
+    paidUntil: DateTime
+    paymentMethodID: String
+    paymentPeriodicity: PaymentPeriodicity
+    properties: [PropertyInput!]
+    startsAt: DateTime
+    userID: String
+  ): PublicSubscription!
 
   """Update an existing subscription flow"""
-  updateSubscriptionFlow(autoRenewal: [Boolean!], id: String!, paymentMethodIds: [String!], periodicities: [PaymentPeriodicity!]): [SubscriptionFlowModel!]!
+  updateSubscriptionFlow(
+    autoRenewal: [Boolean!]
+    id: String!
+
+    """
+    Whom the flow is for: legacy subscriptions (true), all the others (false), or both, which is the default. Anything but both needs the legacy-subscriptions feature.
+    """
+    legacy: [Boolean!]
+    paymentMethodIds: [String!]
+    periodicities: [PaymentPeriodicity!]
+  ): [SubscriptionFlowModel!]!
 
   """Update an existing subscription interval"""
   updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String, sendAsLetter: Boolean): [SubscriptionFlowModel!]!
@@ -6000,8 +6198,34 @@ type PeriodicJob {
   id: String!
   modifiedAt: DateTime!
   running: Boolean!
+  steps: [PeriodicJobStep!]!
   successfullyFinished: DateTime
   tries: Float!
+}
+
+"""
+What one step of a night did: the job's own steps and the syncs after it.
+"""
+type PeriodicJobStep {
+  counts: [PeriodicJobStepCount!]!
+  error: String
+  finishedAt: DateTime!
+  key: String!
+  startedAt: DateTime!
+  status: PeriodicJobStepStatus!
+}
+
+"""One number a step of the night reports."""
+type PeriodicJobStepCount {
+  name: String!
+  value: Int!
+}
+
+enum PeriodicJobStepStatus {
+  error
+  ok
+  skipped
+  warning
 }
 
 type PeriodicityPrice {
@@ -6272,6 +6496,11 @@ type PrintIssueBexioStats {
   """Found, but of a kind the options leave out."""
   excludedKind: Int!
 
+  """
+  Counting per copy: recipients whose running period already received its number.
+  """
+  exhausted: Int!
+
   """The options asked for bexio and it was read."""
   included: Boolean!
   invoicesInWindow: Int!
@@ -6295,6 +6524,14 @@ type PrintIssueBexioStats {
 type PrintIssueCount {
   count: Int!
   key: String!
+}
+
+"""
+perYear: numbers restart every year («6.26»). continuous: they run on («#117»).
+"""
+enum PrintIssueCounting {
+  continuous
+  perYear
 }
 
 """
@@ -6365,6 +6602,18 @@ input PrintIssueInputModel {
   year: Int!
 }
 
+"""
+How the medium numbers its print issues (settings printIssueNumbering and printIssueLabelFormat).
+"""
+type PrintIssueNumbering {
+  counting: PrintIssueCounting!
+
+  """
+  The label template: {range}, {number}, {yy}, {yyyy}, e.g. «{range}.{yy}» or «#{range}».
+  """
+  format: String!
+}
+
 """What a list is computed from."""
 type PrintIssueOptions {
   """
@@ -6399,6 +6648,26 @@ input PrintIssueOptionsInput {
   includeOpen: Boolean
   includeUpcoming: Boolean
   memberPlanIds: [String!]
+}
+
+"""
+How many of the printed issues a subscription paid for it received, as the print export counts: the running period, else the latest paid one.
+"""
+type PrintIssueProgress {
+  """What the period is worth; null = unlimited (lifetime)."""
+  entitled: Int
+  issues: [ReceivedPrintIssue!]!
+
+  """Still to send, never below 0."""
+  owed: Int!
+  periodId: String!
+
+  """Copies received in that period, historic issues inside it included."""
+  received: Int!
+
+  """Running, or ended and still owed copies within the time of two issues."""
+  relevant: Boolean!
+  subscriptionId: String!
 }
 
 """One line of the print run: one address, `anzahl` copies."""
@@ -6463,6 +6732,10 @@ enum PrintIssueRunMode {
 
 """Subscriptions the run left out, by reason."""
 type PrintIssueSkipped {
+  """
+  Shipped before the first issue the reader chose when subscribing («Abo-Start»).
+  """
+  beforeFirstIssue: Int!
   deactivated: Int!
   donation: Int!
 
@@ -6481,6 +6754,17 @@ type PrintIssueSkipped {
 type PrintIssueSources {
   bexio: Int!
   wepublish: Int!
+}
+
+"""
+The issues a new subscriber chooses the first one from: the last shipped and the next.
+"""
+type PrintIssueStart {
+  """Shipped today at the latest, whatever its status."""
+  current: PublicPrintIssue!
+
+  """Ships later; none until staff created it."""
+  upcoming: PublicPrintIssue
 }
 
 """
@@ -6557,6 +6841,20 @@ input PropertyInput {
   value: String!
 }
 
+"""A printed issue as a new subscriber sees it («Abo-Start»)."""
+type PublicPrintIssue {
+  id: String!
+
+  """The ship day (YYYY-MM-DD)."""
+  issueDate: String!
+
+  """As the medium writes it, e.g. «6.26» or «#117»."""
+  label: String!
+
+  """The topic."""
+  title: String
+}
+
 type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   autoRenew: Boolean!
   canExtend: Boolean!
@@ -6576,9 +6874,24 @@ type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   deactivation: SubscriptionDeactivation
   extendable: Boolean!
   externalReward: String
+
+  """
+  «Abo-Start»: the first printed issue is the first one shipped on or after this day.
+  """
+  firstPrintIssueFrom: DateTime
   goodie: Goodie
   id: String!
+
+  """
+  When the subscription was imported from another system. Null for a subscription created here.
+  """
+  importedAt: DateTime
   isActive: Boolean!
+
+  """
+  Imported from another system and not paid for here yet. The first payment registered here ends it.
+  """
+  legacy: Boolean!
   memberPlan: MemberPlan!
   memberPlanID: String!
   modifiedAt: DateTime!
@@ -6593,6 +6906,11 @@ type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   """
   pendingPaymentMethodChange: SubscriptionPaymentMethodChange
   periods: [SubscriptionPeriod!]!
+
+  """
+  The printed issues the subscription received in its running (else latest paid) period; null where nothing is promised.
+  """
+  printIssueProgress: PrintIssueProgress
   properties: [Property!]!
   startsAt: DateTime!
   url: String!
@@ -6633,6 +6951,11 @@ type Query {
 
   """Returns all analytics provider settings."""
   analyticsProviderSettings(filter: SettingAnalyticsProviderFilter): [SettingAnalyticsProvider!]!
+
+  """
+  Memory and uptime of the API process that answers. For load tests: only on review, development and local instances.
+  """
+  apiProcessStats: ApiProcessStats!
 
   """
   Returns your own api tokens, or everyone's with CAN_GET_ALL_API_TOKENS. Secrets are never included.
@@ -7240,8 +7563,18 @@ type Query {
   """
   printIssueCsv(deliveryId: String, id: String!): PrintIssueFileModel!
 
+  """
+  How the medium numbers its print issues: restarting every year or running on, and the label template.
+  """
+  printIssueNumbering: PrintIssueNumbering!
+
   """The computed list waiting to be checked, if any."""
   printIssueRun(id: String!): PrintIssueRun
+
+  """
+  The issues a new subscriber chooses where the subscription starts from; null while the print export is off or nothing shipped yet.
+  """
+  printIssueStart: PrintIssueStart
 
   """All print issues, the newest first."""
   printIssues: [PrintIssue!]!
@@ -7259,6 +7592,11 @@ type Query {
 
   "\n      Returns the revenue generated for the time period given.\n      Only includes paid invoices that have not been manually paid.\n    "
   revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+
+  """
+  The saved recipient filters, by name. Needs the permission to send manual messages or to manage delivery channels.
+  """
+  savedAudienceFilters: [SavedAudienceFilterModel!]!
 
   """Returns a checklist of the SEO setup of the website."""
   seoChecklist: SeoChecklist!
@@ -7291,6 +7629,11 @@ type Query {
   """
   subscriptionCreationMail(autoRenew: Boolean!, memberPlanID: String!, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, userID: String!): ActionMail!
 
+  """
+  How many subscriptions a flow handles, or would handle once switched on. Not narrowed by any filter.
+  """
+  subscriptionFlowHandledCount(id: String!): Int!
+
   """Returns all subscription flows"""
   subscriptionFlows(defaultFlowOnly: Boolean!, memberPlanId: String): [SubscriptionFlowModel!]!
 
@@ -7298,7 +7641,32 @@ type Query {
   subscriptions(cursorId: String, filter: SubscriptionFilter, order: SortOrder = Ascending, skip: Int = 0, sort: SubscriptionSort = ModifiedAt, take: Int = 10): PublicSubscriptionConnection!
 
   """Returns a paginated list of subscriptions based on the filters given."""
-  subscriptionsAsCsv(activeAt: DateTime, autoRenew: Boolean, cancellationDateFrom: DateFilter, cancellationDateTo: DateFilter, deactivationDateFrom: DateFilter, deactivationDateTo: DateFilter, deactivationReason: String, extendable: Boolean, memberPlanID: String, paidUntilFrom: DateFilter, paidUntilTo: DateFilter, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, startsAtFrom: DateFilter, startsAtTo: DateFilter, subscriptionIDs: [String!], userHasAddress: Boolean, userID: String, userIDs: [String!]): String!
+  subscriptionsAsCsv(
+    activeAt: DateTime
+    autoRenew: Boolean
+    cancellationDateFrom: DateFilter
+    cancellationDateTo: DateFilter
+    deactivationDateFrom: DateFilter
+    deactivationDateTo: DateFilter
+    deactivationReason: String
+    extendable: Boolean
+
+    """
+    true keeps only legacy subscriptions: imported from another system and not paid for here yet. false keeps the rest.
+    """
+    legacy: Boolean
+    memberPlanID: String
+    paidUntilFrom: DateFilter
+    paidUntilTo: DateFilter
+    paymentMethodID: String
+    paymentPeriodicity: PaymentPeriodicity
+    startsAtFrom: DateFilter
+    startsAtTo: DateFilter
+    subscriptionIDs: [String!]
+    userHasAddress: Boolean
+    userID: String
+    userIDs: [String!]
+  ): String!
 
   """Returns a single sync provider setting by id."""
   syncProviderSetting(id: String!): SettingSyncProvider!
@@ -7359,6 +7727,11 @@ type Query {
 
   """The open suggestion for one user, if any"""
   userDeliverySuggestion(userId: String!): DeliverySuggestionModel
+
+  """
+  The email segments the user list can be filtered by, best to worst; placeholder only when a placeholder pattern is configured.
+  """
+  userEmailSegments: [MailEmailSegment!]!
 
   """Get all invoices for the authenticated user"""
   userInvoices: [Invoice!]!
@@ -7456,6 +7829,26 @@ enum RatingSystemType {
   star
 }
 
+"""
+A printed issue a subscription received: a list handed to the printshop.
+"""
+type ReceivedPrintIssue {
+  """0 = the print list, n = Nachlieferung n."""
+  batch: Int!
+
+  """How many issues it counts as: 2 for a double issue."""
+  countsAs: Int!
+
+  """When the list went to the printshop."""
+  deliveredAt: String!
+
+  """The ship day (YYYY-MM-DD)."""
+  issueDate: String!
+
+  """As the medium writes it, e.g. «6.26» or «#117»."""
+  label: String!
+}
+
 type RedeemGiftCodeBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -7536,6 +7929,18 @@ input RichTextBlockInput {
   timing: BlockTimingInput
 }
 
+type SavedAudienceFilterModel {
+  """
+  The MailAudienceInput as it was saved. Rolling dates stay rolling, so the filter means the same thing whenever it is loaded.
+  """
+  audience: JSONObject!
+  createdAt: DateTime!
+  description: String
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+}
+
 enum SellableKind {
   giftCode
 }
@@ -7578,6 +7983,16 @@ type SensitiveDataUser implements BaseUser {
   paymentProviderCustomers: [PaymentProviderCustomer!]
   pendingEmail: String
   permissions: [String!]!
+
+  """
+  The printed issues each of the user's subscriptions received; null without print issues.
+  """
+  printIssueProgress: [PrintIssueProgress!]
+
+  """
+  Printed issues still to send to the user, over subscriptions running or still owed copies; null without printed issues.
+  """
+  printIssuesOwed: Int
   properties: [Property!]!
   roleIDs: [String!]!
   roles: [UserRole!]!
@@ -7873,6 +8288,9 @@ enum SettingName {
   PRINT_BEXIO_KINDS
   PRINT_EXPORT_DEFAULTS
   PRINT_ISSUES_PER_YEAR
+  PRINT_ISSUE_COUNTING
+  PRINT_ISSUE_LABEL_FORMAT
+  PRINT_ISSUE_NUMBERING
   RESET_PASSWORD_JWT_EXPIRES_MIN
   SEND_LOGIN_JWT_EXPIRES_MIN
   SESSION_TTL_DAYS
@@ -7889,6 +8307,7 @@ type SettingPaymentProvider implements SettingProvider {
   bexio_countryId: Float
   bexio_invoiceMailBodyNewMembership: String
   bexio_invoiceMailBodyRenewalMembership: String
+  bexio_invoiceMailByWePublish: Boolean
   bexio_invoiceMailSubjectNewMembership: String
   bexio_invoiceMailSubjectRenewalMembership: String
   bexio_invoiceTemplateNewMembership: String
@@ -7897,6 +8316,7 @@ type SettingPaymentProvider implements SettingProvider {
   bexio_invoiceTitleRenewalMembership: String
   bexio_markInvoiceAsOpen: Boolean
   bexio_taxId: Float
+  bexio_testMailbox: String
   bexio_unitId: Float
   bexio_userId: Float
   createdAt: DateTime!
@@ -8295,6 +8715,11 @@ input SubscriptionFilter {
   deactivationDateTo: DateFilter
   deactivationReason: String
   extendable: Boolean
+
+  """
+  true keeps only legacy subscriptions: imported from another system and not paid for here yet. false keeps the rest.
+  """
+  legacy: Boolean
   memberPlanID: String
   paidUntilFrom: DateFilter
   paidUntilTo: DateFilter
@@ -8308,15 +8733,62 @@ input SubscriptionFilter {
   userIDs: [String!]
 }
 
+"""
+What a list of flows is narrowed by. Each given field narrows the count of every flow to the subscriptions with one of its values.
+"""
+input SubscriptionFlowCountFilter {
+  autoRenewal: [Boolean!]
+  memberPlanIds: [String!]
+  paymentMethodIds: [String!]
+  periodicities: [PaymentPeriodicity!]
+}
+
+"""
+The earliest day an event of a flow may lie on, and what holds it there.
+"""
+type SubscriptionFlowEarliestDay {
+  """Days away from the end of the subscription, negative: before it ends."""
+  days: Int!
+
+  """
+  The shortest periodicity a member plan flow applies to, which sets the day. Null for the default flow: its day is fixed.
+  """
+  periodicity: PaymentPeriodicity
+}
+
 type SubscriptionFlowModel {
+  """
+  An inactive flow is skipped: its subscriptions fall to the next flow. The default flow is always active.
+  """
+  active: Boolean!
+
+  """
+  A flow for the matching subscriptions of every member plan. It comes after the flows of the plan itself and before the default flow, and has no memberPlan.
+  """
+  allMemberPlans: Boolean!
   autoRenewal: [Boolean!]!
   default: Boolean!
+
+  """
+  The earliest day an event of this flow may lie on. Follows from the shortest periodicity the flow applies to.
+  """
+  earliestDay: SubscriptionFlowEarliestDay!
   id: String!
   intervals: [SubscriptionInterval!]!
+
+  """
+  Whom the flow is for: legacy subscriptions (true, imported and not paid for here yet), all the others (false), or both.
+  """
+  legacy: [Boolean!]!
   memberPlan: MemberPlan
   numberOfSubscriptions(memberPlanId: String): Int!
   paymentMethods: [PaymentMethod!]!
   periodicities: [PaymentPeriodicity!]!
+
+  """
+  numberOfSubscriptions, narrowed to what a list of flows is filtered by.
+  """
+  subscriptionCount(filter: SubscriptionFlowCountFilter): Int!
 }
 
 type SubscriptionInterval {
@@ -8813,6 +9285,15 @@ input UpdateCrowdfundingInput {
   name: String
 }
 
+input UpdateSavedAudienceFilterInput {
+  """Replaces the saved filter by this one."""
+  audience: MailAudienceInput
+
+  """An empty text removes the description."""
+  description: String
+  name: String
+}
+
 input UpdateUserSubscriptionInput {
   autoRenew: Boolean!
   id: String!
@@ -8924,6 +9405,10 @@ enum UserEvent {
 }
 
 input UserFilter {
+  """
+  Any of these email segments; the same segments as the mail-send audience.
+  """
+  emailSegments: [MailEmailSegment!]
   name: String
   text: String
   userRole: [String!]
@@ -8974,9 +9459,12 @@ enum UserRoleSort {
 
 enum UserSort {
   CreatedAt
+  EmailQuality
+  EmailQualitySince
   FirstName
   ModifiedAt
   Name
+  PrintIssuesOwed
   SubscriptionCount
 }
 

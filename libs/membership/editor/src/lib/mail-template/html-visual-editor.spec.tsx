@@ -107,3 +107,67 @@ describe('HtmlVisualEditor', () => {
     expect(screen.getByRole('menu')).toBeTruthy();
   });
 });
+
+describe('HtmlVisualEditor on a letter band', () => {
+  const renderBand = () =>
+    render(
+      <MemoryRouter>
+        <ThemeProvider theme={createTheme({ cssVariables: true })}>
+          <HtmlVisualEditor
+            value="<b>Zwölf</b>"
+            onChange={vi.fn()}
+            band={{ heightMm: 30 }}
+          />
+        </ThemeProvider>
+      </MemoryRouter>
+    );
+
+  it('edits the band on a sheet of its printed height', () => {
+    renderBand();
+
+    const srcDoc =
+      screen
+        .getByTitle('mailTemplates.editor.frameTitle')
+        .getAttribute('srcdoc') ?? '';
+
+    expect(srcDoc).toContain('<div class="letter-band"><b>Zwölf</b></div>');
+    expect(srcDoc).toContain('top: 30mm');
+  });
+
+  it('leaves out what only an email can use', () => {
+    renderBand();
+
+    for (const name of [
+      'mailTemplates.editor.desktop',
+      'mailTemplates.editor.tablet',
+      'mailTemplates.editor.mobile',
+      'mailTemplates.editor.button',
+    ]) {
+      expect(within(toolbar()).queryByRole('button', { name })).toBeNull();
+    }
+    expect(
+      within(toolbar()).getByRole('button', {
+        name: 'mailTemplates.editor.image',
+      })
+    ).toBeTruthy();
+  });
+
+  it('offers no login link in the link dialog', async () => {
+    renderBand();
+
+    press(
+      within(toolbar()).getByRole('button', {
+        name: 'mailTemplates.editor.link',
+      })
+    );
+    const dialog = await screen.findByRole('dialog', {
+      name: 'mailTemplates.editor.linkTitle',
+    });
+
+    expect(
+      within(dialog).queryByRole('button', {
+        name: 'mailTemplates.editor.appendJwt',
+      })
+    ).toBeNull();
+  });
+});

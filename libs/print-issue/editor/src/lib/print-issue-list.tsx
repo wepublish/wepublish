@@ -15,6 +15,7 @@ import {
   ClosePrintIssueDocument,
   DeletePrintIssueDocument,
   DuplicatePrintIssueDocument,
+  PrintIssueNumberingDocument,
   PrintIssuesDocument,
   PrintIssueStatus,
   ReopenPrintIssueDocument,
@@ -153,6 +154,9 @@ function PrintIssueList() {
 
   const { data, error, loading } = useQuery(PrintIssuesDocument);
   const issues = data?.printIssues ?? [];
+  // how the medium numbers its issues: the next number and the form follow it
+  const { data: numberingData } = useQuery(PrintIssueNumberingDocument);
+  const numbering = numberingData?.printIssueNumbering;
 
   // The API lists every issue at once (the form needs them all for the next
   // number); the table shows a page of them instead of scrolling.
@@ -474,7 +478,8 @@ function PrintIssueList() {
       <PrintIssueDrawer
         open={creating || !!editId}
         issue={creating ? null : editing}
-        next={nextIssue(issues)}
+        next={nextIssue(issues, numbering?.counting)}
+        numbering={numbering}
         onClose={closeDrawer}
       />
 

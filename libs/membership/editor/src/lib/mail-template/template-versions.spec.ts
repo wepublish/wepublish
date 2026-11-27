@@ -6,7 +6,6 @@ import {
   newVersionDraft,
   removedChannels,
   sharedLetterDraft,
-  sendChannelFor,
   templatesForChannel,
   variantInputs,
 } from './template-versions';
@@ -184,34 +183,6 @@ describe('removedChannels', () => {
         [MailChannel.Letter]: newVersionDraft(),
       })
     ).toEqual([]);
-  });
-});
-
-describe('sendChannelFor', () => {
-  const both = [MailChannel.Mail, MailChannel.Letter];
-
-  it('keeps the chosen channel while the template is written for it', () => {
-    expect(sendChannelFor(both, MailChannel.Letter, both)).toBe(
-      MailChannel.Letter
-    );
-  });
-
-  it('moves to a channel the template has', () => {
-    expect(sendChannelFor([MailChannel.Mail], MailChannel.Letter, both)).toBe(
-      MailChannel.Mail
-    );
-    expect(sendChannelFor([MailChannel.Letter], MailChannel.Mail, both)).toBe(
-      MailChannel.Letter
-    );
-  });
-
-  it('never moves to a channel the medium cannot send on', () => {
-    expect(sendChannelFor(both, MailChannel.Letter, [MailChannel.Mail])).toBe(
-      MailChannel.Mail
-    );
-    expect(
-      sendChannelFor([MailChannel.Letter], MailChannel.Mail, [MailChannel.Mail])
-    ).toBeNull();
   });
 });
 

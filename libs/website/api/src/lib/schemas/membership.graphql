@@ -47,6 +47,7 @@ fragment FullMemberPlan on MemberPlan {
     amountMin
     amountTarget
     amountMax
+    printIssues
   }
   defaultPaymentPeriodicity
   currency
@@ -205,6 +206,7 @@ mutation Subscribe(
   $deactivateSubscriptionId: String
   $discountCode: String
   $goodieId: String
+  $firstPrintIssue: FirstPrintIssueInput
 ) {
   createUserSubscription(
     memberPlanID: $memberPlanId
@@ -220,6 +222,7 @@ mutation Subscribe(
     deactivateSubscriptionId: $deactivateSubscriptionId
     discountCode: $discountCode
     goodieId: $goodieId
+    firstPrintIssue: $firstPrintIssue
   ) {
     ...FullPayment
   }
@@ -237,6 +240,7 @@ mutation Resubscribe(
   $subscriptionProperties: [PropertyInput!]
   $discountCode: String
   $goodieId: String
+  $firstPrintIssue: FirstPrintIssueInput
 ) {
   createUserSubscriptionWithConfirmation(
     userId: $userId
@@ -250,6 +254,7 @@ mutation Resubscribe(
     subscriptionProperties: $subscriptionProperties
     discountCode: $discountCode
     goodieId: $goodieId
+    firstPrintIssue: $firstPrintIssue
   )
 }
 
@@ -497,5 +502,23 @@ query DiscountCodeList(
     }
 
     totalCount
+  }
+}
+
+# «Abo-Start»: the issues a new subscriber chooses the first one from
+query PrintIssueStart {
+  printIssueStart {
+    current {
+      id
+      label
+      title
+      issueDate
+    }
+    upcoming {
+      id
+      label
+      title
+      issueDate
+    }
   }
 }

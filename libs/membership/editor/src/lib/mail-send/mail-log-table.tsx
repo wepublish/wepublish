@@ -26,6 +26,7 @@ import { useTranslation } from 'react-i18next';
 import { MdSync } from 'react-icons/md';
 import { useSearchParams } from 'react-router-dom';
 import { DEFAULT_MUTATION_OPTIONS } from '../common';
+import { useLetterChannel } from '../mail-template/use-letter-channel';
 import {
   formatDateTime,
   MailErrorCell,
@@ -33,6 +34,8 @@ import {
   mailLogTypeLabel,
   MailLogStateLegend,
   MailLogStateTag,
+  MailLogRecipientCell,
+  MailLogTriggerCell,
 } from './mail-log-common';
 
 const DEFAULT_PAGE_SIZE = 50;
@@ -186,6 +189,7 @@ export function MailLogTable() {
     data => data.mailLogs
   );
 
+  const { paperLetters } = useLetterChannel();
   const [syncStates, { loading: syncing }] = useMutation(
     SyncMailLogStatesDocument,
     {
@@ -204,12 +208,21 @@ export function MailLogTable() {
       return;
     }
 
+    // Letters only get a mention where some were asked about; most
+    // installations print none.
     enqueueSnackbar(
-      t('mailLog.sync.done', {
-        checked: sync.checked,
-        updated: sync.updated,
-      }),
-      { variant: sync.updated ? 'success' : 'info' }
+      t(
+        sync.lettersChecked ?
+          'mailLog.sync.doneWithLetters'
+        : 'mailLog.sync.done',
+        {
+          checked: sync.checked,
+          updated: sync.updated,
+          lettersChecked: sync.lettersChecked,
+          lettersUpdated: sync.lettersUpdated,
+        }
+      ),
+      { variant: sync.updated || sync.lettersUpdated ? 'success' : 'info' }
     );
   };
 
@@ -424,7 +437,11 @@ export function MailLogTable() {
         >
           <MdSync /> {t('mailLog.sync.action')}
         </Button>
-        <InfoTooltip text={t('mailLog.sync.hint')} />
+        <InfoTooltip
+          text={t(
+            paperLetters ? 'mailLog.sync.hintWithLetters' : 'mailLog.sync.hint'
+          )}
+        />
       </Toolbar>
 
       <DataTable<FullMailLogFragment>
@@ -450,7 +467,7 @@ export function MailLogTable() {
             id: 'recipient',
             label: t('mailLog.recipient'),
             width: 220,
-            render: log => log.recipient.email,
+            render: log => <MailLogRecipientCell recipient={log.recipient} />,
             exportValue: log => log.recipient.email,
           },
           {
@@ -490,6 +507,22 @@ export function MailLogTable() {
             exportValue: log => mailLogTypeLabel(log.type, t),
           },
           {
+            // For looking something up, not for every day: out of sight
+            // until it is switched on in the column menu.
+            id: 'trigger',
+            defaultHidden: true,
+            label: t('mailLog.trigger'),
+            width: 160,
+            render: log => (
+              <MailLogTriggerCell
+                subscriptionId={log.subscriptionId}
+                invoiceId={log.invoiceId}
+              />
+            ),
+            exportValue: log =>
+              [log.subscriptionId, log.invoiceId].filter(Boolean).join(' · '),
+          },
+          {
             id: 'state',
             columnLabel: t('mailLog.state'),
             label: (
@@ -510,7 +543,12 @@ export function MailLogTable() {
             id: 'error',
             label: t('mailLog.error'),
             width: 240,
-            render: log => <MailErrorCell error={log.error} />,
+            render: log => (
+              <MailErrorCell
+                error={log.error}
+                state={log.state}
+              />
+            ),
             exportValue: log => log.error,
           },
         ]}

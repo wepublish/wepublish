@@ -50,6 +50,10 @@ export class FakeLetterProvider extends BaseLetterProvider {
     this.letters.delete(providerLetterID);
   }
 
+  async deleteLetter(providerLetterID: string): Promise<void> {
+    this.letters.delete(providerLetterID);
+  }
+
   async getLetterFile(providerLetterID: string): Promise<Buffer> {
     const file = this.letters.get(providerLetterID);
 

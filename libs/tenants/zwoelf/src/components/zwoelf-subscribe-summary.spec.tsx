@@ -28,7 +28,20 @@ const renderSummary = (
 
   renderWithProviders(
     <ZwoelfSubscribeStepContext
-      value={{ step, setStep, mode: 'self', setMode: vi.fn() }}
+      value={{
+        step,
+        setStep,
+        mode: 'self',
+        setMode: vi.fn(),
+        // nothing to choose: «Abo-Start» is covered by the block's spec
+        printStart: null,
+        firstIssue: '',
+        setFirstIssue: vi.fn(),
+        firstIssueMissing: false,
+        setFirstIssueMissing: vi.fn(),
+        firstIssueApplies: false,
+        setFirstIssueApplies: vi.fn(),
+      }}
     >
       <ZwoelfSubscribeSummary
         memberPlan={fankurve}

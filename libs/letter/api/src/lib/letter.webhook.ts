@@ -16,6 +16,10 @@ import type { NextFunction } from 'connect';
 import type { NodeRequest, NodeResponse } from '@nestjs/platform-node';
 import { toProviderState } from './letter-context';
 import {
+  reasonAfterLetterState,
+  shouldUpdateLetterLogState,
+} from './letter-log-sync.service';
+import {
   LETTERS_MODULE_OPTIONS,
   LettersModuleOptions,
 } from './letters-module-options';
@@ -69,12 +73,23 @@ export class LetterWebhookController {
         continue;
       }
 
+      const state = toProviderState(status.state);
+
+      if (!shouldUpdateLetterLogState(letterLog.state, state)) {
+        continue;
+      }
+
       await this.prisma.mailLog.update({
         where: { id: letterLog.id },
         data: {
-          state: toProviderState(status.state),
+          state,
           mailData: status.letterData,
           error: status.error ?? letterLog.error,
+          // Without a reason of its own, a letter that is no longer held
+          // drops the issue it was held for.
+          ...(status.error ?
+            {}
+          : reasonAfterLetterState(letterLog.state, state)),
         },
       });
     }

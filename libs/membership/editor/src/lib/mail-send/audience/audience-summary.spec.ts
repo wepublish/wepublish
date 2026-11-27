@@ -41,6 +41,15 @@ describe('describeAudience', () => {
     ]);
   });
 
+  it('says when the audience is narrowed to legacy subscriptions', () => {
+    expect(
+      describeAudience({ base: 'hasSubscription', isLegacy: true }, lookups)
+    ).toEqual([
+      'mailSend.base.hasSubscription',
+      'mailSend.isLegacy: mailSend.yes',
+    ]);
+  });
+
   it('reads each mail-history condition as a sentence', () => {
     expect(
       describeAudience(
@@ -68,6 +77,56 @@ describe('describeAudience', () => {
       'mailSend.audienceSummary.mailHistory: mailSend.audienceSummary.notReceived «Adressänderung» (mailSend.mailHistory.states.delivered, mailSend.channel.letter) mailSend.audienceSummary.between:{"from":"2026-01-01","to":"2026-01-31"}',
       'mailSend.audienceSummary.mailHistory: mailSend.audienceSummary.received «tpl-unknown»',
       'mailSend.audienceSummary.matchAny',
+    ]);
+  });
+
+  it('says when a condition is bound to the subscription or to an open invoice', () => {
+    expect(
+      describeAudience(
+        {
+          base: 'hasSubscription',
+          mailHistory: {
+            conditions: [
+              {
+                mailTemplateId: 'tpl-1',
+                scope: 'subscription',
+                onlyOpenInvoice: true,
+              },
+            ],
+          },
+        },
+        lookups
+      )
+    ).toEqual([
+      'mailSend.base.hasSubscription',
+      'mailSend.audienceSummary.mailHistory: mailSend.audienceSummary.received «Adressänderung» (mailSend.audienceSummary.onSubscription, mailSend.audienceSummary.onlyOpenInvoice)',
+    ]);
+  });
+
+  it('reads rolling ranges and a minimum count in words', () => {
+    expect(
+      describeAudience(
+        {
+          base: 'hasSubscription',
+          startsAtRolling: { kind: 'lastDays', days: 30 },
+          endsAtRolling: { kind: 'nextDays', days: 14 },
+          mailHistory: {
+            conditions: [
+              {
+                mailTemplateId: 'tpl-1',
+                minCount: 2,
+                rolling: { kind: 'olderThanDays', days: 14 },
+              },
+            ],
+          },
+        },
+        lookups
+      )
+    ).toEqual([
+      'mailSend.base.hasSubscription',
+      'mailSend.startsAt: mailSend.audienceSummary.rolling.lastDays:{"days":30}',
+      'mailSend.endsAt: mailSend.audienceSummary.rolling.nextDays:{"days":14}',
+      'mailSend.audienceSummary.mailHistory: mailSend.audienceSummary.received «Adressänderung» (mailSend.audienceSummary.minCount:{"count":2}) mailSend.audienceSummary.rolling.olderThanDays:{"days":14}',
     ]);
   });
 

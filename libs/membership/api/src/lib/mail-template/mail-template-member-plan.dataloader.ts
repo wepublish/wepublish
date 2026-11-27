@@ -7,7 +7,8 @@ export type MailTemplateMemberPlan = { id: string; name: string };
 /**
  * The member plans whose communication flow sends a template, for the
  * template table. Asked once per row, so it is one query for the whole list.
- * The default flow belongs to no plan and adds nothing here.
+ * The default flow and the flows for all plans belong to no plan and add
+ * nothing here.
  */
 @Injectable({
   scope: Scope.REQUEST,

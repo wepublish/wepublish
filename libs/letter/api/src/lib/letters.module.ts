@@ -15,6 +15,7 @@ import {
   mailAttachmentsEnabled,
 } from './gated-letter-sender';
 import { LetterContext } from './letter-context';
+import { LetterLogSyncService } from './letter-log-sync.service';
 import { LetterLayoutResolver } from './letter-layout/letter-layout.resolver';
 import { LetterLayoutService } from './letter-layout/letter-layout.service';
 import {
@@ -46,6 +47,7 @@ export class LettersModule {
       providers: this.createAsyncProviders(options),
       exports: [
         LetterContext,
+        LetterLogSyncService,
         LETTER_SENDER,
         DocumentAttachmentRenderer,
         MAIL_ATTACHMENT_RENDERER,
@@ -58,6 +60,7 @@ export class LettersModule {
   ): Provider[] {
     return [
       LetterWebhookMiddleware,
+      LetterLogSyncService,
       // Stationery lives here because its preview needs the LetterContext the
       // factory below builds.
       LetterLayoutService,

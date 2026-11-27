@@ -3,13 +3,26 @@ import '@testing-library/jest-dom/vitest';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 
+import { MailEmailSegment } from '@wepublish/editor/api';
+
 import { ListViewFilters, ListViewFiltersProps } from './list-view-filters';
 
 const theme = createTheme({ cssVariables: true });
 
+const { offeredSegments } = vi.hoisted(() => ({
+  offeredSegments: { current: undefined as string[] | undefined },
+}));
+
 vi.mock('@apollo/client/react', () => ({
   useLazyQuery: () => [vi.fn(), { data: undefined }],
-  useQuery: () => ({ data: undefined, loading: false, refetch: vi.fn() }),
+  useQuery: (_document: unknown, options?: { skip?: boolean }) => ({
+    data:
+      options?.skip || !offeredSegments.current ?
+        undefined
+      : { userEmailSegments: offeredSegments.current },
+    loading: false,
+    refetch: vi.fn(),
+  }),
   useApolloClient: () => ({ query: vi.fn() }),
 }));
 
@@ -232,5 +245,101 @@ describe('ListViewFilters tags', () => {
     expect(
       screen.getByText('navbar.articleTags', { selector: 'label' })
     ).toBeInTheDocument();
+  });
+});
+
+describe('ListViewFilters email segments', () => {
+  const ALL = [
+    MailEmailSegment.Active,
+    MailEmailSegment.Unknown,
+    MailEmailSegment.Unresponsive,
+    MailEmailSegment.Dead,
+    MailEmailSegment.Placeholder,
+  ];
+
+  beforeEach(() => {
+    offeredSegments.current = ALL;
+  });
+
+  const openSegments = () => {
+    fireEvent.mouseDown(
+      screen.getByRole('combobox', { name: 'userList.overview.emailQuality' })
+    );
+
+    return screen.getByRole('listbox');
+  };
+
+  it('offers the segments the API offers, with the short list labels', () => {
+    renderFilters({ fields: ['emailSegments'] });
+
+    const listbox = openSegments();
+
+    for (const segment of ALL) {
+      expect(
+        within(listbox).getByText(`userList.overview.emailSegments.${segment}`)
+      ).toBeInTheDocument();
+    }
+  });
+
+  it('offers no placeholder when the API leaves it out', () => {
+    offeredSegments.current = ALL.filter(
+      segment => segment !== MailEmailSegment.Placeholder
+    );
+    renderFilters({ fields: ['emailSegments'] });
+
+    expect(
+      within(openSegments()).queryByText(
+        'userList.overview.emailSegments.placeholder'
+      )
+    ).not.toBeInTheDocument();
+  });
+
+  it('turns picked segments into the filter', () => {
+    const onSetFilter = vi.fn();
+    renderFilters({
+      fields: ['emailSegments'],
+      filter: { emailSegments: [MailEmailSegment.Dead] },
+      onSetFilter,
+    });
+
+    fireEvent.click(
+      within(openSegments()).getByText(
+        'userList.overview.emailSegments.unresponsive'
+      )
+    );
+
+    expect(onSetFilter).toHaveBeenCalledWith(
+      expect.objectContaining({
+        // in option order, best to worst
+        emailSegments: [MailEmailSegment.Unresponsive, MailEmailSegment.Dead],
+      })
+    );
+  });
+
+  it('drops the filter when the last segment is deselected', () => {
+    const onSetFilter = vi.fn();
+    renderFilters({
+      fields: ['emailSegments'],
+      filter: { emailSegments: [MailEmailSegment.Dead] },
+      onSetFilter,
+    });
+
+    fireEvent.click(
+      within(openSegments()).getByText('userList.overview.emailSegments.dead')
+    );
+
+    expect(onSetFilter).toHaveBeenCalledWith(
+      expect.objectContaining({ emailSegments: null })
+    );
+  });
+
+  it('is left out unless asked for', () => {
+    renderFilters({ fields: ['text'] });
+
+    expect(
+      screen.queryByRole('combobox', {
+        name: 'userList.overview.emailQuality',
+      })
+    ).not.toBeInTheDocument();
   });
 });

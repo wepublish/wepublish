@@ -196,7 +196,12 @@ const KINDS = [
   },
 ];
 
-const INPUT = { issue: '6.26', date: '2026-10-13', bexioKinds: KINDS };
+const INPUT = {
+  issue: '6.26',
+  numbers: { number: 6, year: 2026 },
+  date: '2026-10-13',
+  bexioKinds: KINDS,
+};
 
 describe('runExport', () => {
   it('joins both sources into rows, recipient drafts, a summary and a file name', async () => {
@@ -310,6 +315,28 @@ describe('runExport', () => {
     );
   });
 
+  it("takes the year from the issue's numbers, not from its label", async () => {
+    bexio.invoicesInWindow.mockClear();
+
+    const result = await runExport(
+      {
+        ...INPUT,
+        issue: '#117',
+        numbers: { number: 117, year: 2026 },
+        numbering: { counting: 'continuous', format: '#{range}' },
+      },
+      { members, bexio }
+    );
+
+    // the five years before the issue's year, as for «6.26»
+    expect(bexio.invoicesInWindow).toHaveBeenCalledWith(
+      '2021-01-01',
+      '2026-12-31'
+    );
+    expect(result.filename).toBe('druckliste-117-2026-10-13.csv');
+    expect(result.summary.issue).toBe('#117');
+  });
+
   it('runs without bexio and says so', async () => {
     const result = await runExport(INPUT, { members, bexio: null });
 
@@ -369,6 +396,7 @@ describe('runExport', () => {
       {
         ...INPUT,
         issue: '1.27',
+        numbers: { number: 1, year: 2027 },
         date: '2027-01-15',
         quota: { issuesPerYear: 6, historicIssues: [] },
         bexioDelivered: { '1:11:2026-01-01': 5 },
@@ -385,6 +413,52 @@ describe('runExport', () => {
       bexioPeriodFrom: '2026-01-01',
     });
     expect(result.summary.grace).toBe(1);
+  });
+
+  it('stops a running bexio period that got its number when counting per copy', async () => {
+    const run = (counting: 'perPeriod' | 'perCopy') =>
+      runExport(
+        {
+          ...INPUT,
+          quota: { issuesPerYear: 6, historicIssues: [], counting },
+          bexioDelivered: { '1:11:2026-01-01': 6 },
+        },
+        { members: membersOf([]), bexio }
+      );
+
+    const perCopy = await run('perCopy');
+    expect(perCopy.rows.filter(r => r.quelle === 'bexio')).toEqual([]);
+    expect(perCopy.summary.bexio).toMatchObject({ exhausted: 1 });
+
+    const perPeriod = await run('perPeriod');
+    expect(perPeriod.rows.filter(r => r.quelle === 'bexio')).toHaveLength(1);
+    expect(perPeriod.summary.bexio).toMatchObject({ exhausted: 0 });
+  });
+
+  it('keeps a Nachlieferung to the readers whose chosen first issue it is', async () => {
+    // 6.26 shipped on 13.10.2026; both readers subscribed on 20.10.2026
+    const reader = (id: string, userId: string, firstIssueFrom: string) =>
+      subscription({
+        id,
+        userId,
+        startsAt: '2026-10-20T00:00:00.000Z',
+        paidUntil: '2027-10-19T00:00:00.000Z',
+        firstIssueFrom,
+      });
+
+    const result = await runExport(
+      { ...INPUT, date: '2026-11-02', shipDay: '2026-10-13' },
+      {
+        members: membersOf([
+          reader('s-current', 'u1', '2026-10-13'),
+          reader('s-next', 'u3', '2026-10-14'),
+        ]),
+        bexio: null,
+      }
+    );
+
+    expect(result.recipients.map(r => r.subscriptionId)).toEqual(['s-current']);
+    expect(result.summary.skipped).toMatchObject({ beforeFirstIssue: 1 });
   });
 
   it('lists nothing from bexio and says why while no kind is configured', async () => {
@@ -478,7 +552,13 @@ describe('runExport', () => {
 
     // a double issue covers two of the copies still owed
     const double = await runExport(
-      { ...INPUT, issue: '3/4.26', countsAs: 2, quota },
+      {
+        ...INPUT,
+        issue: '3/4.26',
+        numbers: { number: 3, numberTo: 4, year: 2026 },
+        countsAs: 2,
+        quota,
+      },
       { members: source, bexio: null }
     );
     expect(double.rows[1]?.zahlungsstatus).toBe('Restexemplar 2–3/6');

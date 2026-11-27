@@ -15,6 +15,7 @@ import {
   Letters,
   OAuth,
   PingenError,
+  PingenResponse,
   PrintMode,
   PrintSpectrum,
 } from 'pingen2-sdk-js';
@@ -79,7 +80,9 @@ const WEBHOOK_STATES: Record<string, LetterState> = {
   webhook_sent: LetterState.dispatched,
   webhook_delivered: LetterState.delivered,
   webhook_undeliverable: LetterState.undeliverable,
-  webhook_issues: LetterState.rejected,
+  // Pingen keeps a letter with an issue until someone looks at it there; it
+  // did not turn the letter away.
+  webhook_issues: LetterState.actionRequired,
 };
 
 const LETTER_STATES: Record<string, LetterState> = {
@@ -88,6 +91,13 @@ const LETTER_STATES: Record<string, LetterState> = {
   pending: LetterState.accepted,
   processing: LetterState.accepted,
   validating: LetterState.accepted,
+  // Passed Pingen's check and waits to be sent: also where a held letter
+  // lands once its issue is fixed there.
+  valid: LetterState.accepted,
+  // Released for printing, by a person or by auto send.
+  accepted: LetterState.accepted,
+  action_required: LetterState.actionRequired,
+  invalid: LetterState.actionRequired,
   sending: LetterState.accepted,
   sent: LetterState.dispatched,
   dispatched: LetterState.dispatched,
@@ -247,6 +257,12 @@ export class PingenLetterProvider extends BaseLetterProvider {
     await this.call(() => letters.cancel(providerLetterID));
   }
 
+  async deleteLetter(providerLetterID: string): Promise<void> {
+    const { letters } = await this.connect(await this.requireConfig());
+
+    await this.call(() => letters.delete(providerLetterID));
+  }
+
   async getLetterFile(providerLetterID: string): Promise<Buffer> {
     const config = await this.requireConfig();
     const { oauth } = await this.connect(config);
@@ -298,9 +314,26 @@ export class PingenLetterProvider extends BaseLetterProvider {
     const states: LetterProviderMessageState[] = [];
 
     for (const providerLetterID of providerLetterIDs) {
-      const response = await this.call(() =>
-        letters.getDetails(providerLetterID)
-      );
+      let response: PingenResponse;
+
+      try {
+        response = await this.call(() => letters.getDetails(providerLetterID));
+      } catch (error) {
+        // A letter deleted at Pingen must not keep every other one from
+        // being read. Anything else, like refused credentials, has to fail.
+        if (error instanceof LetterProviderError && error.statusCode === 404) {
+          states.push({
+            providerLetterID,
+            state: LetterState.canceled,
+            gone: true,
+          });
+
+          continue;
+        }
+
+        throw error;
+      }
+
       const resource = await this.call(() =>
         response.toResource<LetterAttributes>()
       );

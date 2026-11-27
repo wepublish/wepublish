@@ -59,6 +59,55 @@ describe('bexioContactFields', () => {
     expect(fields.address_addition).toBe('Postfach 12');
   });
 
+  // bexio answers a contact with an address addition but no street with 422,
+  // and the same push runs before every invoice. A reader whose address is
+  // only a P.O. box keeps it in the second line.
+  it('sends the second street line as the street of a reader without a street', () => {
+    const fields = bexioContactFields(
+      reader(
+        {},
+        {
+          streetAddress: '',
+          streetAddressNumber: '',
+          streetAddress2: 'Postfach',
+          streetAddress2Number: '567',
+        }
+      ),
+      1
+    );
+
+    expect(fields).toMatchObject({
+      street_name: 'Postfach 567',
+      house_number: '',
+      address_addition: '',
+    });
+  });
+
+  it('treats a street of blanks as no street', () => {
+    const fields = bexioContactFields(
+      reader({}, { streetAddress: '  ', streetAddress2: 'Case postale 84' }),
+      1
+    );
+
+    expect(fields).toMatchObject({
+      street_name: 'Case postale 84',
+      address_addition: '',
+    });
+  });
+
+  it('keeps a house number where it is when only the street name is missing', () => {
+    const fields = bexioContactFields(
+      reader({}, { streetAddress: null, streetAddress2: 'Kartause Ittingen' }),
+      1
+    );
+
+    expect(fields).toMatchObject({
+      street_name: 'Kartause Ittingen',
+      house_number: '7',
+      address_addition: '',
+    });
+  });
+
   it('clears the address of a reader without one', () => {
     expect(bexioContactFields(reader({}, null), 1)).toMatchObject({
       street_name: '',

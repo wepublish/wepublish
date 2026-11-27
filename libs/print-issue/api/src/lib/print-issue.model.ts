@@ -18,6 +18,11 @@ import type {
   PrintIssueWithDeliveries,
 } from './print-issue.service';
 import { dbDateToYmd } from './rules/dates';
+import {
+  DEFAULT_ISSUE_NUMBERING,
+  type IssueCounting,
+  type IssueNumberingConfig,
+} from '@wepublish/utils';
 import { issueLabel } from './rules/issue';
 
 export const PrintIssueRunModeEnum = {
@@ -172,6 +177,12 @@ export class PrintIssueSkipped {
       "Plan sets 0 printed issues for the subscription's periodicity.",
   })
   noPrintIssues!: number;
+
+  @Field(() => Int, {
+    description:
+      'Shipped before the first issue the reader chose when subscribing («Abo-Start»).',
+  })
+  beforeFirstIssue!: number;
 }
 
 @ObjectType()
@@ -233,6 +244,12 @@ export class PrintIssueBexioStats {
       'Invoices whose billed quantity differs from the linked recipients.',
   })
   quantityMismatch!: number;
+
+  @Field(() => Int, {
+    description:
+      'Counting per copy: recipients whose running period already received its number.',
+  })
+  exhausted!: number;
 }
 
 @ObjectType({ description: 'What one run of the export found.' })
@@ -592,6 +609,32 @@ export class PrintBexioKind {
   refersTo!: string;
 }
 
+export const PrintIssueCountingEnum = {
+  perYear: 'perYear',
+  continuous: 'continuous',
+} as const satisfies Record<IssueCounting, IssueCounting>;
+
+registerEnumType(PrintIssueCountingEnum, {
+  name: 'PrintIssueCounting',
+  description:
+    'perYear: numbers restart every year («6.26»). continuous: they run on («#117»).',
+});
+
+@ObjectType({
+  description:
+    'How the medium numbers its print issues (settings printIssueNumbering and printIssueLabelFormat).',
+})
+export class PrintIssueNumbering {
+  @Field(() => PrintIssueCountingEnum)
+  counting!: IssueCounting;
+
+  @Field({
+    description:
+      'The label template: {range}, {number}, {yy}, {yyyy}, e.g. «{range}.{yy}» or «#{range}».',
+  })
+  format!: string;
+}
+
 @ObjectType({ description: 'What the options can do on this medium.' })
 export class PrintExportContext {
   @Field({
@@ -636,6 +679,7 @@ const NO_SKIPS: PrintIssueSkipped = {
   lapsed: 0,
   exhausted: 0,
   noPrintIssues: 0,
+  beforeFirstIssue: 0,
 };
 
 export const toSummaryModel = (summary: Summary): PrintIssueSummary => ({
@@ -647,6 +691,7 @@ export const toSummaryModel = (summary: Summary): PrintIssueSummary => ({
     excludedKind: 0,
     skippedOpen: 0,
     quantityMismatch: 0,
+    exhausted: 0,
     noValidPeriod:
       (summary.bexio as { einzelheftOhneAusgabe?: number } | undefined)
         ?.einzelheftOhneAusgabe ?? 0,
@@ -666,10 +711,11 @@ export const toDeliveryModel = (
 });
 
 export const toPrintIssueModel = (
-  issue: PrintIssueWithDeliveries
+  issue: PrintIssueWithDeliveries,
+  numbering: IssueNumberingConfig = DEFAULT_ISSUE_NUMBERING
 ): PrintIssueModel => ({
   ...issue,
-  label: issueLabel(issue),
+  label: issueLabel(issue, numbering),
   issueDate: dbDateToYmd(issue.issueDate),
   options: optionsOf(issue.options),
   deliveries: issue.deliveries.map(toDeliveryModel),

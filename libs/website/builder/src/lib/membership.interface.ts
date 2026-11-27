@@ -328,6 +328,14 @@ export type BuilderSubscribeProps<
   onInvalid?: (errors: FieldErrors) => void;
   giftCodeRedemptionUrl?: string | null;
   giftCodeRedemptionText?: string | null;
+  /**
+   * What a tenant adds to the subscription on submit, e.g. the first printed
+   * issue its own section asked for; false stops the submit because something
+   * the tenant needs is missing.
+   */
+  subscribeExtras?: () =>
+    | Partial<Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>>
+    | false;
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>;
 
 type BuilderChallengeResult = Pick<

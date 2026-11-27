@@ -1324,7 +1324,7 @@ export function Base({ children }: BaseProps) {
                     ]}
                   >
                     <SidebarNavItem
-                      href="/communicationflows/edit/default"
+                      href="/communicationflows"
                       icon={<MdOutgoingMail />}
                     >
                       {t('navbar.subscriptionSettings')}

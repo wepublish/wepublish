@@ -19,5 +19,8 @@ export * from './lib/delivery-mode/user-delivery-mode-panel';
 export * from './lib/delivery-mode/delivery-channel-page';
 export * from './lib/memberplan/memberplan-edit';
 export * from './lib/system-mail/system-mail-section';
+export * from './lib/subscription-flow/flow-overview';
+export * from './lib/subscription-flow/legacy-flow-redirect';
 export * from './lib/subscription-flow/subscription-flow-list';
+export * from './lib/subscription-flow/subscription-flow-overview';
 export * from './lib/periodic-job/periodic-job-logs';

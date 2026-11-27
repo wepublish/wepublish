@@ -34,6 +34,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { Property } from '@wepublish/property/api';
+import { isLegacySubscription } from '../subscription/legacy-subscription';
 
 export type MemberPlanWithPaymentMethods = MemberPlan & {
   availablePaymentMethods: AvailablePaymentMethod[];
@@ -294,6 +295,7 @@ export class MemberContext implements MemberContextInterface {
         paymentMethodId: subscription.paymentMethodID,
         periodicity: subscription.paymentPeriodicity,
         autorenwal: subscription.autoRenew,
+        legacy: isLegacySubscription(subscription),
         events: [SubscriptionEvent.DEACTIVATION_UNPAID],
       });
       const subscriptionFlowActionDeactivationUnpaid = subscriptionFlows.find(
@@ -512,6 +514,8 @@ export class MemberContext implements MemberContextInterface {
           },
           mailType: mailLogType.UserFlow,
           asLetter: action.sendAsLetter,
+          subscriptionId: subscription.id,
+          invoiceId: invoice.id,
         });
       } else {
         logger('memberContext').info(
@@ -773,6 +777,7 @@ export class MemberContext implements MemberContextInterface {
     discountCodeId,
     goodieId,
     skipMail,
+    firstPrintIssueFrom,
   }: {
     userID: string;
     paymentMethodID: string;
@@ -790,6 +795,8 @@ export class MemberContext implements MemberContextInterface {
     goodieId?: string;
     /** Set when an editor creates the subscription and chose not to mail the reader. */
     skipMail?: boolean;
+    /** «Abo-Start»: the first printed issue is the first shipped on or after this day. */
+    firstPrintIssueFrom?: Date | null;
   }): Promise<{
     subscription: SubscriptionWithRelations;
     invoice: InvoiceWithItems;
@@ -841,6 +848,7 @@ export class MemberContext implements MemberContextInterface {
         extendable,
         currency: memberPlan.currency,
         confirmed: !needsConfirmation,
+        firstPrintIssueFrom: firstPrintIssueFrom ?? null,
       },
       include: {
         deactivation: true,
@@ -999,6 +1007,7 @@ export class MemberContext implements MemberContextInterface {
         autoRenew,
         extendable,
         currency: memberPlan.currency,
+        importedAt: now,
       },
       include: {
         deactivation: true,
@@ -1138,6 +1147,7 @@ export class MemberContext implements MemberContextInterface {
       },
       mailType: mailLogType.UserFlow,
       asLetter: action.sendAsLetter,
+      subscriptionId: subscription.id,
     });
   }
 }

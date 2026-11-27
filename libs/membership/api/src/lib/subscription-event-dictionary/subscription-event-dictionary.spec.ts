@@ -46,6 +46,7 @@ describe('SubscriptionEventDictionary', () => {
         memberPlanId: null,
         periodicities: [PaymentPeriodicity.monthly, PaymentPeriodicity.yearly],
         autoRenewal: [true, false],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [
@@ -64,6 +65,7 @@ describe('SubscriptionEventDictionary', () => {
         memberPlanId: 'custom-plan-1',
         periodicities: [PaymentPeriodicity.yearly],
         autoRenewal: [true],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [
@@ -101,6 +103,7 @@ describe('SubscriptionEventDictionary', () => {
       periodicity: PaymentPeriodicity.yearly,
       paymentMethodId: 'stripe',
       autorenwal: true,
+      legacy: false,
     });
 
     expect(actions.length).toBeGreaterThanOrEqual(2);
@@ -130,6 +133,7 @@ describe('SubscriptionEventDictionary', () => {
           PaymentPeriodicity.lifetime,
         ],
         autoRenewal: [true, false],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [
@@ -161,6 +165,7 @@ describe('SubscriptionEventDictionary', () => {
       periodicity: PaymentPeriodicity.biannual,
       paymentMethodId: 'payrexx',
       autorenwal: false,
+      legacy: false,
     });
 
     expect(actions.length).toBeGreaterThanOrEqual(1);
@@ -181,6 +186,7 @@ describe('SubscriptionEventDictionary', () => {
         memberPlanId: null,
         periodicities: [PaymentPeriodicity.yearly],
         autoRenewal: [true],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [],
@@ -192,6 +198,7 @@ describe('SubscriptionEventDictionary', () => {
         memberPlanId: 'custom-plan-1',
         periodicities: [PaymentPeriodicity.yearly],
         autoRenewal: [true],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [
@@ -229,6 +236,7 @@ describe('SubscriptionEventDictionary', () => {
       periodicity: PaymentPeriodicity.yearly,
       paymentMethodId: 'stripe',
       autorenwal: true,
+      legacy: false,
       daysAwayFromEnding: -7,
     });
 
@@ -245,6 +253,7 @@ describe('SubscriptionEventDictionary', () => {
         memberPlanId: null,
         periodicities: [PaymentPeriodicity.yearly],
         autoRenewal: [true, false],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [],
@@ -256,6 +265,7 @@ describe('SubscriptionEventDictionary', () => {
         memberPlanId: 'custom-plan-1',
         periodicities: [PaymentPeriodicity.yearly],
         autoRenewal: [false],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [
@@ -295,6 +305,7 @@ describe('SubscriptionEventDictionary', () => {
       periodicity: PaymentPeriodicity.yearly,
       paymentMethodId: 'stripe',
       autorenwal: false,
+      legacy: false,
       events: [
         SubscriptionEvent.INVOICE_CREATION,
         SubscriptionEvent.DEACTIVATION_UNPAID,
@@ -314,6 +325,7 @@ describe('SubscriptionEventDictionary', () => {
         memberPlanId: 'custom-plan-1',
         periodicities: [PaymentPeriodicity.yearly],
         autoRenewal: [true],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [],
@@ -329,6 +341,7 @@ describe('SubscriptionEventDictionary', () => {
         periodicity: PaymentPeriodicity.yearly,
         paymentMethodId: 'stripe',
         autorenwal: true,
+        legacy: false,
       })
     ).rejects.toThrow('Default user subscription flow not found!');
   });
@@ -341,6 +354,7 @@ describe('SubscriptionEventDictionary', () => {
         memberPlanId: null,
         periodicities: [PaymentPeriodicity.yearly],
         autoRenewal: [true],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [],
@@ -356,6 +370,7 @@ describe('SubscriptionEventDictionary', () => {
         periodicity: PaymentPeriodicity.yearly,
         paymentMethodId: 'stripe',
         autorenwal: true,
+        legacy: false,
         daysAwayFromEnding: 10,
         events: [SubscriptionEvent.INVOICE_CREATION],
       })
@@ -480,6 +495,7 @@ describe('SubscriptionEventDictionary', () => {
         memberPlanId: null,
         periodicities: [PaymentPeriodicity.yearly],
         autoRenewal: [true],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [],
@@ -491,6 +507,7 @@ describe('SubscriptionEventDictionary', () => {
         memberPlanId: null,
         periodicities: [PaymentPeriodicity.monthly],
         autoRenewal: [true],
+        legacy: [true, false],
         createdAt: new Date(),
         modifiedAt: new Date(),
         intervals: [],
@@ -506,10 +523,200 @@ describe('SubscriptionEventDictionary', () => {
         periodicity: PaymentPeriodicity.yearly,
         paymentMethodId: 'stripe',
         autorenwal: true,
+        legacy: false,
       })
     ).rejects.toThrow(
       'Subscription Flow with no memberplan found that is not default! This is a data integrity error!'
     );
+  });
+
+  // Plan flow first, then a flow for all plans, then the default flow.
+  describe('a flow for all member plans', () => {
+    const flow = (overrides: Record<string, unknown>) => ({
+      id: 'flow',
+      default: false,
+      allMemberPlans: false,
+      memberPlanId: null,
+      periodicities: [PaymentPeriodicity.yearly],
+      autoRenewal: [true],
+      createdAt: new Date(),
+      modifiedAt: new Date(),
+      paymentMethods: [{ id: 'payrexx' }],
+      legacy: [true, false],
+      ...overrides,
+      intervals: [
+        {
+          id: `${overrides.id}-subscribe`,
+          event: SubscriptionEvent.SUBSCRIBE,
+          daysAwayFromEnding: null,
+          mailTemplate: { id: `${overrides.id}-SUBSCRIBE` },
+          sendAsLetter: false,
+        },
+      ],
+    });
+
+    const defaultFlow = flow({ id: 'default', default: true });
+    const allPlansYearly = flow({ id: 'all-plans', allMemberPlans: true });
+    const planYearly = flow({ id: 'plan', memberPlanId: 'plan-1' });
+
+    const templateFor = async (
+      flows: unknown[],
+      query: Partial<{ memberplanId: string; periodicity: PaymentPeriodicity }>
+    ) => {
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue(flows);
+
+      const actions = await new SubscriptionEventDictionary(
+        prismaMock as any
+      ).getActionsForSubscriptions({
+        memberplanId: 'plan-2',
+        periodicity: PaymentPeriodicity.yearly,
+        paymentMethodId: 'payrexx',
+        autorenwal: true,
+        legacy: false,
+        events: [SubscriptionEvent.SUBSCRIBE],
+        ...query,
+      });
+
+      return actions[0]?.mailTemplateId;
+    };
+
+    it('takes the matching subscriptions of a plan that has no flow for them', async () => {
+      await expect(
+        templateFor([defaultFlow, planYearly, allPlansYearly], {})
+      ).resolves.toBe('all-plans-SUBSCRIBE');
+    });
+
+    it('leaves a subscription to the flow of its own plan', async () => {
+      await expect(
+        templateFor([defaultFlow, allPlansYearly, planYearly], {
+          memberplanId: 'plan-1',
+        })
+      ).resolves.toBe('plan-SUBSCRIBE');
+    });
+
+    it('leaves what its conditions do not match to the default flow', async () => {
+      await expect(
+        templateFor([defaultFlow, allPlansYearly], {
+          periodicity: PaymentPeriodicity.monthly,
+        })
+      ).resolves.toBe('default-SUBSCRIBE');
+    });
+
+    it('takes any payment method and renewal where those are left open', async () => {
+      const anyYearly = flow({
+        id: 'any-yearly',
+        allMemberPlans: true,
+        paymentMethods: [],
+        autoRenewal: [],
+      });
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([
+        defaultFlow,
+        anyYearly,
+      ]);
+
+      const actions = await new SubscriptionEventDictionary(
+        prismaMock as any
+      ).getActionsForSubscriptions({
+        memberplanId: 'plan-2',
+        periodicity: PaymentPeriodicity.yearly,
+        paymentMethodId: 'stripe',
+        autorenwal: false,
+        legacy: false,
+        events: [SubscriptionEvent.SUBSCRIBE],
+      });
+
+      expect(actions[0].mailTemplateId).toBe('any-yearly-SUBSCRIBE');
+    });
+
+    it('does not read an open condition of a member plan flow as any', async () => {
+      await expect(
+        templateFor(
+          [
+            defaultFlow,
+            flow({ id: 'plan', memberPlanId: 'plan-2', paymentMethods: [] }),
+          ],
+          {}
+        )
+      ).resolves.toBe('default-SUBSCRIBE');
+    });
+
+    // A switched-off flow passes its subscriptions to the next one.
+    it('skips an inactive flow', async () => {
+      await expect(
+        templateFor(
+          [
+            defaultFlow,
+            { ...planYearly, active: false },
+            { ...allPlansYearly, active: false },
+          ],
+          { memberplanId: 'plan-1' }
+        )
+      ).resolves.toBe('default-SUBSCRIBE');
+    });
+
+    it('looks up the template of an event in the same order', async () => {
+      prismaMock.subscriptionFlow
+        .findFirst!.mockResolvedValueOnce(null)
+        .mockResolvedValueOnce(allPlansYearly);
+
+      await expect(
+        new SubscriptionEventDictionary(
+          prismaMock as any
+        ).getSubscriptionTemplateAction(
+          {
+            memberPlanID: 'plan-2',
+            paymentMethodID: 'payrexx',
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            autoRenew: true,
+          } as any,
+          SubscriptionEvent.SUBSCRIBE
+        )
+      ).resolves.toEqual({
+        mailTemplateId: 'all-plans-SUBSCRIBE',
+        sendAsLetter: false,
+      });
+
+      const [planLookup, allPlansLookup] =
+        prismaMock.subscriptionFlow.findFirst!.mock.calls.map(
+          ([args]) => args.where
+        );
+
+      expect(planLookup).toMatchObject({
+        default: false,
+        active: true,
+        allMemberPlans: false,
+        memberPlan: { id: 'plan-2' },
+      });
+      // Each condition: left open, or it has the subscription's value.
+      expect(allPlansLookup).toEqual({
+        default: false,
+        active: true,
+        allMemberPlans: true,
+        AND: [
+          {
+            OR: [
+              { autoRenewal: { isEmpty: true } },
+              { autoRenewal: { has: true } },
+            ],
+          },
+          {
+            OR: [
+              { periodicities: { isEmpty: true } },
+              { periodicities: { has: PaymentPeriodicity.yearly } },
+            ],
+          },
+          {
+            OR: [
+              { paymentMethods: { none: {} } },
+              { paymentMethods: { some: { id: 'payrexx' } } },
+            ],
+          },
+          {
+            OR: [{ legacy: { isEmpty: true } }, { legacy: { has: false } }],
+          },
+        ],
+      });
+    });
   });
 
   describe('letter switch', () => {
@@ -519,6 +726,7 @@ describe('SubscriptionEventDictionary', () => {
       memberPlanId: null,
       periodicities: [PaymentPeriodicity.monthly],
       autoRenewal: [true, false],
+      legacy: [true, false],
       createdAt: new Date(),
       modifiedAt: new Date(),
       intervals: [
@@ -557,6 +765,7 @@ describe('SubscriptionEventDictionary', () => {
         periodicity: PaymentPeriodicity.monthly,
         paymentMethodId: 'payrexx',
         autorenwal: true,
+        legacy: false,
         events: [
           SubscriptionEvent.SUBSCRIBE,
           SubscriptionEvent.INVOICE_CREATION,
@@ -575,6 +784,7 @@ describe('SubscriptionEventDictionary', () => {
     it('tells which template an event uses and whether it prints', async () => {
       prismaMock.subscriptionFlow
         .findFirst!.mockResolvedValueOnce(null)
+        .mockResolvedValueOnce(null)
         .mockResolvedValueOnce({
           ...defaultFlow,
           intervals: [defaultFlow.intervals[0]],

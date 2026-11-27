@@ -6,7 +6,7 @@ import {
   SubscriptionEvent,
   User,
 } from '@prisma/client';
-import { MailContext } from '@wepublish/mail/api';
+import { MailContext, MailProviderRecipientError } from '@wepublish/mail/api';
 import { PaymentsService } from '@wepublish/payment/api';
 import { InvoiceDeliveryService } from './invoice-delivery.service';
 
@@ -33,6 +33,7 @@ const flow = (sendAsLetter: boolean) => ({
   default: true,
   memberPlanId: null,
   autoRenewal: [],
+  legacy: [true, false],
   periodicities: [],
   paymentMethods: [],
   intervals: [
@@ -50,6 +51,8 @@ function setup({ letters = false }: { letters?: boolean } = {}) {
   const provider = {
     createRemoteInvoice: vi.fn(async () => ({ intent })),
     renderRemoteInvoice: vi.fn(async () => undefined),
+    markRemoteInvoiceSent: vi.fn(async () => undefined),
+    deliversInvoiceItself: vi.fn(async () => true),
   };
   const letterSender = {
     isConfigured: vi.fn(async () => true),
@@ -100,7 +103,7 @@ function setup({ letters = false }: { letters?: boolean } = {}) {
   };
   const payments = {
     findPaymentProviderByPaymentMethodeId: vi.fn(async () => provider),
-    findByInvoiceId: vi.fn(async () => []),
+    findByInvoiceId: vi.fn(async (): Promise<unknown[]> => []),
   };
 
   const service = new InvoiceDeliveryService(
@@ -109,7 +112,7 @@ function setup({ letters = false }: { letters?: boolean } = {}) {
     payments as unknown as PaymentsService
   );
 
-  return { service, provider, letterSender, prisma, mailContext };
+  return { service, provider, letterSender, prisma, mailContext, payments };
 }
 
 describe('InvoiceDeliveryService.deliverRenewal', () => {
@@ -130,6 +133,10 @@ describe('InvoiceDeliveryService.deliverRenewal', () => {
       })
     );
     expect(mailContext.sendComposedMail).toHaveBeenCalledTimes(1);
+    expect(prisma.mailLog.create.mock.calls[0][0].data).toMatchObject({
+      subscription: { connect: { id: 'sub-1' } },
+      invoice: { connect: { id: 'inv-1' } },
+    });
   });
 
   it('prints the invoice after the letter for a reader in letter mode', async () => {
@@ -149,6 +156,170 @@ describe('InvoiceDeliveryService.deliverRenewal', () => {
       })
     );
     expect(mailContext.sendComposedMail).not.toHaveBeenCalled();
+  });
+
+  it('mails the invoice-creation mail without the pdf when the provider emails the invoice itself', async () => {
+    const { service, mailContext } = setup();
+
+    await service.deliverRenewal(subscription, invoice);
+
+    expect(mailContext.sendComposedMail.mock.calls[0][0]).not.toHaveProperty(
+      'attachments'
+    );
+  });
+
+  describe('when we.publish delivers the invoices', () => {
+    const pdf = {
+      content: Buffer.from('pdf'),
+      name: 'RE-1.pdf',
+      mime: 'application/pdf',
+    };
+
+    it('attaches the pdf to the invoice-creation mail', async () => {
+      const { service, provider, mailContext } = setup();
+      provider.deliversInvoiceItself.mockResolvedValue(false);
+      provider.createRemoteInvoice.mockResolvedValue({
+        intent,
+        document: pdf,
+      });
+
+      await service.deliverRenewal(subscription, invoice);
+
+      expect(mailContext.sendComposedMail).toHaveBeenCalledWith(
+        expect.objectContaining({
+          attachments: [
+            {
+              filename: 'RE-1.pdf',
+              contentType: 'application/pdf',
+              content: pdf.content,
+            },
+          ],
+        })
+      );
+    });
+
+    // Bexio sends nothing then; the night sweep mails it once there is a pdf.
+    it('leaves the mail to the night sweep when the provider rendered no pdf', async () => {
+      const { service, provider, mailContext, prisma } = setup();
+      provider.deliversInvoiceItself.mockResolvedValue(false);
+      provider.createRemoteInvoice.mockResolvedValue({
+        intent,
+        deliveryError: 'pdf failed',
+      });
+
+      await expect(
+        service.deliverRenewal(subscription, invoice)
+      ).resolves.toBeUndefined();
+
+      expect(mailContext.sendComposedMail).not.toHaveBeenCalled();
+      // The entry is what tells the sweep this mail is still owed — and the
+      // editor why the reader is waiting.
+      expect(prisma.mailLog.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          state: 'deferred',
+          mailTemplate: { connect: { id: 'mt-4' } },
+          error: expect.stringContaining('pdf'),
+        }),
+      });
+    });
+  });
+
+  describe('telling the provider that its invoice was sent', () => {
+    const pdf = {
+      content: Buffer.from('pdf'),
+      name: 'RE-1.pdf',
+      mime: 'application/pdf',
+    };
+    const payment = { id: 'pay-1', intentID: '42', paymentMethodID: 'pm-1' };
+
+    function delivering(options: { letters?: boolean } = {}) {
+      const context = setup(options);
+      context.provider.deliversInvoiceItself.mockResolvedValue(false);
+      context.provider.createRemoteInvoice.mockResolvedValue({
+        intent,
+        document: pdf,
+      });
+      context.payments.findByInvoiceId.mockResolvedValue([payment]);
+
+      return context;
+    }
+
+    it('does so once the mail with the invoice was handed over', async () => {
+      const { service, provider } = delivering();
+
+      await service.deliverRenewal(subscription, invoice);
+
+      expect(provider.markRemoteInvoiceSent).toHaveBeenCalledTimes(1);
+      expect(provider.markRemoteInvoiceSent).toHaveBeenCalledWith({ payment });
+    });
+
+    it('does so once the letter with the invoice was handed over', async () => {
+      const { service, provider, letterSender } = delivering({ letters: true });
+
+      await service.deliverRenewal(subscription, invoice);
+
+      expect(letterSender.sendLetter).toHaveBeenCalledTimes(1);
+      expect(provider.markRemoteInvoiceSent).toHaveBeenCalledWith({ payment });
+    });
+
+    it('does not when the mail was refused', async () => {
+      const { service, provider, mailContext } = delivering();
+      mailContext.sendComposedMail.mockRejectedValue(
+        new MailProviderRecipientError('jane@example.com', 'hard-bounce')
+      );
+
+      await service.deliverRenewal(subscription, invoice);
+
+      expect(provider.markRemoteInvoiceSent).not.toHaveBeenCalled();
+    });
+
+    it('does not when the invoice is left to the night sweep', async () => {
+      const { service, provider } = delivering();
+      provider.createRemoteInvoice.mockResolvedValue({
+        intent,
+        deliveryError: 'pdf failed',
+      });
+
+      await service.deliverRenewal(subscription, invoice);
+
+      expect(provider.markRemoteInvoiceSent).not.toHaveBeenCalled();
+    });
+
+    // The provider's own email marks it; the cover mail carries no invoice.
+    it('does not when the provider emailed the invoice itself', async () => {
+      const { service, provider, payments, mailContext } = setup();
+      payments.findByInvoiceId.mockResolvedValue([payment]);
+
+      await service.deliverRenewal(subscription, invoice);
+
+      expect(mailContext.sendComposedMail).toHaveBeenCalledTimes(1);
+      expect(provider.markRemoteInvoiceSent).not.toHaveBeenCalled();
+    });
+
+    // The reader has the invoice; a provider outage must not undo that.
+    it('keeps the delivery when the provider cannot be told', async () => {
+      const { service, provider, mailContext } = delivering();
+      provider.markRemoteInvoiceSent.mockRejectedValue(new Error('bexio down'));
+
+      await expect(
+        service.deliverRenewal(subscription, invoice)
+      ).resolves.toBeUndefined();
+
+      expect(mailContext.sendComposedMail).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('notes no deferred mail for a reader in letter mode', async () => {
+    // The letter sweep finds them by their delivery preference.
+    const { service, provider, prisma } = setup({ letters: true });
+    provider.createRemoteInvoice.mockResolvedValue({
+      intent,
+      deliveryError: 'pdf failed',
+    });
+
+    await service.deliverRenewal(subscription, invoice);
+
+    expect(prisma.mailLog.create).not.toHaveBeenCalled();
   });
 
   // The editor sees the error; the invoice is gone, so they can simply retry.

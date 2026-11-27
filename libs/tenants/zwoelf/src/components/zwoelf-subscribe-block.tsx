@@ -1,7 +1,13 @@
 import styled from '@emotion/styled';
 import { Button } from '@mui/material';
+import { useQuery } from '@apollo/client/react';
 import { SubscribeBlock } from '@wepublish/block-content/website';
-import { PaymentPeriodicity } from '@wepublish/website/api';
+import {
+  FirstPrintIssueChoice,
+  PaymentPeriodicity,
+  PrintIssueStartDocument,
+  SubscribeMutationVariables,
+} from '@wepublish/website/api';
 import {
   BuilderRouterContext,
   BuilderSubscribeBlockProps,
@@ -14,10 +20,45 @@ import { useTranslation } from 'react-i18next';
 
 import { ZwoelfRadioCard, ZwoelfRadioCards } from './zwoelf-radio-card';
 import {
+  ZwoelfFirstIssueChoice,
+  ZwoelfPrintIssueStart,
   ZwoelfSubscribeMode,
   ZwoelfSubscribeStep,
   ZwoelfSubscribeStepContext,
 } from './zwoelf-subscribe-step-context';
+
+/**
+ * What the wizard adds to the subscription: the first printed issue the
+ * reader chose. False while it is asked for but not chosen; nothing where the
+ * plan and duration print no issues or none shipped yet.
+ */
+export const zwoelfSubscribeExtras = ({
+  applies,
+  choice,
+  start,
+}: {
+  applies: boolean;
+  choice: ZwoelfFirstIssueChoice;
+  start: ZwoelfPrintIssueStart | null;
+}): Partial<SubscribeMutationVariables> | false => {
+  if (!applies || !start) {
+    return {};
+  }
+
+  if (!choice) {
+    return false;
+  }
+
+  return {
+    firstPrintIssue: {
+      currentIssueId: start.current.id,
+      choice:
+        choice === 'current' ?
+          FirstPrintIssueChoice.Current
+        : FirstPrintIssueChoice.Upcoming,
+    },
+  };
+};
 
 /** Gift subscriptions are still sold in the external shop. */
 export const ZWOELF_SHOP_URL = 'https://shop.zwoelf.ch/produkt-kategorie/abos/';
@@ -96,6 +137,13 @@ export const ZwoelfSubscribeBlock = (props: BuilderSubscribeBlockProps) => {
   const [mode, setMode] = useState<ZwoelfSubscribeMode>('self');
   const previousStep = useRef(step);
 
+  // «Abo-Start»: the issues to choose the first one from
+  const { data: startData } = useQuery(PrintIssueStartDocument);
+  const printStart = startData?.printIssueStart ?? null;
+  const [firstIssue, setFirstIssue] = useState<ZwoelfFirstIssueChoice>('');
+  const [firstIssueMissing, setFirstIssueMissing] = useState(false);
+  const [firstIssueApplies, setFirstIssueApplies] = useState(false);
+
   useEffect(() => {
     if (previousStep.current !== step) {
       previousStep.current = step;
@@ -107,8 +155,20 @@ export const ZwoelfSubscribeBlock = (props: BuilderSubscribeBlockProps) => {
   }, [step]);
 
   const stepContext = useMemo(
-    () => ({ step, setStep, mode, setMode }),
-    [step, mode]
+    () => ({
+      step,
+      setStep,
+      mode,
+      setMode,
+      printStart,
+      firstIssue,
+      setFirstIssue,
+      firstIssueMissing,
+      setFirstIssueMissing,
+      firstIssueApplies,
+      setFirstIssueApplies,
+    }),
+    [step, mode, printStart, firstIssue, firstIssueMissing, firstIssueApplies]
   );
 
   if (query.upgradeSubscriptionId) {
@@ -174,6 +234,19 @@ export const ZwoelfSubscribeBlock = (props: BuilderSubscribeBlockProps) => {
           {...props}
           hiddenAreas={hiddenAreas}
           onInvalid={() => setStep(2)}
+          subscribeExtras={() => {
+            const extras = zwoelfSubscribeExtras({
+              applies: firstIssueApplies,
+              choice: firstIssue,
+              start: printStart,
+            });
+
+            if (extras === false) {
+              setFirstIssueMissing(true);
+            }
+
+            return extras;
+          }}
         />
       </Wrapper>
     </ZwoelfSubscribeStepContext>
